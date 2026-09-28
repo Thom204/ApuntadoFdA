@@ -1,0 +1,12 @@
+# Godot 4
+.godot/
+*.import.tmp
+/android/
+export/
+*.translation
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
