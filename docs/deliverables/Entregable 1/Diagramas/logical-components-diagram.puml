@@ -1,0 +1,326 @@
+@startuml logical-components-diagram
+' ============================================================================
+'  4.3 Diagrama UML de Componentes Lógicos
+'  Sistema Digital de Juego de Cartas (Clásica 4-3-3 & Apuntado a 101)
+'  Monolito modular por dominio (ADR-01) + puertos y adaptadores (hexagonal)
+'  Implementación objetivo: Godot 4.5+ / GDScript
+'  Revisión: alineado con 4.4 (ajustes H1–H5) y con la matriz de dependencias de 4.5.3
+' ============================================================================
+
+title <size:18><b>4.3 Diagrama UML de Componentes Lógicos</b></size>\n<size:12>Vista lógica (Richards & Ford, cap. 8) · Sistema Digital de Juego de Cartas · Clásica 4-3-3 & Apuntado a 101 · Monolito modular por dominio + puertos y adaptadores · Godot 4.5+ / GDScript</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 12
+skinparam componentStyle uml2
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #333333
+skinparam nodesep 40
+skinparam ranksep 55
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  StereotypeFontSize 10
+  StereotypeFontColor #555555
+}
+skinparam component<<mediator>> {
+  BorderColor #C05600
+  BorderThickness 2
+  BackgroundColor #FFF4E5
+}
+skinparam component<<Strategy>> {
+  BorderColor #1B7F3B
+  BorderThickness 2
+}
+skinparam component<<State>> {
+  BorderColor #B7791F
+  BorderThickness 2
+}
+skinparam component<<adapter>> {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+}
+skinparam interface {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  FontSize 11
+}
+skinparam package {
+  BorderColor #7A7A7A
+  FontSize 12
+  FontStyle bold
+}
+skinparam rectangle {
+  FontSize 13
+  FontStyle bold
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+skinparam legend {
+  FontSize 10
+  BackgroundColor #FFFFFF
+  BorderColor #7A7A7A
+}
+skinparam actor {
+  BorderColor #3C3C3C
+  BackgroundColor #FFFFFF
+}
+
+' ============================================================================
+'  ACTORES
+' ============================================================================
+actor "Jugador" as Player
+actor "Administrador\nde Sala" as Host
+Host -|> Player
+
+' ============================================================================
+'  ADAPTADORES PRIMARIOS (driving) · PRESENTACIÓN
+' ============================================================================
+package "presentation  ·  res://presentation/\n<size:10><i>adaptador primario (driving)</i></size>" as PkgPresentation #EEF1F5 {
+  component "Game Table UI\n<size:10>apuntado.presentation.table</size>\n<size:9><i>escenas y nodos Control</i></size>" as GameTableUI <<adapter>>
+  component "Card Theming\n<size:10>apuntado.presentation.theme</size>\n<size:9><i>Theme / Texture2D Resources</i></size>" as CardTheming <<adapter>>
+  interface "ICardTheme" as ICardTheme
+  note as NTheme
+    <b>Tematización</b> (p. ej. cartas de fútbol):
+    solo cambia Resources de presentación;
+    ningún componente del núcleo se entera.
+  end note
+}
+
+' ============================================================================
+'  ADAPTADORES DE INFRAESTRUCTURA · RED
+' ============================================================================
+package "infrastructure.network  ·  res://infrastructure/network/\n<size:10><i>adaptador primario y secundario</i></size>" as PkgNetwork #EEF1F5 {
+  component "Network Session\n<size:10>apuntado.infrastructure.network</size>\n<size:9><i>MultiplayerAPI · RPC · WebSocketMultiplayerPeer</i></size>" as NetworkSession <<adapter>> <<Remote Proxy>>
+  interface "IMatchCommands\n<size:9>(proxy remoto)</size>" as IMatchCommandsProxy
+  interface "IPlayerViewEvents\n<size:9>«signal»</size>" as IPlayerViewEvents
+  note as NNet
+    <b>Remote Proxy</b> · un solo namespace para ambos exports
+    (feature tags <i>web</i> / <i>dedicated_server</i>).
+    Cliente: realiza IMatchCommands y reenvía por RPC.
+    Servidor: valida peer_id + token de sesión antes de
+    delegar; rechaza y audita lo inválido (RNF 6).
+  end note
+}
+
+' ============================================================================
+'  NÚCLEO HEXAGONAL
+' ============================================================================
+rectangle "Núcleo de la aplicación  ·  sin dependencias de UI, red ni base de datos" as Core #FCFCFC {
+
+  package "orchestration  ·  res://orchestration/" as PkgOrchestration #FFF8EE {
+    component "Match Orchestration\n<size:10>apuntado.orchestration</size>\n<size:9><i>autoload MatchOrchestrator</i></size>" as MatchOrchestration <<mediator>> <<facade>>
+    interface "IMatchCommands\n<size:9>puerto de entrada</size>" as IMatchCommands
+    interface "IGameEvents\n<size:9>«signal» post-commit</size>" as IGameEvents
+    interface "IMatchRepository\n<size:9>puerto de salida</size>" as IMatchRepository
+    note as NOrch
+      <b>Mediator + Facade</b> (ADR-01, cap. 11)
+      Único punto de coordinación entre módulos:
+      <b>invoca, no decide</b>.
+      1) resuelve la regla (A3) e inyecta IGameRule
+      2) delega el comando al módulo dueño
+      3) guarda snapshot por turno (RNF 4)
+      4) emite IGameEvents solo tras el commit
+    end note
+  }
+
+  package "match  ·  res://match/" as PkgMatch #F4F0FB {
+    component "Match Setup\n<size:10>apuntado.match.setup</size>\n<size:9><i>MatchConfig · Player</i></size>" as MatchSetup
+    component "Match Outcome\n<size:10>apuntado.match.outcome</size>\n<size:9><i>Match (raíz de agregado)</i></size>" as MatchOutcome
+    component "Match History\n<size:10>apuntado.match.history</size>\n<size:9><i>MatchHistory</i></size>" as MatchHistory <<append-only log>>
+    interface "IMatchSetup" as IMatchSetup
+    interface "IMatchOutcome" as IMatchOutcome
+    interface "IMatchAudit" as IMatchAudit
+  }
+
+  package "turn  ·  res://turn/" as PkgTurn #FFF6E0 {
+    component "Turn Orchestration\n<size:10>apuntado.turn.orchestration</size>\n<size:9><i>Round · Turn · TurnPhase · MoveRecord</i></size>" as TurnOrchestration <<State>>
+    interface "IRoundPlay" as IRoundPlay
+    interface "RoundEvents\n<size:9>«signal» (MoveRecord)</size>" as RoundEvents
+    note as NTurn
+      <b>State</b>: Draw → Discard → End decide
+      <i>cuándo</i> se permite cada acción;
+      <i>qué</i> gana se delega a IGameRule.
+      Round y MoveRecord viven aquí (H1, H2):
+      el emisor define el evento y Match
+      History solo lo consume (sin ciclo).
+    end note
+  }
+
+  package "scoring  ·  res://scoring/" as PkgScoring #FDECE3 {
+    component "Round Scoring\n<size:10>apuntado.scoring.round</size>\n<size:9><i>RoundSettlement · Scoreboard</i></size>" as RoundScoring
+    interface "IRoundScoring" as IRoundScoring
+  }
+
+  package "rules  ·  res://rules/" as PkgRules #E7F4EA {
+    component "Rule Selection\n<size:10>apuntado.rules.selection</size>\n<size:9><i>RuleRegistry</i></size>" as RuleSelection <<Registry / Factory>>
+    component "Game Modes\n<size:10>apuntado.rules.modes</size>\n<size:9><i>ClassicRule · ApuntadoRule</i></size>" as GameModes <<Strategy>>
+    component "Hand Evaluation\n<size:10>apuntado.rules.evaluation</size>\n<size:9><i>HandEvaluator · Meld · CardValueTable</i></size>" as HandEvaluation <<domain service>>
+    interface "IRuleResolver" as IRuleResolver
+    interface "IGameRule\n<size:9>contrato GameRule (@abstract)</size>" as IGameRule
+    interface "IHandEvaluation" as IHandEvaluation
+    note as NRules
+      <b>Strategy + Template Method</b> (ADR-02)
+      Consumidores dependen solo de IGameRule (DIP).
+      Contrato: GameRule (@abstract), ValidationResult,
+      RuleSettings y GameMode (H5): Match Setup usa el
+      contrato y no conoce RuleRegistry.
+      La regla recibe Array[Card], nunca Hand (H4).
+      Nueva modalidad = 1 archivo en rules/modes
+      + 1 valor en GameMode + 1 register()
+      (RNF 1: ≤ 2 archivos existentes).
+    end note
+    note as NEval
+      Hand Evaluation: agnóstico a la
+      modalidad, sin estado ni árbol de
+      escena → pruebas headless con GUT
+      y medición ≤ 150 ms (RNF 2).
+      CardValueTable vive aquí (H3):
+      solo depende de Card.
+    end note
+  }
+
+  package "deck  ·  res://deck/" as PkgDeck #E4EFFB {
+    component "Deck Management\n<size:10>apuntado.deck</size>\n<size:9><i>Deck · DiscardPile · Hand · Card</i></size>" as DeckManagement
+    interface "ICardZones" as ICardZones
+  }
+
+  package "notification  ·  res://notification/" as PkgNotification #E6F4F4 {
+    component "Game Notification\n<size:10>apuntado.notification</size>\n<size:9><i>filtra vista pública / mano privada</i></size>" as GameNotification
+    interface "IPlayerChannel\n<size:9>puerto de salida</size>" as IPlayerChannel
+    note as NNotif
+      <b>Observer</b>: cada jugador recibe
+      solo su mano + el estado público;
+      el orden del mazo nunca sale del
+      servidor (RNF 3, RNF 6).
+    end note
+  }
+
+}
+
+' ============================================================================
+'  ADAPTADORES SECUNDARIOS (driven) · PERSISTENCIA
+' ============================================================================
+package "infrastructure.persistence  ·  res://infrastructure/persistence/\n<size:10><i>adaptador secundario (driven)</i></size>" as PkgPersistence #EEF1F5 {
+  component "Match Persistence\n<size:10>apuntado.infrastructure.persistence</size>\n<size:9><i>snapshot por turno · tablas Ronda / Movimiento</i></size>" as MatchPersistence <<adapter>>
+  note as NPers
+    Implementa el puerto de salida (DIP):
+    el núcleo no conoce la tecnología
+    de BD (decisión de la vista física).
+  end note
+}
+
+' ============================================================================
+'  RELACIONES
+'  provee (lollipop):  Componente -- Interfaz
+'  requiere (socket):  Componente --( Interfaz
+'  «tipo» (punteada):  dependencia solo de tipo, incluida en Ca/Ce de 4.5.3
+'  [norank] solo evita que la flecha altere el layout; no cambia su semántica
+' ============================================================================
+
+' --- Actores -> presentación ---
+Player --> GameTableUI : robar · descartar\n· cerrar ronda
+Host --> GameTableUI : crear partida\n· configurar modalidad
+
+' --- Presentación ---
+CardTheming -left- ICardTheme
+GameTableUI -right-( ICardTheme
+GameTableUI --( IMatchCommandsProxy
+GameTableUI --( IPlayerViewEvents
+
+' --- Red (Remote Proxy) ---
+NetworkSession -up- IMatchCommandsProxy
+NetworkSession -up- IPlayerViewEvents
+NetworkSession -down- IPlayerChannel
+NetworkSession --( IMatchCommands
+
+' --- Orquestación (Mediator + Facade) ---
+MatchOrchestration -up- IMatchCommands
+MatchOrchestration -right- IGameEvents
+MatchOrchestration --( IMatchSetup
+MatchOrchestration --( IRuleResolver
+MatchOrchestration --( IRoundPlay
+MatchOrchestration --( IMatchOutcome
+MatchOrchestration --( IMatchAudit
+MatchOrchestration --( IMatchRepository
+MatchOrchestration .[norank].> IGameRule : «tipo»\ninyecta la regla
+
+' --- Notificación (Observer) ---
+GameNotification -left-( IGameEvents
+GameNotification -up-( IPlayerChannel
+
+' --- Match ---
+MatchSetup -up- IMatchSetup
+MatchOutcome -up- IMatchOutcome
+MatchHistory -up- IMatchAudit
+MatchOutcome --( IRoundPlay
+MatchOutcome --( IRoundScoring
+MatchOutcome --( IGameRule
+MatchOutcome -[norank]-( IMatchSetup : compone
+MatchOutcome -[norank]-( IMatchAudit : compone
+MatchHistory --( RoundEvents
+MatchSetup .[norank].> IGameRule : «tipo»\nRuleSettings · GameMode
+
+' --- Turn (State) ---
+TurnOrchestration -up- IRoundPlay
+TurnOrchestration - RoundEvents
+TurnOrchestration --( ICardZones
+TurnOrchestration --( IGameRule
+TurnOrchestration --( IRoundScoring
+
+' --- Scoring ---
+RoundScoring -up- IRoundScoring
+
+' --- Rules (Strategy + Registry) ---
+RuleSelection -up- IRuleResolver
+GameModes -up- IGameRule
+HandEvaluation -up- IHandEvaluation
+RuleSelection ..> GameModes : «instantiate»\n(register)
+RuleSelection --( IHandEvaluation
+GameModes --( IHandEvaluation
+GameModes ..> DeckManagement : «tipo»\nCard
+HandEvaluation ..> DeckManagement : «tipo»\nCard
+
+' --- Deck ---
+DeckManagement -up- ICardZones
+
+' --- Persistencia (implementa puerto de salida) ---
+MatchPersistence -up- IMatchRepository
+
+' --- Anclaje de notas ---
+NTheme .. CardTheming
+NNet .. NetworkSession
+NOrch .. MatchOrchestration
+NNotif .. GameNotification
+NTurn .. TurnOrchestration
+NRules .. GameModes
+NEval .. HandEvaluation
+NPers .. MatchPersistence
+
+' ============================================================================
+'  LEYENDA
+' ============================================================================
+legend bottom
+  <b>Leyenda</b>
+  |= Notación |= Significado |
+  | —○ (lollipop) | Interfaz <b>provista</b> por el componente |
+  | —( (socket) | Interfaz <b>requerida</b>; ○( = ensamblaje ball-and-socket |
+  | - - -> «instantiate» | Dependencia de creación: solo Rule Selection conoce las reglas concretas |
+  | - - -> «tipo» | Dependencia solo de tipo: usa un contrato o value object sin invocar operaciones.\nEs la forma más débil de connascence, pero cuenta en Ca/Ce (4.5.3) |
+  | Paquete | Módulo del monolito modular por dominio (ADR-01) · carpeta Godot res:// |
+  | Componente | Hoja del namespace lógico (inventario 4.1); en cursiva, clases que lo realizan (4.4) |
+  | «adapter» (gris) | Adaptador (hexagonal) fuera del núcleo; los puertos de entrada/salida se definen dentro del núcleo |
+  | «mediator» (naranja) | Coordinador de aplicación sin lógica de negocio |
+  | «Strategy» / «State» | Puntos de variación polimórfica (borde verde / ámbar), igual que en 4.4 |
+  | I<Nombre> | API pública del componente (clases con class_name), consumida por tipo y nunca por ruta de nodo.\nCon varias implementaciones (IGameRule, IMatchCommands, IMatchRepository, IPlayerChannel) es una clase @abstract (Godot 4.5+) |
+  | «signal» | Interfaz de eventos con señales de Godot (Observer) |
+  | Nombres | Inglés; se conservan términos del dominio sin traducción (Apuntado, Terna, Cuarta) |
+  | (H1…H5) | Ajuste derivado del análisis de acoplamiento y Ley de Deméter (sección 4.5.2) |
+endlegend
+
+@enduml

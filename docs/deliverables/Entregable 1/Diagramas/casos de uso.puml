@@ -1,0 +1,46 @@
+@startuml
+left to right direction
+actor Jugador
+actor "Anfitrión" as Anfitrion
+Anfitrion --|> Jugador
+
+rectangle "Sistema: juego de cartas en línea" {
+  usecase "Crear partida" as UC01
+  usecase "Unirse a sala" as UC02
+  usecase "Robar carta" as UC03
+  usecase "Descartar carta" as UC04
+  usecase "Declarar cierre" as UC05
+  usecase "Validar combinación" as UC06
+  usecase "Validar cierre Clásico" as UC07
+  usecase "Validar cierre Apuntado" as UC08
+  usecase "Liquidar ronda" as UC09
+  usecase "Calcular penalizaciones" as UC10
+  usecase "Eliminar jugador" as UC11
+  usecase "Finalizar partida" as UC12
+}
+
+Anfitrion --> UC01
+Jugador --> UC02
+Jugador --> UC03
+Jugador --> UC04
+Jugador --> UC05
+
+UC05 ..> UC06 : <<include>>
+UC07 --|> UC06
+UC08 --|> UC06
+UC09 ..> UC05 : <<extend>>
+UC09 ..> UC10 : <<include>>
+UC11 ..> UC09 : <<extend>>
+UC12 ..> UC09 : <<extend>>
+@enduml
+
+
+
+UC08 ..> UC09 : <<include>>
+UC10 --|> UC09
+UC11 --|> UC09
+UC12 ..> UC08 : <<extend>>
+UC12 ..> UC13 : <<include>>
+UC14 ..> UC12 : <<extend>>
+UC15 ..> UC12 : <<extend>>
+@enduml

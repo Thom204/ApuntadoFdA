@@ -1,0 +1,550 @@
+@startuml domain-class-diagram
+' ============================================================================
+'  4.4 Diagrama UML de Clases del Dominio
+'  Sistema Digital de Juego de Cartas (Clásica 4-3-3 & Apuntado a 101)
+'  Implementación objetivo: Godot 4.5+ / GDScript (monolito modular por dominio)
+'  Revisión: incorpora los ajustes H1–H5 de la sección 4.5.2 (acoplamiento y Deméter)
+' ============================================================================
+
+title <size:18><b>4.4 Diagrama UML de Clases del Dominio</b></size>\n<size:12>Sistema Digital de Juego de Cartas · Clásica 4-3-3 & Apuntado a 101 · Godot 4.5+ / GDScript</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 12
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #333333
+skinparam classAttributeIconSize 0
+skinparam nodesep 35
+skinparam ranksep 45
+skinparam padding 2
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  StereotypeFontSize 10
+  StereotypeFontColor #555555
+}
+skinparam class<<Strategy>> {
+  BorderColor #1B7F3B
+  BorderThickness 2
+}
+skinparam class<<State>> {
+  BorderColor #B7791F
+  BorderThickness 2
+}
+skinparam class<<aggregate root>> {
+  BorderColor #5B3F99
+  BorderThickness 2
+}
+skinparam package {
+  BorderColor #7A7A7A
+  FontSize 13
+  FontStyle bold
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+hide empty methods
+
+' ============================================================================
+'  MÓDULO MATCH  (Match Setup · Match Outcome · Match History)
+' ============================================================================
+package "apuntado.match  ·  res://match/" as PkgMatch #F4F0FB {
+
+  class "Match\n<size:10><i>(Partida)</i></size>" as Match <<aggregate root>> {
+    + id: StringName {readOnly}
+    + host_id: StringName {readOnly}
+    + status: MatchStatus {readOnly}
+    - _config: MatchConfig
+    - _rule: GameRule
+    - _players: Array[Player]
+    - _rounds: Array[Round]
+    - _history: MatchHistory
+    --
+    + add_player(player: Player): void
+    + start_next_round(rng: RandomNumberGenerator): Round
+    + conclude_round(): RoundSettlement
+    + scoreboard(): Scoreboard
+    + active_players(): Array[Player]
+    + winner_id(): StringName
+    -- «signal» --
+    player_joined(player_id: StringName)
+    player_eliminated(player_id: StringName)
+    match_finished(winner_id: StringName)
+  }
+
+  enum MatchStatus {
+    WAITING_FOR_PLAYERS
+    IN_PROGRESS
+    FINISHED
+  }
+
+  class "Player\n<size:10><i>(Jugador)</i></size>" as Player <<entity>> {
+    + id: StringName {readOnly}
+    + nickname: String
+    + seat: int
+    + status: PlayerStatus {readOnly}
+    --
+    + eliminate(): void
+    + is_active(): bool
+  }
+
+  enum PlayerStatus {
+    ACTIVE
+    ELIMINATED
+  }
+
+  note left of Match
+    <b>Raíz de agregado</b> · Match Setup (A1–A4) y Match Outcome (E4–E5).
+    conclude_round(): Round.settle() → GameRule.is_eliminated()
+    → GameRule.is_match_over() → winner_id().
+    Conecta Round.move_performed → MatchHistory.record (Observer).
+    El acumulado <b>no se almacena</b>: se deriva de Scoreboard
+    (fuente única de verdad).
+  end note
+
+  package "match.setup  ·  res://match/setup/" as PkgSetup #EAE2F8 {
+    class MatchConfig <<Resource>> {
+      + mode: GameMode
+      + max_players: int
+      + cards_per_player: int = 10
+      + deck_count: int = 2
+      + rules: RuleSettings
+      --
+      + is_valid(): bool
+    }
+  }
+
+  package "match.history  ·  res://match/history/" as PkgHistory #EAE2F8 {
+    class MatchHistory <<append-only log>> {
+      - _moves: Array[MoveRecord]
+      --
+      + record(move: MoveRecord): void
+      + moves_of_round(round_number: int): Array[MoveRecord]
+      + all(): Array[MoveRecord]
+    }
+  }
+}
+
+' ============================================================================
+'  MÓDULO TURN  (Turn Orchestration · Round + patrón State + evento MoveRecord)
+' ============================================================================
+package "apuntado.turn  ·  res://turn/" as PkgTurn #FFF6E0 {
+
+  class "Round\n<size:10><i>(Ronda)</i></size>" as Round <<entity>> {
+    + number: int {readOnly}
+    - _deck: Deck
+    - _discard_pile: DiscardPile
+    - _hands: Dictionary[StringName, Hand]
+    - _turn_order: Array[StringName]
+    - _turn: Turn
+    - _rule: GameRule
+    - _settlement: RoundSettlement
+    --
+    + start(rng: RandomNumberGenerator): void
+    + draw_from_deck(player_id: StringName): Card
+    + draw_from_discard(player_id: StringName): Card
+    + discard(player_id: StringName, card_id: int): void
+    + declare_closing(player_id: StringName, card_id: int): ValidationResult
+    + settle(): RoundSettlement
+    + current_player_id(): StringName
+    + cards_of(player_id: StringName): Array[Card]
+    + top_discard(): Card
+    + is_closed(): bool
+    -- «signal» --
+    turn_changed(player_id: StringName)
+    move_performed(move: MoveRecord)
+    round_closed(closer_id: StringName, result: ValidationResult)
+  }
+
+  note bottom of Round
+    <b>Invariante de conservación:</b> cada Card está en un único
+    lugar (Deck, DiscardPile o Hand).
+    <b>Tell, don't ask · Ley de Deméter:</b> no expone Deck,
+    DiscardPile ni Hand; solo copias (cards_of) y datos públicos
+    (top_discard). Recibe card_id, nunca una Card del cliente
+    (anti-trampas, RNF 6). Valida cada acción con Turn.can().
+    A la regla le entrega copias (Hand.cards()), nunca la Hand (H4).
+    Vive en res://turn/ junto a Turn y TurnPhase (H1).
+  end note
+
+  class Turn <<entity>> {
+    + player_id: StringName {readOnly}
+    + number: int {readOnly}
+    - _phase: TurnPhase
+    --
+    + can(action: TurnAction): bool
+    + apply(action: TurnAction): void
+    + is_over(): bool
+  }
+
+  enum TurnAction {
+    DRAW_FROM_DECK
+    DRAW_FROM_DISCARD
+    DISCARD
+    DECLARE_CLOSING
+  }
+
+  abstract class TurnPhase <<State>> {
+    + {abstract} allows(action: TurnAction): bool
+    + {abstract} next(action: TurnAction): TurnPhase
+  }
+
+  ' (orden de declaración ajustado para que el layout muestre Draw → Discard → End)
+  class EndPhase {
+    + allows(action: TurnAction): bool
+    + next(action: TurnAction): TurnPhase
+  }
+
+  class DrawPhase {
+    + allows(action: TurnAction): bool
+    + next(action: TurnAction): TurnPhase
+  }
+
+  class DiscardPhase {
+    + allows(action: TurnAction): bool
+    + next(action: TurnAction): TurnPhase
+  }
+
+  note right of TurnPhase
+    <b>State:</b> DrawPhase → DiscardPhase → EndPhase.
+    DiscardPhase admite DISCARD o DECLARE_CLOSING.
+    Separa <i>cuándo</i> se actúa (State)
+    de <i>qué</i> gana (Strategy).
+  end note
+
+  class MoveRecord <<value object>> {
+    + sequence: int {readOnly}
+    + round_number: int {readOnly}
+    + player_id: StringName {readOnly}
+    + action: TurnAction {readOnly}
+    + card_id: int {readOnly}
+    + timestamp_ms: int {readOnly}
+  }
+
+  note left of MoveRecord
+    <b>Carga útil de RoundEvents</b> (señal move_performed).
+    El emisor define el evento; MatchHistory solo lo consume:
+    sin ciclo turn ↔ match.history (H2).
+  end note
+}
+
+' ============================================================================
+'  MÓDULO SCORING  (Round Scoring)
+' ============================================================================
+package "apuntado.scoring  ·  res://scoring/" as PkgScoring #FDECE3 {
+
+  class RoundSettlement <<value object>> {
+    + round_number: int {readOnly}
+    + closer_id: StringName {readOnly}
+    + penalties: Dictionary[StringName, int] {readOnly}
+    --
+    + penalty_of(player_id: StringName): int
+  }
+
+  class Scoreboard <<value object>> {
+    - _totals: Dictionary[StringName, int]
+    --
+    + {static} from_settlements(list: Array[RoundSettlement]): Scoreboard
+    + total_of(player_id: StringName): int
+    + leader_among(player_ids: Array[StringName]): StringName
+  }
+}
+
+' ============================================================================
+'  MÓDULO RULES  (Rule Selection · Hand Evaluation · modalidades Strategy)
+' ============================================================================
+package "apuntado.rules  ·  res://rules/" as PkgRules #E7F4EA {
+
+  abstract class "GameRule\n<size:10><i>(ReglaJuego)</i></size>" as GameRule <<Strategy>> <<Resource>> {
+    # settings: RuleSettings
+    # evaluator: HandEvaluator
+    --
+    + validate_closing(cards: Array[Card], discard: Card): ValidationResult
+    + penalty_for(cards: Array[Card]): int
+    + {abstract} is_eliminated(total_score: int): bool
+    + {abstract} is_match_over(active_players: int): bool
+    # {abstract} _closing_pattern(): Array[MeldKind]
+    # {abstract} _accepts_leftover(leftover: Array[Card], points: int): bool
+  }
+
+  class "ValidationResult\n<size:10><i>(ResultadoValidacion)</i></size>" as ValidationResult <<value object>> {
+    + is_valid: bool {readOnly}
+    + reason: RejectionReason {readOnly}
+    + melds: Array[Meld] {readOnly}
+    + leftover: Array[Card] {readOnly}
+    + leftover_points: int {readOnly}
+    --
+    + {static} accept(melds: Array[Meld], leftover: Array[Card], points: int): ValidationResult
+    + {static} reject(reason: RejectionReason): ValidationResult
+  }
+
+  enum RejectionReason {
+    NONE
+    NOT_PLAYER_TURN
+    CARD_NOT_IN_HAND
+    INCOMPLETE_MELDS
+    LEFTOVER_TOO_HIGH
+  }
+
+  class RuleSettings <<Resource>> {
+    + elimination_threshold: int = 101
+    + max_leftover_points: int = 5
+    + jokers_enabled: bool = false
+    + card_values: CardValueTable
+  }
+
+  enum GameMode <<catálogo>> {
+    CLASSIC
+    APUNTADO
+  }
+
+  note left of GameMode
+    <b>Contrato de reglas (H5):</b> script propio sin
+    comportamiento (res://rules/game_mode.gd).
+    MatchConfig lo usa sin conocer RuleRegistry;
+    una modalidad nueva no modifica GameRule.
+  end note
+
+  note top of GameRule
+    <b>Strategy (ADR-02) + Template Method.</b> validate_closing() fija el algoritmo:
+    1) cartas − descarte  2) evaluator.best_melds(_closing_pattern())  3) _accepts_leftover()
+    Recibe Array[Card] (copia de Hand.cards()), nunca la entidad Hand: la regla no puede alterar una mano (H4).
+    <b>Classic:</b> [CUARTA, TERNA, TERNA] · sobrante vacío · nunca elimina · termina con el primer cierre válido.
+    <b>Apuntado:</b> [TERNA ×3] · sobrante < max_leftover_points (5) · elimina si total ≥ elimination_threshold (101)
+    · termina con ≤ 1 jugador activo.  Parámetros = datos (RuleSettings); comportamiento = Strategy.
+  end note
+  package "rules.modes  ·  res://rules/modes/" as PkgModes #D5ECDB {
+    class "ClassicRule\n<size:10><i>(ReglaClasicaCuartaTerna)</i></size>" as ClassicRule <<Resource>> {
+      + is_eliminated(total_score: int): bool
+      + is_match_over(active_players: int): bool
+      # _closing_pattern(): Array[MeldKind]
+      # _accepts_leftover(leftover: Array[Card], points: int): bool
+    }
+
+    class "ApuntadoRule\n<size:10><i>(ReglaApuntado101)</i></size>" as ApuntadoRule <<Resource>> {
+      + is_eliminated(total_score: int): bool
+      + is_match_over(active_players: int): bool
+      # _closing_pattern(): Array[MeldKind]
+      # _accepts_leftover(leftover: Array[Card], points: int): bool
+    }
+  }
+
+  package "rules.selection  ·  res://rules/selection/" as PkgSelection #D5ECDB {
+    class RuleRegistry <<Registry / Factory>> {
+      - _catalog: Dictionary[GameMode, Script]
+      - _evaluator: HandEvaluator
+      --
+      + register(mode: GameMode, rule_script: Script): void
+      + resolve(mode: GameMode, settings: RuleSettings): GameRule
+    }
+
+    note bottom of RuleRegistry
+      Único punto que conoce las reglas
+      concretas; Match y Round dependen
+      solo de GameRule (DIP). Nueva modalidad:
+      1 archivo en modes/ + 1 valor en GameMode
+      + 1 register() (RNF 1: ≤ 2 existentes).
+    end note
+  }
+
+  package "rules.evaluation  ·  res://rules/evaluation/" as PkgEvaluation #D5ECDB {
+    class HandEvaluator <<domain service>> {
+      + best_melds(cards: Array[Card], pattern: Array[MeldKind], values: CardValueTable): Array[Meld]
+      + is_valid_meld(cards: Array[Card]): bool
+      + points_of(cards: Array[Card], values: CardValueTable): int
+    }
+
+    note bottom of HandEvaluator
+      Agnóstico a la modalidad, sin estado ni árbol de escena:
+      pruebas headless con GUT y medición aislada ≤ 150 ms (RNF 2).
+      CardValueTable vive aquí (insumo de points_of, paso E1):
+      el evaluador solo depende de Card, sin ciclo con rules (H3).
+    end note
+    class "Meld\n<size:10><i>(Terna / Cuarta)</i></size>" as Meld <<value object>> {
+      + type: MeldType {readOnly}
+      + cards: Array[Card] {readOnly}
+      --
+      + kind(): MeldKind
+    }
+
+    enum MeldType {
+      SET
+      RUN
+    }
+
+    enum MeldKind {
+      TERNA = 3
+      CUARTA = 4
+    }
+
+    class CardValueTable <<Resource>> {
+      + values: Dictionary[Rank, int]
+      + joker_value: int
+      --
+      + value_of(card: Card): int
+    }
+  }
+}
+
+' ============================================================================
+'  MÓDULO DECK  (Deck Management)
+' ============================================================================
+package "apuntado.deck  ·  res://deck/" as PkgDeck #E4EFFB {
+
+  class "Hand\n<size:10><i>(Mano)</i></size>" as Hand <<entity>> {
+    + owner_id: StringName {readOnly}
+    - _cards: Array[Card]
+    --
+    + add(card: Card): void
+    + take(card_id: int): Card
+    + find(card_id: int): Card
+    + cards(): Array[Card]
+    + size(): int
+  }
+
+  class "Deck\n<size:10><i>(Mazo)</i></size>" as Deck <<entity>> {
+    - _cards: Array[Card]
+    --
+    + {static} build(deck_count: int, with_jokers: bool): Deck
+    + shuffle(rng: RandomNumberGenerator): void
+    + draw(): Card
+    + deal(amount: int): Array[Card]
+    + refill_from(pile: DiscardPile): void
+    + size(): int
+    + is_empty(): bool
+  }
+
+  class "DiscardPile\n<size:10><i>(PozoDescarte)</i></size>" as DiscardPile <<entity>> {
+    - _cards: Array[Card]
+    --
+    + push(card: Card): void
+    + peek_top(): Card
+    + take_top(): Card
+    + take_all_but_top(): Array[Card]
+    + is_empty(): bool
+  }
+
+  class "Card\n<size:10><i>(Carta)</i></size>" as Card <<value object>> {
+    + instance_id: int {readOnly}
+    + rank: Rank {readOnly}
+    + suit: Suit {readOnly}
+    --
+    + is_joker(): bool
+    + same_rank_as(other: Card): bool
+    + same_suit_as(other: Card): bool
+    + follows(other: Card): bool
+  }
+
+  note right of Card
+    <b>Inmutable.</b> instance_id único en la
+    baraja doble (cartas repetidas). Sin puntos
+    ni color: el valor sale de CardValueTable.
+  end note
+  enum "Suit\n<size:10><i>(Palo)</i></size>" as Suit {
+    HEARTS
+    DIAMONDS
+    CLUBS
+    SPADES
+  }
+
+  enum "Rank\n<size:10><i>(Valor)</i></size>" as Rank {
+    JOKER = 0
+    ACE = 1
+    TWO … TEN = 2…10
+    JACK = 11
+    QUEEN = 12
+    KING = 13
+  }
+}
+
+' ============================================================================
+'  RELACIONES  (la longitud/dirección de cada flecha solo ajusta el layout)
+' ============================================================================
+
+' --- Match (raíz de agregado) ---
+Match +- MatchStatus
+Match "1" *-- "1" MatchConfig : config
+Match "1" *-- "1..*" Player : participantes
+Match "1" *---- "0..*" Round : rondas
+Match "1" *-- "1" MatchHistory : bitácora
+Player +-- PlayerStatus
+
+' --- History (Observer: Match conecta la señal de Round con MatchHistory) ---
+' MoveRecord pertenece a turn (H2): el emisor define el evento, History lo consume
+MatchHistory "1" *------ "0..*" MoveRecord : movimientos
+
+' --- Turn (State + evento RoundEvents) ---
+Round ..> MoveRecord : <<create>>\n(señal move_performed)
+MoveRecord ..> TurnAction
+Round "1" *--- "1" Turn : turno actual
+Turn +- TurnAction
+Turn "1" *-- "1" TurnPhase : fase actual
+TurnPhase <|-- DrawPhase
+TurnPhase <|-- DiscardPhase
+TurnPhase <|-- EndPhase
+
+' --- Scoring ---
+RoundSettlement "0..1" --* "1" Round : liquidación
+RoundSettlement <.. Scoreboard : <<derive from>>
+Match ..> Scoreboard : <<derive>>
+
+' --- Rules (Strategy + Template Method) ---
+Match "1" --------> "1" GameRule : se rige por >
+Round "1" -------> "1" GameRule : delega cierre\ny penalización >
+RuleRegistry .> GameRule : <<create>>
+GameRule <|-- ClassicRule
+GameRule <|-- ApuntadoRule
+RuleRegistry ..> ClassicRule : <<register>>
+RuleRegistry ..> ApuntadoRule : <<register>>
+RuleRegistry ..> GameMode : clave del\ncatálogo
+MatchConfig ..> GameMode : mode
+GameRule ...> ValidationResult : <<create>>
+ValidationResult +- RejectionReason
+GameRule "1" --> "1" RuleSettings : settings
+MatchConfig "1" *--- "1" RuleSettings : rules
+RuleSettings "1" *-- "1" CardValueTable : card_values
+HandEvaluator ..> CardValueTable : points_of()
+GameRule "1" ---> "1" HandEvaluator : evaluator
+HandEvaluator ..> Meld : <<create>>
+ValidationResult "1" o-- "0..*" Meld : combinaciones
+Meld +-- MeldType
+Meld +-- MeldKind
+
+' --- Deck ---
+GameRule ..> Card : evalúa\n(Array[Card])
+Round "1" *-------> "2..*" Hand : manos
+Round "1" *-------> "1" Deck : mazo
+Round "1" *-------> "1" DiscardPile : pozo
+Hand "1" o-- "0..*" Card
+Deck "1" o-- "0..*" Card
+DiscardPile "1" o-- "0..*" Card
+Meld "1" o- "3..4" Card : cartas
+Deck .> DiscardPile : refill_from
+Card +-- Suit
+Card +-- Rank
+
+' ============================================================================
+'  LEYENDA
+' ============================================================================
+legend bottom
+  <b>Leyenda</b>
+  |= Elemento |= Significado |
+  | Paquete | Módulo del monolito modular por dominio (ADR-01): namespace lógico · carpeta Godot |
+  | <<Strategy>> / <<State>> | Punto de variación polimórfico (borde verde / borde ámbar) |
+  | <<aggregate root>> | Raíz de agregado: frontera de consistencia de la partida (borde morado) |
+  | <<value object>> | Inmutable; igualdad por valor |
+  | <<Resource>> | Hereda de Godot Resource (configurable/serializable). Sin esta marca: hereda de RefCounted (sin árbol de escena) |
+  | «signal» | Señales GDScript (Observer): Match History, Game Notification y la UI se suscriben; el dominio no conoce la UI |
+  | ⊕ | Enum anidado: en GDScript se declara dentro de la clase (p. ej. Card.Suit) |
+  | ◆ composición / ◇ agregación | Ciclo de vida ligado al todo / las cartas se mueven entre zonas sin perder identidad |
+  | ——> / - - -> | Asociación navegable / dependencia (<<create>>, <<derive>>, parámetro) |
+  | - / # | Privado / protegido: en GDScript se expresa con prefijo _ por convención |
+  | <i>(Nombre)</i> | Término del enunciado. Se conservan Apuntado, Terna y Cuarta (sin traducción establecida) |
+  | (H1…H5) | Ajuste derivado del análisis de acoplamiento y Ley de Deméter (sección 4.5.2) |
+endlegend
+
+@enduml
