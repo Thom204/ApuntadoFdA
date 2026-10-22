@@ -1,0 +1,347 @@
+@startuml component-diagram-detailed
+' ============================================================================
+'  E2 · 1.3 Diagrama UML de Componentes Detallado (Interfaces y Puertos)
+'  Sistema Digital de Juego de Cartas (Clásica 4-3-3 & Apuntado a 101)
+'  Monolito modular por dominio (ADR-01, ADR-03) + puertos y adaptadores
+'  Comunicación: síncrona por interfaz + eventos post-commit (ADR-05)
+'  Implementación objetivo: Godot 4.5+ / GDScript
+'  Evoluciona la Figura 4.3 del E1 (vista lógica) a vista detallada:
+'   - Puertos UML explícitos en el borde del Núcleo y del Motor de Reglas
+'   - Conectores de delegación puerto -> componente interno
+'   - Estrategias ClassicRule / ApuntadoRule como componentes separados
+'   - Puerto de persistencia conectado a la BD (sección 2, ADR-04)
+'   - Contratos con operaciones por interfaz (tabla inferior)
+' ============================================================================
+
+title <size:18><b>1.3 Diagrama UML de Componentes Detallado (Interfaces y Puertos)</b></size>\n<size:12>Sistema Digital de Juego de Cartas · Clásica 4-3-3 & Apuntado a 101 · Monolito modular por dominio + puertos y adaptadores · Godot 4.5+ / GDScript</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 12
+skinparam componentStyle uml2
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #333333
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  StereotypeFontSize 10
+  StereotypeFontColor #555555
+}
+skinparam component<<mediator>> {
+  BorderColor #C05600
+  BorderThickness 2
+  BackgroundColor #FFF4E5
+}
+skinparam component<<Strategy>> {
+  BorderColor #1B7F3B
+  BorderThickness 2
+}
+skinparam component<<State>> {
+  BorderColor #B7791F
+  BorderThickness 2
+}
+skinparam component<<adapter>> {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+}
+skinparam component<<subsystem>> {
+  BackgroundColor #FCFCFC
+  BorderColor #3C3C3C
+  BorderThickness 2
+}
+skinparam component<<rules engine>> {
+  BackgroundColor #F1F9F3
+  BorderColor #1B7F3B
+  BorderThickness 2
+}
+skinparam interface {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  FontSize 11
+}
+skinparam package {
+  BorderColor #7A7A7A
+  FontSize 12
+  FontStyle bold
+}
+skinparam database {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+skinparam legend {
+  FontSize 10
+  BackgroundColor #FFFFFF
+  BorderColor #7A7A7A
+}
+skinparam actor {
+  BorderColor #3C3C3C
+  BackgroundColor #FFFFFF
+}
+
+' ============================================================================
+'  ACTORES
+' ============================================================================
+actor "Jugador" as Player
+actor "Administrador\nde Sala" as Host
+Host -|> Player
+
+' ============================================================================
+'  ADAPTADORES PRIMARIOS (driving) · PRESENTACIÓN  (export web)
+' ============================================================================
+package "presentation  ·  res://presentation/\n<size:10><i>adaptador primario (driving) · solo export web</i></size>" as PkgPresentation #EEF1F5 {
+  component "Game Table UI\n<size:10>apuntado.presentation.table</size>" as GameTableUI <<adapter>>
+  component "Card Theming\n<size:10>apuntado.presentation.theme</size>" as CardTheming <<adapter>>
+  interface "ICardTheme" as ICardTheme
+}
+
+' ============================================================================
+'  ADAPTADORES DE INFRAESTRUCTURA · RED
+' ============================================================================
+package "infrastructure.network  ·  res://infrastructure/network/\n<size:10><i>adaptador primario y secundario</i></size>" as PkgNetwork #EEF1F5 {
+  component "Network Session\n<size:10>apuntado.infrastructure.network</size>\n<size:9><i>MultiplayerAPI · RPC · WebSocketMultiplayerPeer</i></size>" as NetworkSession <<adapter>> <<Remote Proxy>>
+  interface "IMatchCommands\n<size:9>(proxy remoto, cliente)</size>" as IMatchCommandsProxy
+  interface "IPlayerViewEvents\n<size:9>«signal»</size>" as IPlayerViewEvents
+  note as NNet
+    <b>Remote Proxy</b>: el cliente reenvía cada
+    comando por RPC; el servidor valida
+    peer_id + token de sesión antes de
+    entrar al puerto <b>pCommands</b> (RNF 6).
+  end note
+}
+
+' ============================================================================
+'  NÚCLEO (componente compuesto con puertos en su borde)
+' ============================================================================
+component "Núcleo de la aplicación\n<size:10>sin dependencias de UI, red ni base de datos</size>" as Core <<subsystem>> {
+
+  portin "pCommands" as pCommands
+  portout "pPersistence" as pPersistence
+  portout "pPlayerChannel" as pPlayerChannel
+
+  package "orchestration  ·  res://orchestration/" as PkgOrchestration #FFF8EE {
+    component "Match Orchestration\n<size:10>apuntado.orchestration</size>\n<size:9><i>autoload MatchOrchestrator</i></size>" as MatchOrchestration <<mediator>> <<facade>>
+    interface "IGameEvents\n<size:9>«signal» post-commit</size>" as IGameEvents
+  }
+
+  package "match  ·  res://match/" as PkgMatch #F4F0FB {
+    component "Match Setup\n<size:10>apuntado.match.setup</size>" as MatchSetup
+    component "Match Outcome\n<size:10>apuntado.match.outcome</size>\n<size:9><i>Match (raíz de agregado)</i></size>" as MatchOutcome
+    component "Match History\n<size:10>apuntado.match.history</size>" as MatchHistory <<append-only log>>
+    interface "IMatchSetup" as IMatchSetup
+    interface "IMatchOutcome" as IMatchOutcome
+    interface "IMatchAudit" as IMatchAudit
+  }
+
+  package "turn  ·  res://turn/" as PkgTurn #FFF6E0 {
+    component "Turn Orchestration\n<size:10>apuntado.turn.orchestration</size>\n<size:9><i>Round · Turn · TurnPhase</i></size>" as TurnOrchestration <<State>>
+    interface "IRoundPlay" as IRoundPlay
+    interface "RoundEvents\n<size:9>«signal» (MoveRecord)</size>" as RoundEvents
+  }
+
+  package "scoring  ·  res://scoring/" as PkgScoring #FDECE3 {
+    component "Round Scoring\n<size:10>apuntado.scoring.round</size>" as RoundScoring
+    interface "IRoundScoring" as IRoundScoring
+  }
+
+  package "deck  ·  res://deck/" as PkgDeck #E4EFFB {
+    component "Deck Management\n<size:10>apuntado.deck</size>" as DeckManagement
+    interface "ICardZones" as ICardZones
+  }
+
+  package "notification  ·  res://notification/" as PkgNotification #E6F4F4 {
+    component "Game Notification\n<size:10>apuntado.notification</size>\n<size:9><i>filtra vista pública / mano privada</i></size>" as GameNotification
+  }
+
+  interface "IRuleResolver" as IRuleResolver
+  interface "IGameRule\n<size:9>contrato de variante</size>" as IGameRule
+
+  ' --------------------------------------------------------------------------
+  '  MOTOR DE REGLAS: subsistema con puertos propios (punto de variación)
+  ' --------------------------------------------------------------------------
+  component "Rules Engine\n<size:10>apuntado.rules  ·  res://rules/</size>" as RulesEngine <<rules engine>> {
+    portin "pRuleResolver" as pRuleResolver
+    portin "pGameRule" as pGameRule
+
+    component "Rule Selection\n<size:10>apuntado.rules.selection</size>\n<size:9><i>RuleRegistry</i></size>" as RuleSelection <<Registry / Factory>>
+
+    component "Game Modes\n<size:10>apuntado.rules.modes</size>\n<size:9><i>contrato: GameRule @abstract (Template Method)</i></size>" as GameModes {
+      component "ClassicRule\n<size:10>rules/modes/classic_rule.gd</size>\n<size:9>[CUARTA, TERNA, TERNA] · sobrante vacío</size>" as ClassicRule <<Strategy>>
+      component "ApuntadoRule\n<size:10>rules/modes/apuntado_rule.gd</size>\n<size:9>[TERNA ×3] · sobrante < 5 · umbral 101</size>" as ApuntadoRule <<Strategy>>
+    }
+
+    component "Hand Evaluation\n<size:10>apuntado.rules.evaluation</size>\n<size:9><i>HandEvaluator · Meld · CardValueTable</i></size>" as HandEvaluation <<domain service>>
+    interface "IHandEvaluation" as IHandEvaluation
+  }
+}
+
+' --- Interfaces que cruzan los puertos (fuera de los compuestos) ---
+interface "IMatchCommands\n<size:9>puerto de entrada</size>" as IMatchCommands
+interface "IMatchRepository\n<size:9>puerto de salida</size>" as IMatchRepository
+interface "IPlayerChannel\n<size:9>puerto de salida</size>" as IPlayerChannel
+
+' ============================================================================
+'  ADAPTADORES SECUNDARIOS (driven) · PERSISTENCIA
+' ============================================================================
+package "infrastructure.persistence  ·  res://infrastructure/persistence/\n<size:10><i>adaptador secundario (driven)</i></size>" as PkgPersistence #EEF1F5 {
+  component "Match Persistence\n<size:10>apuntado.infrastructure.persistence</size>\n<size:9><i>Repository + Data Mapper (2.3)</i></size>" as MatchPersistence <<adapter>>
+}
+database "BD relacional\n<size:10>esquema 2.2 · motor según ADR-04</size>" as MatchDB
+
+' ============================================================================
+'  RELACIONES
+'  provee (lollipop):  X - Interfaz        requiere (socket):  X --( Interfaz
+'  «delegate»: conector de delegación UML entre un puerto y su parte interna
+' ============================================================================
+
+' --- Actores -> presentación ---
+Player --> GameTableUI : robar · descartar\n· cerrar ronda
+Host --> GameTableUI : crear partida\n· configurar modalidad
+
+' --- Presentación ---
+CardTheming -left- ICardTheme
+GameTableUI -right-( ICardTheme
+GameTableUI --( IMatchCommandsProxy
+GameTableUI --( IPlayerViewEvents
+
+' --- Red (Remote Proxy) ---
+NetworkSession -up- IMatchCommandsProxy
+NetworkSession -up- IPlayerViewEvents
+NetworkSession --( IMatchCommands
+NetworkSession - IPlayerChannel
+
+' --- Puertos del Núcleo ---
+pCommands - IMatchCommands
+pCommands --> MatchOrchestration : «delegate»
+MatchOrchestration --> pPersistence : «delegate»
+pPersistence --( IMatchRepository
+GameNotification --> pPlayerChannel : «delegate»
+pPlayerChannel --( IPlayerChannel
+
+' --- Persistencia ---
+MatchPersistence -up- IMatchRepository
+MatchPersistence --> MatchDB : transacción por\nliquidación (2.4)
+
+' --- Orquestación (Mediator + Facade) ---
+MatchOrchestration -right- IGameEvents
+MatchOrchestration --( IMatchSetup
+MatchOrchestration --( IRuleResolver
+MatchOrchestration --( IRoundPlay
+MatchOrchestration --( IMatchOutcome
+MatchOrchestration --( IMatchAudit
+MatchOrchestration .[norank].> IGameRule : «tipo»\ninyecta la regla
+
+' --- Notificación (Observer) ---
+GameNotification -left-( IGameEvents
+
+' --- Match ---
+MatchSetup -up- IMatchSetup
+MatchOutcome -up- IMatchOutcome
+MatchHistory -up- IMatchAudit
+MatchOutcome --( IRoundPlay
+MatchOutcome --( IRoundScoring
+MatchOutcome --( IGameRule
+MatchHistory --( RoundEvents
+MatchSetup .[norank].> IGameRule : «tipo»\nRuleSettings · GameMode
+
+' --- Turn (State) ---
+TurnOrchestration -up- IRoundPlay
+TurnOrchestration - RoundEvents
+TurnOrchestration --( ICardZones
+TurnOrchestration --( IGameRule
+TurnOrchestration --( IRoundScoring
+
+' --- Scoring / Deck ---
+RoundScoring -up- IRoundScoring
+DeckManagement -up- ICardZones
+
+' --- Puertos del Motor de Reglas ---
+pRuleResolver - IRuleResolver
+pRuleResolver --> RuleSelection : «delegate»
+pGameRule - IGameRule
+pGameRule --> ClassicRule : «delegate»\nsi mode = CLASSIC
+pGameRule --> ApuntadoRule : «delegate»\nsi mode = APUNTADO
+
+' --- Interno del motor ---
+RuleSelection ..> ClassicRule : «instantiate»
+RuleSelection ..> ApuntadoRule : «instantiate»
+HandEvaluation - IHandEvaluation
+ClassicRule --( IHandEvaluation
+ApuntadoRule --( IHandEvaluation
+RuleSelection --( IHandEvaluation : inyecta\nel evaluador
+GameModes ..> DeckManagement : «tipo»\nCard
+HandEvaluation ..> DeckManagement : «tipo»\nCard
+
+' ============================================================================
+'  NOTAS
+' ============================================================================
+note right of MatchOrchestration
+  <b>Mediator + Facade</b> (ADR-01, ADR-05): <b>invoca, no decide</b>.
+  1) A3: IRuleResolver.resolve(mode) e inyecta IGameRule
+  2) delega el comando al módulo dueño (llamada síncrona)
+  3) persiste vía pPersistence (snapshot / liquidación)
+  4) emite IGameEvents <b>solo tras el commit</b>
+end note
+
+note bottom of GameModes
+  <b>Desacoplamiento orquestador ↔ reglas</b> (ADR-02, ADR-03)
+  • Turn Orchestration y Match Outcome solo conocen <b>IGameRule</b>,
+    expuesto por el puerto <b>pGameRule</b>; nunca una regla concreta.
+  • Rule Selection es el único que instancia estrategias.
+  • ClassicRule y ApuntadoRule <b>no dependen entre sí</b>
+    (verificado por fitness function, sección 5.2).
+  • Nueva variante = 1 componente en rules/modes + 1 valor
+    en GameMode + 1 register() (≤ 2 archivos existentes).
+  • Las reglas no tocan persistencia ni red: reciben Array[Card]
+    y devuelven value objects (ValidationResult).
+end note
+
+note bottom of MatchPersistence
+  Implementa IMatchRepository (DIP).
+  La liquidación de ronda (penalizaciones +
+  eliminaciones) se guarda en <b>una sola</b>
+  transacción: sin marcadores parciales (2.4).
+end note
+
+note as NContracts
+  <b>Contratos de las interfaces que cruzan puertos o separan módulos</b>
+  |= Interfaz |= Provee |= Requiere |= Operaciones principales |
+  | IMatchCommands | Núcleo (pCommands) | Network Session | create_match(config) · join(match_id, player) · draw_from_deck(player_id)\ndraw_from_discard(player_id) · discard(player_id, card_id) · declare_closing(player_id, card_id) |
+  | IGameRule | Rules Engine (pGameRule) | Turn Orchestration, Match Outcome | validate_closing(cards: Array[Card], discard: Card): ValidationResult\npenalty_for(cards): int · is_eliminated(total: int): bool · is_match_over(active: int): bool |
+  | IRuleResolver | Rules Engine (pRuleResolver) | Match Orchestration | resolve(mode: GameMode, settings: RuleSettings): GameRule |
+  | IMatchRepository | Match Persistence | Núcleo (pPersistence) | load(match_id): Match · save_snapshot(match) · save_settlement(match, settlement) <i>[atómica]</i> |
+  | IPlayerChannel | Network Session | Núcleo (pPlayerChannel) | send_private(player_id, hand_view) · broadcast(public_view) |
+  | IGameEvents «signal» | Match Orchestration | Game Notification | turn_changed · move_performed · round_closed · player_eliminated · match_finished |
+  | IRoundPlay | Turn Orchestration | Match Orchestration, Match Outcome | start(rng) · draw_*(player_id) · discard(...) · declare_closing(...) · settle(): RoundSettlement |
+  | IRoundScoring | Round Scoring | Turn Orchestration, Match Outcome | record(settlement) · total_of(player_id): int · scoreboard(): Scoreboard |
+  | IHandEvaluation | Hand Evaluation | ClassicRule, ApuntadoRule | best_melds(cards, pattern, values): Array[Meld] · points_of(cards, values): int |
+end note
+
+' ============================================================================
+'  LEYENDA
+' ============================================================================
+legend bottom
+  <b>Leyenda</b>
+  |= Notación |= Significado |
+  | —○ (lollipop) | Interfaz <b>provista</b> |
+  | —( (socket) | Interfaz <b>requerida</b>; ○( = ensamblaje ball-and-socket |
+  | ▫ en el borde | <b>Puerto</b> UML: punto de interacción del componente compuesto con su entorno |
+  | → «delegate» | Conector de delegación: el puerto reenvía a la parte interna que realiza el contrato |
+  | - - -> «instantiate» | Solo Rule Selection crea reglas concretas (Registry / Factory) |
+  | - - -> «tipo» | Dependencia solo de tipo (contrato o value object) |
+  | «subsystem» / «rules engine» | Componentes compuestos con puertos propios |
+  | Paquete | Módulo del monolito modular por dominio · carpeta Godot res:// |
+  | «adapter» (gris) | Adaptador hexagonal fuera del núcleo |
+  | «Strategy» / «State» | Puntos de variación polimórfica (borde verde / ámbar) |
+  | «signal» | Interfaz de eventos con señales de Godot (Observer) |
+endlegend
+
+@enduml

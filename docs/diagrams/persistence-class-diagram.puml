@@ -1,0 +1,369 @@
+@startuml persistence-class-diagram
+' ============================================================================
+'  E2 · 2.3 Diagrama UML de Clases de Entidad y Mapeo de Persistencia
+'  Sistema Digital de Juego de Cartas (Clásica 4-3-3 & Apuntado a 101)
+'  Continúa el diagrama de dominio 4.4 (E1) hacia la persistencia.
+'  Patrones: Repository (puerto IMatchRepository, sección 1.3) + Data Mapper.
+'  Las entidades de persistencia son anémicas: solo datos, sin reglas de juego.
+'  Implementación objetivo: Godot 4.5+ / GDScript · BD relacional (ADR-04)
+' ============================================================================
+
+title <size:18><b>2.3 Diagrama UML de Clases de Entidad y Mapeo de Persistencia</b></size>\n<size:12>Dominio (4.4) → Repository + Data Mapper → Entidades de persistencia → Esquema relacional (2.2) · Godot 4.5+ / GDScript</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 12
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #333333
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 50
+skinparam padding 2
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  StereotypeFontSize 10
+  StereotypeFontColor #555555
+}
+skinparam class<<aggregate root>> {
+  BorderColor #5B3F99
+  BorderThickness 2
+}
+skinparam class<<persistence entity>> {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+  BorderThickness 1.5
+}
+skinparam class<<table view>> {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+  BorderStyle dashed
+}
+skinparam class<<repository>> {
+  BorderColor #C05600
+  BorderThickness 2
+}
+skinparam package {
+  BorderColor #7A7A7A
+  FontSize 13
+  FontStyle bold
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+hide empty methods
+hide empty fields
+
+' ============================================================================
+'  1. DOMINIO (de 4.4, solo las clases que se persisten; atributos resumidos)
+' ============================================================================
+package "Dominio  ·  núcleo (diagrama 4.4, sin cambios)" as PkgDomain #FBFBF7 {
+  class "Match" as Match <<aggregate root>> {
+    id · host_id · status
+  }
+  class "MatchConfig" as MatchConfig <<Resource>> {
+    mode · cards_per_player · deck_count
+  }
+  class "RuleSettings" as RuleSettings <<Resource>> {
+    elimination_threshold · max_leftover_points · jokers_enabled
+  }
+  class "Player" as Player <<entity>> {
+    id · nickname · seat · status
+  }
+  class "Round" as Round <<entity>> {
+    number · is_closed()
+  }
+  class "Turn / TurnPhase" as Turn <<State>> {
+    player_id · number · fase
+  }
+  class "Hand" as Hand <<entity>> {
+    owner_id · cards()
+  }
+  class "Deck / DiscardPile" as Zones <<entity>> {
+    _cards (orden)
+  }
+  class "Card" as Card <<value object>> {
+    instance_id · rank · suit
+  }
+  class "MoveRecord" as MoveRecord <<value object>> {
+    sequence · player_id · action · card_id
+  }
+  class "RoundSettlement" as RoundSettlement <<value object>> {
+    closer_id · penalties
+  }
+  class "Scoreboard" as Scoreboard <<value object>> {
+    from_settlements() · total_of()
+  }
+}
+
+' ============================================================================
+'  2. PUERTO + MAPEO  (Repository + Data Mapper)
+' ============================================================================
+package "Puerto de salida  ·  res://orchestration/" as PkgPort #FFF8EE {
+  abstract class "IMatchRepository" as IMatchRepository <<port>> <<@abstract>> {
+    + {abstract} load(match_id: String): Match
+    + {abstract} save_snapshot(match: Match): void
+    + {abstract} save_settlement(match: Match, settlement: RoundSettlement): void
+  }
+}
+
+package "Adaptador de persistencia  ·  res://infrastructure/persistence/" as PkgAdapter #EEF1F5 {
+  class "SqlMatchRepository" as SqlMatchRepository <<repository>> {
+    - _db: SqlGateway
+    - _mappers: MatchMapper
+    --
+    + load(match_id: String): Match
+    + save_snapshot(match: Match): void
+    + save_settlement(match: Match, settlement: RoundSettlement): void
+  }
+  class "MatchMapper" as MatchMapper <<data mapper>> {
+    + to_entities(match: Match): MatchRecordSet
+    + to_domain(rows: MatchRecordSet, rule: GameRule): Match
+  }
+  class "MatchRecordSet" as MatchRecordSet <<DTO>> {
+    + session: GameSessionEntity
+    + participants: Array[MatchParticipantEntity]
+    + current_round: RoundEntity
+    + hands: Array[HandStateEntity]
+    + placements: Array[CardPlacementEntity]
+    + new_moves: Array[TurnMoveEntity]
+  }
+  class "SqlGateway" as SqlGateway <<gateway>> {
+    + query(sql: String, params: Array): Array[Dictionary]
+    + execute(sql: String, params: Array): int
+    + in_transaction(work: Callable): void
+  }
+  note bottom of SqlGateway
+    Único punto que conoce el driver
+    de la BD (addon según ADR-04).
+    in_transaction(): BEGIN · work · COMMIT,
+    o ROLLBACK si work falla (sección 2.4).
+  end note
+}
+
+' ============================================================================
+'  3. ENTIDADES DE PERSISTENCIA (anémicas) · una clase por tabla del esquema 2.2
+' ============================================================================
+package "Entidades de persistencia  ·  res://infrastructure/persistence/entities/" as PkgEntities #F5F7FA {
+
+  class "PlayerEntity\n<size:10>tabla <b>player</b> (Jugador)</size>" as PlayerEntity <<persistence entity>> {
+    + player_id: int «PK»
+    + username: String «UQ»
+    + password_hash: String
+    + created_at: int
+  }
+
+  class "GameSessionEntity\n<size:10>tabla <b>match_session</b> (Partida)</size>" as GameSessionEntity <<persistence entity>> {
+    + session_id: String «PK» UUID
+    + host_player_id: int «FK player»
+    + mode: String {CLASSIC | APUNTADO}
+    + status: String {WAITING | IN_PROGRESS | FINISHED}
+    + cards_per_player: int
+    + deck_count: int
+    + elimination_threshold: int
+    + max_leftover_points: int
+    + jokers_enabled: bool
+    + winner_participant_id: int «FK» [0..1]
+    + version: int
+    + created_at: int
+    + finished_at: int [0..1]
+  }
+
+  class "MatchParticipantEntity\n<size:10>tabla <b>match_participant</b></size>" as MatchParticipantEntity <<persistence entity>> {
+    + participant_id: int «PK»
+    + session_id: String «FK match_session»
+    + player_id: int «FK player»
+    + seat: int {0..4}
+    + nickname: String
+    + status: String {ACTIVE | ELIMINATED}
+    + eliminated_in_round: int [0..1]
+    + joined_at: int
+    --
+    UQ (session_id, seat)
+    UQ (session_id, player_id)
+  }
+
+  class "RoundEntity\n<size:10>tabla <b>round</b> (Ronda)</size>" as RoundEntity <<persistence entity>> {
+    + round_id: int «PK»
+    + session_id: String «FK match_session»
+    + round_number: int
+    + status: String {IN_PROGRESS | CLOSED | SETTLED}
+    + turn_participant_id: int «FK» [0..1]
+    + turn_number: int
+    + turn_phase: String {DRAW | DISCARD | END}
+    + closer_participant_id: int «FK» [0..1]
+    + started_at: int
+    + closed_at: int [0..1]
+    --
+    UQ (session_id, round_number)
+  }
+
+  class "HandStateEntity\n<size:10>tabla <b>hand_state</b> (Mano_Jugador)</size>" as HandStateEntity <<persistence entity>> {
+    + hand_id: int «PK»
+    + round_id: int «FK round»
+    + participant_id: int «FK match_participant»
+    + is_closing_hand: bool
+    --
+    UQ (round_id, participant_id)
+  }
+
+  class "CardEntity\n<size:10>tabla <b>card</b> (catálogo fijo)</size>" as CardEntity <<persistence entity>> {
+    + card_instance_id: int «PK»
+    + rank: int {0..13}
+    + suit: String [0..1]
+  }
+
+  class "CardPlacementEntity\n<size:10>tabla <b>card_placement</b></size>" as CardPlacementEntity <<persistence entity>> {
+    + round_id: int «PK, FK round»
+    + card_instance_id: int «PK, FK card»
+    + zone: String {DECK | DISCARD | HAND}
+    + hand_id: int «FK hand_state» [0..1]
+    + position: int
+    --
+    CHECK (zone = 'HAND') = (hand_id IS NOT NULL)
+  }
+
+  class "TurnMoveEntity\n<size:10>tabla <b>turn_move</b> (Turno_Jugada)</size>" as TurnMoveEntity <<persistence entity>> {
+    + move_id: int «PK»
+    + round_id: int «FK round»
+    + sequence: int
+    + participant_id: int «FK match_participant»
+    + action: String {DRAW_FROM_DECK | DRAW_FROM_DISCARD | DISCARD | DECLARE_CLOSING}
+    + card_instance_id: int «FK card» [0..1]
+    + created_at_ms: int
+    --
+    UQ (round_id, sequence)
+  }
+
+  class "RoundScoreEntity\n<size:10>tabla <b>round_score</b></size>" as RoundScoreEntity <<persistence entity>> {
+    + round_id: int «PK, FK round»
+    + participant_id: int «PK, FK match_participant»
+    + score_delta: int
+  }
+
+  class "CumulativeScoreView\n<size:10>vista <b>v_cumulative_score</b> (Puntaje_Acumulado)</size>" as CumulativeScoreView <<table view>> {
+    + session_id: String
+    + participant_id: int
+    + total: int = SUM(score_delta)
+    + rounds_played: int
+  }
+}
+
+' ============================================================================
+'  RELACIONES · entidades (multiplicidades = cardinalidades del esquema 2.2)
+' ============================================================================
+PlayerEntity "1" -- "0..*" MatchParticipantEntity : participa >
+PlayerEntity "1" -- "0..*" GameSessionEntity : anfitrión de >
+GameSessionEntity "1" *-- "5" MatchParticipantEntity : ocupa asientos <
+GameSessionEntity "1" *-- "0..*" RoundEntity : rondas
+RoundEntity "1" *-- "2..5" HandStateEntity : manos activas
+MatchParticipantEntity "1" -- "0..*" HandStateEntity
+RoundEntity "1" *-- "0..*" TurnMoveEntity : jugadas
+MatchParticipantEntity "1" -- "0..*" TurnMoveEntity : realiza >
+RoundEntity "1" *-- "0..*" RoundScoreEntity : liquidación
+MatchParticipantEntity "1" -- "0..*" RoundScoreEntity
+RoundEntity "1" *-- "0..108" CardPlacementEntity : ubica cartas
+CardEntity "1" -- "0..*" CardPlacementEntity
+HandStateEntity "0..1" -- "0..11" CardPlacementEntity : contiene
+CumulativeScoreView ..> RoundScoreEntity : «derive»\nSUM por participante
+
+' ============================================================================
+'  RELACIONES · Repository + Data Mapper
+' ============================================================================
+IMatchRepository <|.. SqlMatchRepository
+SqlMatchRepository --> MatchMapper
+SqlMatchRepository --> SqlGateway
+MatchMapper ..> MatchRecordSet : «create»
+MatchRecordSet ..> GameSessionEntity
+MatchRecordSet ..> RoundEntity
+IMatchRepository ..> Match : carga / guarda
+
+' ============================================================================
+'  TRAZABILIDAD · dominio → entidad  («maps to», dependencias punteadas)
+' ============================================================================
+Match .right[#5B3F99].> GameSessionEntity : «maps to»
+MatchConfig .right[#5B3F99].> GameSessionEntity : «maps to»\n(columnas)
+RuleSettings .right[#5B3F99].> GameSessionEntity : «maps to»\n(columnas)
+Player .right[#5B3F99].> MatchParticipantEntity : «maps to»
+Round .right[#5B3F99].> RoundEntity : «maps to»
+Turn .right[#5B3F99].> RoundEntity : «maps to»\nturn_*
+Hand .right[#5B3F99].> HandStateEntity : «maps to»
+Zones .right[#5B3F99].> CardPlacementEntity : «maps to»\nzone + position
+Card .right[#5B3F99].> CardEntity : «maps to»
+MoveRecord .right[#5B3F99].> TurnMoveEntity : «maps to»
+RoundSettlement .right[#5B3F99].> RoundScoreEntity : «maps to»\n1 fila por jugador
+Scoreboard .right[#5B3F99].> CumulativeScoreView : «maps to»
+
+' --- columna vertical del dominio (solo layout) ---
+Match -[hidden]down- MatchConfig
+MatchConfig -[hidden]down- RuleSettings
+RuleSettings -[hidden]down- Player
+Player -[hidden]down- Round
+Round -[hidden]down- Turn
+Turn -[hidden]down- Hand
+Hand -[hidden]down- Zones
+Zones -[hidden]down- Card
+Card -[hidden]down- MoveRecord
+MoveRecord -[hidden]down- RoundSettlement
+RoundSettlement -[hidden]down- Scoreboard
+
+' ============================================================================
+'  NOTAS DE DISEÑO
+' ============================================================================
+note right of GameSessionEntity
+  <b>Match + MatchConfig + RuleSettings</b> se aplanan en una
+  sola tabla: todos sus atributos dependen solo de session_id
+  (relación 1:1, cumple 3FN).
+  <b>GameRule no se persiste</b>: es comportamiento. Al cargar,
+  RuleRegistry.resolve(mode, settings) reconstruye la estrategia.
+  Una variante nueva = un valor nuevo en <i>mode</i>: <b>sin cambio de esquema</b>.
+  <b>version</b>: control optimista de concurrencia (sección 2.4).
+end note
+
+note right of CardPlacementEntity
+  <b>Invariante de conservación en la BD:</b>
+  PK (round_id, card_instance_id) impide que una carta
+  esté en dos lugares de la misma ronda.
+  Reemplaza <i>cards_data</i> en JSON: cumple 1FN y
+  permite reconstruir Deck, DiscardPile y cada Hand
+  (orden = position) para reconexión (RNF 4).
+end note
+
+note right of RoundScoreEntity
+  Guarda solo el <b>delta de la ronda</b> por jugador
+  (penalización o +10 de quien cierra, RD07/RD13).
+  El acumulado <b>no se almacena</b>: v_cumulative_score
+  lo deriva, igual que Scoreboard.from_settlements()
+  en el dominio. Evita la dependencia transitiva (3FN)
+  y que el total contradiga el historial.
+  Clásica: 1 ronda por partida. Apuntado: N rondas
+  hasta el umbral (relación 1:N match_session → round).
+end note
+
+note left of SqlMatchRepository
+  <b>Data Mapper:</b> el dominio no sabe que existe SQL;
+  las entidades no conocen las reglas.
+  save_settlement() escribe en <b>una transacción</b>:
+  round.status = SETTLED · filas round_score ·
+  match_participant.status = ELIMINATED · match_session
+  (status, winner, version + 1). Todo o nada.
+end note
+
+legend bottom
+  <b>Leyenda</b>
+  |= Elemento |= Significado |
+  | «persistence entity» (gris) | Clase de datos anémica: una por tabla del esquema 2.2; sin lógica de juego |
+  | «table view» (borde punteado) | Vista SQL derivada; no se escribe |
+  | «PK» / «FK tabla» / UQ | Clave primaria / foránea / restricción de unicidad |
+  | [0..1] | Columna anulable |
+  | {A ∣ B} | Dominio cerrado del valor (CHECK) |
+  | - - -> «maps to» (morado) | Trazabilidad: qué clase del dominio 4.4 se guarda en qué entidad |
+  | «repository» / «data mapper» | Implementación del puerto IMatchRepository (sección 1.3) |
+  | Tiempos (int) | Epoch en ms (Time.get_unix_time_from_system) |
+endlegend
+
+@enduml

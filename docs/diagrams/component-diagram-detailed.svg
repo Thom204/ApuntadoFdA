@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="2265px" preserveAspectRatio="none" style="width:2611px;height:2265px;background:#FFFFFF;" version="1.1" viewBox="0 0 2611 2265" width="2611px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="46.2988" id="_title" style="stroke:none;stroke-width:1.0;" width="877" x="860" y="5"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="18" font-weight="bold" lengthAdjust="spacing" textLength="592" x="1002.5" y="27.4375">1.3 Diagrama UML de Componentes Detallado (Interfaces y Puertos)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="867" x="865" y="43.4043">Sistema Digital de Juego de Cartas · Clásica 4-3-3 &amp; Apuntado a 101 · Monolito modular por dominio + puertos y adaptadores · Godot 4.5+ / GDScript</text><!--MD5=[8b852caa02d3aca4c286f73f1892cf48]
+cluster PkgPresentation--><g id="cluster_PkgPresentation"><path d="M309.5,301.2988 L532.5,301.2988 A3.75,3.75 0 0 1 535,303.7988 L542,333.918 L788.5,333.918 A2.5,2.5 0 0 1 791,336.418 L791,428.7988 A2.5,2.5 0 0 1 788.5,431.2988 L309.5,431.2988 A2.5,2.5 0 0 1 307,428.7988 L307,303.7988 A2.5,2.5 0 0 1 309.5,301.2988 " fill="#EEF1F5" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="307" x2="542" y1="333.918" y2="333.918"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="200" x="322" y="314.9238">presentation  ·  res://presentation/</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" font-weight="bold" lengthAdjust="spacing" textLength="222" x="311" y="327.5059">adaptador primario (driving) · solo export web</text></g><!--MD5=[d5bdba0205a573a48af7a1264d709d8a]
+cluster PkgNetwork--><g id="cluster_PkgNetwork"><path d="M8.5,464.2988 L326.5,464.2988 A3.75,3.75 0 0 1 329,466.7988 L336,496.918 L542.5,496.918 A2.5,2.5 0 0 1 545,499.418 L545,727.7988 A2.5,2.5 0 0 1 542.5,730.2988 L8.5,730.2988 A2.5,2.5 0 0 1 6,727.7988 L6,466.7988 A2.5,2.5 0 0 1 8.5,464.2988 " fill="#EEF1F5" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="6" x2="336" y1="496.918" y2="496.918"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="317" x="10" y="477.9238">infrastructure.network  ·  res://infrastructure/network/</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" font-weight="bold" lengthAdjust="spacing" textLength="158" x="89.5" y="490.5059">adaptador primario y secundario</text></g><!--MD5=[2c2e2644034c00788261e03c85b06837]
+cluster Core--><g id="cluster_Core"><rect fill="#FCFCFC" height="1266.5" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:2.0;" width="1637.5" x="438" y="790.2988"/><rect fill="#FCFCFC" height="10" style="stroke:#3C3C3C;stroke-width:2.0;" width="15" x="2055.5" y="795.2988"/><rect fill="#FCFCFC" height="2" style="stroke:#3C3C3C;stroke-width:2.0;" width="4" x="2053.5" y="797.2988"/><rect fill="#FCFCFC" height="2" style="stroke:#3C3C3C;stroke-width:2.0;" width="4" x="2053.5" y="801.2988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="63" x="1225.25" y="812.9863">«subsystem»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="133" x="1190.25" y="827.0234">Núcleo de la aplicación</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="214" x="1149.75" y="839.6055">sin dependencias de UI, red ni base de datos</text></g><!--MD5=[98422f19b17e52fbbcdd2506938985d5]
+cluster PkgOrchestration--><g id="cluster_PkgOrchestration"><path d="M1017.5,871.2988 L1226.5,871.2988 A3.75,3.75 0 0 1 1229,873.7988 L1236,891.8184 L1264.5,891.8184 A2.5,2.5 0 0 1 1267,894.3184 L1267,997.7988 A2.5,2.5 0 0 1 1264.5,1000.2988 L1017.5,1000.2988 A2.5,2.5 0 0 1 1015,997.7988 L1015,873.7988 A2.5,2.5 0 0 1 1017.5,871.2988 " fill="#FFF8EE" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="1015" x2="1236" y1="891.8184" y2="891.8184"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="208" x="1019" y="884.9238">orchestration  ·  res://orchestration/</text></g><!--MD5=[16ec923b054f1fb3ccc1ddcb50cb9929]
+cluster PkgMatch--><g id="cluster_PkgMatch"><path d="M464.5,1046.2988 L591.5,1046.2988 A3.75,3.75 0 0 1 594,1048.7988 L601,1066.8184 L1035.5,1066.8184 A2.5,2.5 0 0 1 1038,1069.3184 L1038,1267.2988 A2.5,2.5 0 0 1 1035.5,1269.7988 L464.5,1269.7988 A2.5,2.5 0 0 1 462,1267.2988 L462,1048.7988 A2.5,2.5 0 0 1 464.5,1046.2988 " fill="#F4F0FB" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="462" x2="601" y1="1066.8184" y2="1066.8184"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="126" x="466" y="1059.9238">match  ·  res://match/</text></g><!--MD5=[a2f0ae162a7925a454f27f32e5b6ea5a]
+cluster PkgTurn--><g id="cluster_PkgTurn"><path d="M558.5,1353.7988 L659.5,1353.7988 A3.75,3.75 0 0 1 662,1356.2988 L669,1374.3184 L817.5,1374.3184 A2.5,2.5 0 0 1 820,1376.8184 L820,1692.2988 A2.5,2.5 0 0 1 817.5,1694.7988 L558.5,1694.7988 A2.5,2.5 0 0 1 556,1692.2988 L556,1356.2988 A2.5,2.5 0 0 1 558.5,1353.7988 " fill="#FFF6E0" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="556" x2="669" y1="1374.3184" y2="1374.3184"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="100" x="560" y="1367.4238">turn  ·  res://turn/</text></g><!--MD5=[578990977d94c3f28ddbbbde08edbfd0]
+cluster PkgScoring--><g id="cluster_PkgScoring"><path d="M504.5,1759.2988 L647.5,1759.2988 A3.75,3.75 0 0 1 650,1761.7988 L657,1779.8184 L685.5,1779.8184 A2.5,2.5 0 0 1 688,1782.3184 L688,2030.2988 A2.5,2.5 0 0 1 685.5,2032.7988 L504.5,2032.7988 A2.5,2.5 0 0 1 502,2030.2988 L502,1761.7988 A2.5,2.5 0 0 1 504.5,1759.2988 " fill="#FDECE3" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="502" x2="657" y1="1779.8184" y2="1779.8184"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="142" x="506" y="1772.9238">scoring  ·  res://scoring/</text></g><!--MD5=[28881aa2764ad40dd5195ebe3650e7bc]
+cluster PkgDeck--><g id="cluster_PkgDeck"><path d="M745.5,1759.2988 L858.5,1759.2988 A3.75,3.75 0 0 1 861,1761.7988 L868,1779.8184 L920.5,1779.8184 A2.5,2.5 0 0 1 923,1782.3184 L923,2030.2988 A2.5,2.5 0 0 1 920.5,2032.7988 L745.5,2032.7988 A2.5,2.5 0 0 1 743,2030.2988 L743,1761.7988 A2.5,2.5 0 0 1 745.5,1759.2988 " fill="#E4EFFB" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="743" x2="868" y1="1779.8184" y2="1779.8184"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="112" x="747" y="1772.9238">deck  ·  res://deck/</text></g><!--MD5=[79325c94d234eae01f5baba69383afdd]
+cluster PkgNotification--><g id="cluster_PkgNotification"><path d="M1638.5,877.2988 L1821.5,877.2988 A3.75,3.75 0 0 1 1824,879.7988 L1831,897.8184 L1853.5,897.8184 A2.5,2.5 0 0 1 1856,900.3184 L1856,991.7988 A2.5,2.5 0 0 1 1853.5,994.2988 L1638.5,994.2988 A2.5,2.5 0 0 1 1636,991.7988 L1636,879.7988 A2.5,2.5 0 0 1 1638.5,877.2988 " fill="#E6F4F4" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="1636" x2="1831" y1="897.8184" y2="897.8184"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="182" x="1640" y="890.9238">notification  ·  res://notification/</text></g><!--MD5=[2ea66095538c2d753708d4ca15ec6139]
+cluster RulesEngine--><g id="cluster_RulesEngine"><rect fill="#F1F9F3" height="655" rx="2.5" ry="2.5" style="stroke:#1B7F3B;stroke-width:2.0;" width="740" x="1072" y="1219.2988"/><rect fill="#F1F9F3" height="10" style="stroke:#1B7F3B;stroke-width:2.0;" width="15" x="1792" y="1224.2988"/><rect fill="#F1F9F3" height="2" style="stroke:#1B7F3B;stroke-width:2.0;" width="4" x="1790" y="1226.2988"/><rect fill="#F1F9F3" height="2" style="stroke:#1B7F3B;stroke-width:2.0;" width="4" x="1790" y="1230.2988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="70" x="1407" y="1241.9863">«rules engine»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="74" x="1405" y="1256.0234">Rules Engine</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="141" x="1371.5" y="1268.6055">apuntado.rules  ·  res://rules/</text></g><!--MD5=[369c60cd0986f347fdf39d3f6593f3a0]
+cluster GameModes--><g id="cluster_GameModes"><rect fill="#FFFFFF" height="168" rx="2.5" ry="2.5" style="stroke:#7A7A7A;stroke-width:1.0;" width="549" x="1221" y="1534.7988"/><rect fill="#FFFFFF" height="10" style="stroke:#7A7A7A;stroke-width:1.0;" width="15" x="1750" y="1539.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#7A7A7A;stroke-width:1.0;" width="4" x="1748" y="1541.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#7A7A7A;stroke-width:1.0;" width="4" x="1748" y="1545.7988"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="77" x="1457" y="1559.4238">Game Modes</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="110" x="1440.5" y="1572.0059">apuntado.rules.modes</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" font-style="italic" font-weight="bold" lengthAdjust="spacing" textLength="223" x="1384" y="1583.1367">contrato: GameRule @abstract (Template Method)</text></g><!--MD5=[26d8e55f90d216f8c6be690788983b2e]
+cluster PkgPersistence--><g id="cluster_PkgPersistence"><path d="M2133.5,1327.7988 L2495.5,1327.7988 A3.75,3.75 0 0 1 2498,1330.2988 L2505,1360.418 L2505.5,1360.418 A2.5,2.5 0 0 1 2508,1362.918 L2508,1466.2988 A2.5,2.5 0 0 1 2505.5,1468.7988 L2133.5,1468.7988 A2.5,2.5 0 0 1 2131,1466.2988 L2131,1330.2988 A2.5,2.5 0 0 1 2133.5,1327.7988 " fill="#EEF1F5" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="2131" x2="2505" y1="1360.418" y2="1360.418"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="361" x="2135" y="1341.4238">infrastructure.persistence  ·  res://infrastructure/persistence/</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" font-weight="bold" lengthAdjust="spacing" textLength="148" x="2241.5" y="1354.0059">adaptador secundario (driven)</text></g><!--MD5=[0168b5a45596b69f7a7f3348de120edd]
+entity GameTableUI--><g id="elem_GameTableUI"><rect fill="#F2F4F7" height="68.7188" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:0.5;" width="173" x="323.5" y="346.2988"/><rect fill="#F2F4F7" height="10" style="stroke:#5A6B7F;stroke-width:0.5;" width="15" x="476.5" y="351.2988"/><rect fill="#F2F4F7" height="2" style="stroke:#5A6B7F;stroke-width:0.5;" width="4" x="474.5" y="353.2988"/><rect fill="#F2F4F7" height="2" style="stroke:#5A6B7F;stroke-width:0.5;" width="4" x="474.5" y="357.2988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="49" x="380.5" y="375.9863">«adapter»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="84" x="338.5" y="390.0234">Game Table UI</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="133" x="338.5" y="402.6055">apuntado.presentation.table</text></g><!--MD5=[920191d109c7050896fe4ea2b9300078]
+entity CardTheming--><g id="elem_CardTheming"><rect fill="#F2F4F7" height="68.7188" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:0.5;" width="180" x="595" y="346.2988"/><rect fill="#F2F4F7" height="10" style="stroke:#5A6B7F;stroke-width:0.5;" width="15" x="755" y="351.2988"/><rect fill="#F2F4F7" height="2" style="stroke:#5A6B7F;stroke-width:0.5;" width="4" x="753" y="353.2988"/><rect fill="#F2F4F7" height="2" style="stroke:#5A6B7F;stroke-width:0.5;" width="4" x="753" y="357.2988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="49" x="655.5" y="375.9863">«adapter»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="81" x="610" y="390.0234">Card Theming</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="140" x="610" y="402.6055">apuntado.presentation.theme</text></g><!--MD5=[3278a109f127356c6adb1a218725d399]
+entity ICardTheme--><g id="elem_ICardTheme"><ellipse cx="546" cy="380.7988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="64" x="514" y="408.4551">ICardTheme</text></g><!--MD5=[539a329b4100d24449d4cc72b781c41d]
+entity NetworkSession--><g id="elem_NetworkSession"><rect fill="#F2F4F7" height="79.6084" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:0.5;" width="253" x="254.5" y="634.2988"/><rect fill="#F2F4F7" height="10" style="stroke:#5A6B7F;stroke-width:0.5;" width="15" x="487.5" y="639.2988"/><rect fill="#F2F4F7" height="2" style="stroke:#5A6B7F;stroke-width:0.5;" width="4" x="485.5" y="641.2988"/><rect fill="#F2F4F7" height="2" style="stroke:#5A6B7F;stroke-width:0.5;" width="4" x="485.5" y="645.2988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="127" x="312.5" y="663.9863">«adapter»«Remote Proxy»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="96" x="269.5" y="678.0234">Network Session</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="154" x="269.5" y="690.6055">apuntado.infrastructure.network</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" font-style="italic" lengthAdjust="spacing" textLength="213" x="269.5" y="701.7363">MultiplayerAPI · RPC · WebSocketMultiplayerPeer</text></g><!--MD5=[85b78c228fc20d434d380283bfa2fa87]
+entity IMatchCommandsProxy--><g id="elem_IMatchCommandsProxy"><ellipse cx="473" cy="546.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="97" x="424.5" y="573.9551">IMatchCommands</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" lengthAdjust="spacing" textLength="95" x="424.5" y="585.3271">(proxy remoto, cliente)</text></g><!--MD5=[c9674fac58d46f03d377937fe63a10ad]
+entity IPlayerViewEvents--><g id="elem_IPlayerViewEvents"><ellipse cx="321" cy="546.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="97" x="272.5" y="573.9551">IPlayerViewEvents</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" lengthAdjust="spacing" textLength="35" x="272.5" y="585.3271">«signal»</text></g><g id="elem_NNet"><path d="M21.5,517.2988 L21.5,575.6973 L224.5,575.6973 L224.5,527.2988 L214.5,517.2988 L21.5,517.2988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><path d="M214.5,517.2988 L214.5,527.2988 L224.5,527.2988 L214.5,517.2988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="68" x="27.5" y="531.9863">Remote Proxy</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="114" x="95.5" y="531.9863">: el cliente reenvía cada</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="173" x="27.5" y="544.0859">comando por RPC; el servidor valida</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="166" x="27.5" y="556.1855">peer_id + token de sesión antes de</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="74" x="27.5" y="568.2852">entrar al puerto</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="61" x="104.5" y="568.2852">pCommands</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="40" x="168.5" y="568.2852">(RNF 6).</text></g><text fill="#000000" font-family="DejaVu Sans" font-size="12" lengthAdjust="spacing" textLength="77" x="1030.5" y="769.4688">pCommands</text><rect fill="#F1F1F1" height="12" style="stroke:#181818;stroke-width:1.5;" width="12" x="1063" y="784.2988"/><text fill="#000000" font-family="DejaVu Sans" font-size="12" lengthAdjust="spacing" textLength="82" x="1887.5" y="1084.4688">pPersistence</text><rect fill="#F1F1F1" height="12" style="stroke:#181818;stroke-width:1.5;" width="12" x="1922.5" y="1099.2988"/><text fill="#000000" font-family="DejaVu Sans" font-size="12" lengthAdjust="spacing" textLength="97" x="2027" y="1084.4688">pPlayerChannel</text><rect fill="#F1F1F1" height="12" style="stroke:#181818;stroke-width:1.5;" width="12" x="2069.5" y="1099.2988"/><!--MD5=[50ea0b4ca6201b2fb77a566fe0ab1ad4]
+entity IRuleResolver--><g id="elem_IRuleResolver"><ellipse cx="1871" cy="1219.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="71" x="1835.5" y="1246.9551">IRuleResolver</text></g><!--MD5=[fa6a9cc89d68ed1732307b9ace459e19]
+entity IGameRule--><g id="elem_IGameRule"><ellipse cx="948" cy="1818.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="56" x="906" y="1845.9551">IGameRule</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" lengthAdjust="spacing" textLength="84" x="906" y="1857.3271">contrato de variante</text></g><!--MD5=[6b1a0c329f5258c41841cd0c57074066]
+entity MatchOrchestration--><g id="elem_MatchOrchestration"><rect fill="#FFF4E5" height="79.6084" rx="2.5" ry="2.5" style="stroke:#C05600;stroke-width:2.0;" width="161" x="1031.5" y="904.2988"/><rect fill="#FFF4E5" height="10" style="stroke:#C05600;stroke-width:2.0;" width="15" x="1172.5" y="909.2988"/><rect fill="#FFF4E5" height="2" style="stroke:#C05600;stroke-width:2.0;" width="4" x="1170.5" y="911.2988"/><rect fill="#FFF4E5" height="2" style="stroke:#C05600;stroke-width:2.0;" width="4" x="1170.5" y="915.2988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="100" x="1057" y="933.9863">«mediator»«facade»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="1046.5" y="948.0234">Match Orchestration</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="111" x="1046.5" y="960.6055">apuntado.orchestration</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" font-style="italic" lengthAdjust="spacing" textLength="121" x="1046.5" y="971.7363">autoload MatchOrchestrator</text></g><!--MD5=[6ddb4a942dcea54d6d6f3a80381d86ce]
+entity IGameEvents--><g id="elem_IGameEvents"><ellipse cx="1242" cy="944.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="69" x="1196" y="971.9551">IGameEvents</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" lengthAdjust="spacing" textLength="92" x="1196" y="983.3271">«signal» post-commit</text></g><!--MD5=[9ce94b0dea852e369f078895094615e1]
+entity MatchSetup--><g id="elem_MatchSetup"><rect fill="#FFFFFF" height="56.6191" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="147" x="874.5" y="1190.7988"/><rect fill="#FFFFFF" height="10" style="stroke:#3C3C3C;stroke-width:0.5;" width="15" x="1001.5" y="1195.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="999.5" y="1197.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="999.5" y="1201.7988"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="72" x="889.5" y="1222.4238">Match Setup</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="107" x="889.5" y="1235.0059">apuntado.match.setup</text></g><!--MD5=[87c45810bea67b28dbe0224364b95203]
+entity MatchOutcome--><g id="elem_MatchOutcome"><rect fill="#FFFFFF" height="67.5088" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="163" x="671.5" y="1185.2988"/><rect fill="#FFFFFF" height="10" style="stroke:#3C3C3C;stroke-width:0.5;" width="15" x="814.5" y="1190.2988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="812.5" y="1192.2988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="812.5" y="1196.2988"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="91" x="686.5" y="1216.9238">Match Outcome</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="123" x="686.5" y="1229.5059">apuntado.match.outcome</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" font-style="italic" lengthAdjust="spacing" textLength="112" x="686.5" y="1240.6367">Match (raíz de agregado)</text></g><!--MD5=[7d023f27c72673e3ddc1bd416b77aaa5]
+entity MatchHistory--><g id="elem_MatchHistory"><rect fill="#FFFFFF" height="68.7188" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="153" x="478.5" y="1184.7988"/><rect fill="#FFFFFF" height="10" style="stroke:#3C3C3C;stroke-width:0.5;" width="15" x="611.5" y="1189.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="609.5" y="1191.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="609.5" y="1195.7988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="90" x="505" y="1214.4863">«append-only log»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="80" x="493.5" y="1228.5234">Match History</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="113" x="493.5" y="1241.1055">apuntado.match.history</text></g><!--MD5=[6337b5bf02574a4d17f0fcff82b48cea]
+entity IMatchSetup--><g id="elem_IMatchSetup"><ellipse cx="962" cy="1105.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="67" x="928.5" y="1132.9551">IMatchSetup</text></g><!--MD5=[d5461044c62760708f0093ba5c8e4901]
+entity IMatchOutcome--><g id="elem_IMatchOutcome"><ellipse cx="787" cy="1105.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="84" x="745" y="1132.9551">IMatchOutcome</text></g><!--MD5=[3d7b5908c7da57b619affd89b5fe0de5]
+entity IMatchAudit--><g id="elem_IMatchAudit"><ellipse cx="624" cy="1105.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="65" x="591.5" y="1132.9551">IMatchAudit</text></g><!--MD5=[3275c31ec564f1dd38996b7f282c87b2]
+entity TurnOrchestration--><g id="elem_TurnOrchestration"><rect fill="#FFFFFF" height="79.6084" rx="2.5" ry="2.5" style="stroke:#B7791F;stroke-width:2.0;" width="173" x="630.5" y="1598.7988"/><rect fill="#FFFFFF" height="10" style="stroke:#B7791F;stroke-width:2.0;" width="15" x="783.5" y="1603.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#B7791F;stroke-width:2.0;" width="4" x="781.5" y="1605.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#B7791F;stroke-width:2.0;" width="4" x="781.5" y="1609.7988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="36" x="694" y="1628.4863">«State»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="108" x="645.5" y="1642.5234">Turn Orchestration</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="133" x="645.5" y="1655.1055">apuntado.turn.orchestration</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" font-style="italic" lengthAdjust="spacing" textLength="110" x="645.5" y="1666.2363">Round · Turn · TurnPhase</text></g><!--MD5=[6aa9d8c894b876d3712840f2f97e9dfe]
+entity IRoundPlay--><g id="elem_IRoundPlay"><ellipse cx="753" cy="1412.7988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="60" x="723" y="1440.4551">IRoundPlay</text></g><!--MD5=[0b9ea7e4bf5ebf433ab4797b181ca2f8]
+entity RoundEvents--><g id="elem_RoundEvents"><ellipse cx="581" cy="1638.7988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="71" x="532.5" y="1666.4551">RoundEvents</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" lengthAdjust="spacing" textLength="97" x="532.5" y="1677.8271">«signal» (MoveRecord)</text></g><!--MD5=[0d98a238499dc3f9a51c6f58827ce3a5]
+entity RoundScoring--><g id="elem_RoundScoring"><rect fill="#FFFFFF" height="56.6191" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="154" x="518" y="1959.7988"/><rect fill="#FFFFFF" height="10" style="stroke:#3C3C3C;stroke-width:0.5;" width="15" x="652" y="1964.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="650" y="1966.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="650" y="1970.7988"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="83" x="533" y="1991.4238">Round Scoring</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="114" x="533" y="2004.0059">apuntado.scoring.round</text></g><!--MD5=[f4ec21799154ab09a72f4cb159b43e48]
+entity IRoundScoring--><g id="elem_IRoundScoring"><ellipse cx="595" cy="1818.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="79" x="555.5" y="1845.9551">IRoundScoring</text></g><!--MD5=[5ef1777ba53477f049dec2bdcf9572f3]
+entity DeckManagement--><g id="elem_DeckManagement"><rect fill="#FFFFFF" height="56.6191" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="148" x="759" y="1959.7988"/><rect fill="#FFFFFF" height="10" style="stroke:#3C3C3C;stroke-width:0.5;" width="15" x="887" y="1964.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="885" y="1966.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="885" y="1970.7988"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="108" x="774" y="1991.4238">Deck Management</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="71" x="774" y="2004.0059">apuntado.deck</text></g><!--MD5=[2010a8fe1ec649196d95c4c11bf30d07]
+entity ICardZones--><g id="elem_ICardZones"><ellipse cx="806" cy="1818.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="61" x="775.5" y="1845.9551">ICardZones</text></g><!--MD5=[b7ae3028f119388a320f0ae60e2b3e00]
+entity GameNotification--><g id="elem_GameNotification"><rect fill="#FFFFFF" height="67.5088" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="188" x="1652" y="910.2988"/><rect fill="#FFFFFF" height="10" style="stroke:#3C3C3C;stroke-width:0.5;" width="15" x="1820" y="915.2988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="1818" y="917.2988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="1818" y="921.2988"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="102" x="1667" y="941.9238">Game Notification</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="100" x="1667" y="954.5059">apuntado.notification</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" font-style="italic" lengthAdjust="spacing" textLength="148" x="1667" y="965.6367">filtra vista pública / mano privada</text></g><text fill="#000000" font-family="DejaVu Sans" font-size="12" lengthAdjust="spacing" textLength="88" x="1300.5" y="1198.4688">pRuleResolver</text><rect fill="#F1F1F1" height="12" style="stroke:#181818;stroke-width:1.5;" width="12" x="1338.5" y="1213.2988"/><text fill="#000000" font-family="DejaVu Sans" font-size="12" lengthAdjust="spacing" textLength="71" x="1446" y="1198.4688">pGameRule</text><rect fill="#F1F1F1" height="12" style="stroke:#181818;stroke-width:1.5;" width="12" x="1475.5" y="1213.2988"/><!--MD5=[758d31b194fcdb5cc2420456b4874022]
+entity RuleSelection--><g id="elem_RuleSelection"><rect fill="#FFFFFF" height="79.6084" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="156" x="1088" y="1372.7988"/><rect fill="#FFFFFF" height="10" style="stroke:#3C3C3C;stroke-width:0.5;" width="15" x="1224" y="1377.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="1222" y="1379.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="1222" y="1383.7988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="97" x="1112.5" y="1402.4863">«Registry / Factory»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="81" x="1103" y="1416.5234">Rule Selection</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="116" x="1103" y="1429.1055">apuntado.rules.selection</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" font-style="italic" lengthAdjust="spacing" textLength="53" x="1103" y="1440.2363">RuleRegistry</text></g><!--MD5=[b28b0a154fa370f30456616eef1ed209]
+entity HandEvaluation--><g id="elem_HandEvaluation"><rect fill="#FFFFFF" height="79.6084" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="214" x="1117" y="1778.2988"/><rect fill="#FFFFFF" height="10" style="stroke:#3C3C3C;stroke-width:0.5;" width="15" x="1311" y="1783.2988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="1309" y="1785.2988"/><rect fill="#FFFFFF" height="2" style="stroke:#3C3C3C;stroke-width:0.5;" width="4" x="1309" y="1789.2988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="85" x="1176.5" y="1807.9863">«domain service»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="92" x="1132" y="1822.0234">Hand Evaluation</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="123" x="1132" y="1834.6055">apuntado.rules.evaluation</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" font-style="italic" lengthAdjust="spacing" textLength="174" x="1132" y="1845.7363">HandEvaluator · Meld · CardValueTable</text></g><!--MD5=[f156f6e2c29e505eabe7fff7da2a04da]
+entity IHandEvaluation--><g id="elem_IHandEvaluation"><ellipse cx="1381" cy="1818.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="87" x="1337.5" y="1845.9551">IHandEvaluation</text></g><!--MD5=[61285c9f82d5804eb8ff73c8cac2aa89]
+entity ClassicRule--><g id="elem_ClassicRule"><rect fill="#FFFFFF" height="79.6084" rx="2.5" ry="2.5" style="stroke:#1B7F3B;stroke-width:2.0;" width="227" x="1269.5" y="1598.7988"/><rect fill="#FFFFFF" height="10" style="stroke:#1B7F3B;stroke-width:2.0;" width="15" x="1476.5" y="1603.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#1B7F3B;stroke-width:2.0;" width="4" x="1474.5" y="1605.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#1B7F3B;stroke-width:2.0;" width="4" x="1474.5" y="1609.7988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="52" x="1352" y="1628.4863">«Strategy»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="66" x="1284.5" y="1642.5234">ClassicRule</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="133" x="1284.5" y="1655.1055">rules/modes/classic_rule.gd</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" lengthAdjust="spacing" textLength="187" x="1284.5" y="1666.2363">[CUARTA, TERNA, TERNA] · sobrante vacío</text></g><!--MD5=[5ba53d2fa81d99a6f4e2dbc12eeb72fb]
+entity ApuntadoRule--><g id="elem_ApuntadoRule"><rect fill="#FFFFFF" height="79.6084" rx="2.5" ry="2.5" style="stroke:#1B7F3B;stroke-width:2.0;" width="209" x="1536.5" y="1598.7988"/><rect fill="#FFFFFF" height="10" style="stroke:#1B7F3B;stroke-width:2.0;" width="15" x="1725.5" y="1603.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#1B7F3B;stroke-width:2.0;" width="4" x="1723.5" y="1605.7988"/><rect fill="#FFFFFF" height="2" style="stroke:#1B7F3B;stroke-width:2.0;" width="4" x="1723.5" y="1609.7988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="52" x="1610" y="1628.4863">«Strategy»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="1551.5" y="1642.5234">ApuntadoRule</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="146" x="1551.5" y="1655.1055">rules/modes/apuntado_rule.gd</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" lengthAdjust="spacing" textLength="169" x="1551.5" y="1666.2363">[TERNA ×3] · sobrante &lt; 5 · umbral 101</text></g><!--MD5=[f05c8308b15e6ff7e2f07413b39ccb86]
+entity MatchPersistence--><g id="elem_MatchPersistence"><rect fill="#F2F4F7" height="79.6084" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:0.5;" width="211" x="2147.5" y="1372.7988"/><rect fill="#F2F4F7" height="10" style="stroke:#5A6B7F;stroke-width:0.5;" width="15" x="2338.5" y="1377.7988"/><rect fill="#F2F4F7" height="2" style="stroke:#5A6B7F;stroke-width:0.5;" width="4" x="2336.5" y="1379.7988"/><rect fill="#F2F4F7" height="2" style="stroke:#5A6B7F;stroke-width:0.5;" width="4" x="2336.5" y="1383.7988"/><text fill="#555555" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="49" x="2223.5" y="1402.4863">«adapter»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="106" x="2162.5" y="1416.5234">Match Persistence</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="171" x="2162.5" y="1429.1055">apuntado.infrastructure.persistence</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" font-style="italic" lengthAdjust="spacing" textLength="138" x="2162.5" y="1440.2363">Repository + Data Mapper (2.3)</text></g><!--MD5=[de2effd8dc5bf946a609466312d0f75f]
+entity Player--><g id="elem_Player"><ellipse cx="474" cy="119.7988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><path d="M474,127.7988 L474,154.7988 M461,135.7988 L487,135.7988 M474,154.7988 L461,169.7988 M474,154.7988 L487,169.7988 " fill="none" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="47" x="450.5" y="182.9238">Jugador</text></g><!--MD5=[369697cb8e95e437d349afb476c6440c]
+entity Host--><g id="elem_Host"><ellipse cx="357" cy="112.7988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><path d="M357,120.7988 L357,147.7988 M344,128.7988 L370,128.7988 M357,147.7988 L344,162.7988 M357,147.7988 L370,162.7988 " fill="none" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="80" x="317" y="175.9238">Administrador</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="42" x="317" y="190.4434">de Sala</text></g><!--MD5=[7aac78690b132fcb4039a7536257d4ec]
+entity IMatchCommands--><g id="elem_IMatchCommands"><ellipse cx="421" cy="790.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="97" x="372.5" y="817.9551">IMatchCommands</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" lengthAdjust="spacing" textLength="76" x="372.5" y="829.3271">puerto de entrada</text></g><!--MD5=[6f81f42ed1201b5774c567384ff3f73f]
+entity IMatchRepository--><g id="elem_IMatchRepository"><ellipse cx="2215" cy="1219.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="93" x="2168.5" y="1246.9551">IMatchRepository</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" lengthAdjust="spacing" textLength="69" x="2168.5" y="1258.3271">puerto de salida</text></g><!--MD5=[20f19c07d4aad63651e8d293c7bdd347]
+entity IPlayerChannel--><g id="elem_IPlayerChannel"><ellipse cx="374" cy="1219.2988" fill="#FFFFFF" rx="8" ry="8" style="stroke:#3C3C3C;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="11" lengthAdjust="spacing" textLength="79" x="334.5" y="1246.9551">IPlayerChannel</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="9" lengthAdjust="spacing" textLength="69" x="334.5" y="1258.3271">puerto de salida</text></g><!--MD5=[16731a8445e3aca77a931c9a9d69ae9b]
+entity MatchDB--><g id="elem_MatchDB"><path d="M2140.5,1620.7988 C2140.5,1610.7988 2236,1610.7988 2236,1610.7988 C2236,1610.7988 2331.5,1610.7988 2331.5,1620.7988 L2331.5,1656.418 C2331.5,1666.418 2236,1666.418 2236,1666.418 C2236,1666.418 2140.5,1666.418 2140.5,1656.418 L2140.5,1620.7988 " fill="#F2F4F7" style="stroke:#5A6B7F;stroke-width:0.5;"/><path d="M2140.5,1620.7988 C2140.5,1630.7988 2236,1630.7988 2236,1630.7988 C2236,1630.7988 2331.5,1630.7988 2331.5,1620.7988 " fill="none" style="stroke:#5A6B7F;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="76" x="2150.5" y="1646.4238">BD relacional</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="171" x="2150.5" y="1659.0059">esquema 2.2 · motor según ADR-04</text></g><g id="elem_GMN122"><path d="M2123.5,909.2988 L2123.5,979.7969 L2422.5,979.7969 L2422.5,919.2988 L2412.5,909.2988 L2123.5,909.2988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><path d="M2412.5,909.2988 L2412.5,919.2988 L2422.5,919.2988 L2412.5,909.2988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="91" x="2129.5" y="923.9863">Mediator + Facade</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="89" x="2223.5" y="923.9863">(ADR-01, ADR-05):</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="85" x="2315.5" y="923.9863">invoca, no decide</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="3" x="2400.5" y="923.9863">.</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="268" x="2129.5" y="936.0859">1) A3: IRuleResolver.resolve(mode) e inyecta IGameRule</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="278" x="2129.5" y="948.1855">2) delega el comando al módulo dueño (llamada síncrona)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="245" x="2129.5" y="960.2852">3) persiste vía pPersistence (snapshot / liquidación)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="105" x="2129.5" y="972.3848">4) emite IGameEvents</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="93" x="2237.5" y="972.3848">solo tras el commit</text></g><g id="elem_GMN125"><path d="M2123,1752.7988 L2123,1883.7949 L2459,1883.7949 L2459,1762.7988 L2449,1752.7988 L2123,1752.7988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><path d="M2449,1752.7988 L2449,1762.7988 L2459,1762.7988 L2449,1752.7988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="196" x="2129" y="1767.4863">Desacoplamiento orquestador ↔ reglas</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="88" x="2328" y="1767.4863">(ADR-02, ADR-03)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="255" x="2129" y="1779.5859">• Turn Orchestration y Match Outcome solo conocen</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="54" x="2387" y="1779.5859">IGameRule</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="3" x="2441" y="1779.5859">,</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="107" x="2135" y="1791.6855">expuesto por el puerto</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="57" x="2245" y="1791.6855">pGameRule</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="133" x="2302" y="1791.6855">; nunca una regla concreta.</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="253" x="2129" y="1803.7852">• Rule Selection es el único que instancia estrategias.</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="140" x="2129" y="1815.8848">• ClassicRule y ApuntadoRule</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="101" x="2272" y="1815.8848">no dependen entre sí</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="215" x="2135" y="1827.9844">(verificado por fitness function, sección 5.2).</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="284" x="2129" y="1840.084">• Nueva variante = 1 componente en rules/modes + 1 valor</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="258" x="2135" y="1852.1836">en GameMode + 1 register() (≤ 2 archivos existentes).</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="296" x="2129" y="1864.2832">• Las reglas no tocan persistencia ni red: reciben Array[Card]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="213" x="2135" y="1876.3828">y devuelven value objects (ValidationResult).</text></g><g id="elem_GMN128"><path d="M2372,1609.7988 L2372,1668.1973 L2604,1668.1973 L2604,1619.7988 L2594,1609.7988 L2372,1609.7988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><path d="M2594,1609.7988 L2594,1619.7988 L2604,1619.7988 L2594,1609.7988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="172" x="2378" y="1624.4863">Implementa IMatchRepository (DIP).</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="199" x="2378" y="1636.5859">La liquidación de ronda (penalizaciones +</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="134" x="2378" y="1648.6855">eliminaciones) se guarda en</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="41" x="2515" y="1648.6855">una sola</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="211" x="2378" y="1660.7852">transacción: sin marcadores parciales (2.4).</text></g><g id="elem_NContracts"><path d="M538,63.2988 L538,234.5938 L1460,234.5938 L1460,73.2988 L1450,63.2988 L538,63.2988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><path d="M1450,63.2988 L1450,73.2988 L1460,73.2988 L1450,63.2988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="323" x="544" y="77.9863">Contratos de las interfaces que cruzan puertos o separan módulos</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="39" x="546" y="92.0859">Interfaz</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="34" x="657" y="92.0859">Provee</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="44" x="801" y="92.0859">Requiere</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="120" x="988" y="92.0859">Operaciones principales</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="87" x="547" y="104.1855">IMatchCommands</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="105" x="658" y="104.1855">Núcleo (pCommands)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="79" x="802" y="104.1855">Network Session</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="356" x="989" y="104.1855">create_match(config) · join(match_id, player) · draw_from_deck(player_id)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="454" x="986" y="116.2852">draw_from_discard(player_id) · discard(player_id, card_id) · declare_closing(player_id, card_id)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="51" x="547" y="128.3848">IGameRule</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="125" x="658" y="128.3848">Rules Engine (pGameRule)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="173" x="802" y="128.3848">Turn Orchestration, Match Outcome</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="324" x="989" y="128.3848">validate_closing(cards: Array[Card], discard: Card): ValidationResult</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="404" x="986" y="140.4844">penalty_for(cards): int · is_eliminated(total: int): bool · is_match_over(active: int): bool</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="64" x="547" y="152.584">IRuleResolver</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="138" x="658" y="152.584">Rules Engine (pRuleResolver)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="98" x="802" y="152.584">Match Orchestration</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="290" x="989" y="152.584">resolve(mode: GameMode, settings: RuleSettings): GameRule</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="83" x="547" y="164.6836">IMatchRepository</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="88" x="658" y="164.6836">Match Persistence</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="106" x="802" y="164.6836">Núcleo (pPersistence)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="404" x="989" y="164.6836">load(match_id): Match · save_snapshot(match) · save_settlement(match, settlement)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="46" x="1396" y="164.6836">[atómica]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="3" x="1442" y="164.6836"> </text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="72" x="547" y="176.7832">IPlayerChannel</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="79" x="658" y="176.7832">Network Session</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="120" x="802" y="176.7832">Núcleo (pPlayerChannel)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="289" x="989" y="176.7832">send_private(player_id, hand_view) · broadcast(public_view)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="105" x="547" y="188.8828">IGameEvents «signal»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="98" x="658" y="188.8828">Match Orchestration</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="85" x="802" y="188.8828">Game Notification</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="404" x="989" y="188.8828">turn_changed · move_performed · round_closed · player_eliminated · match_finished</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="53" x="547" y="200.9824">IRoundPlay</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="90" x="658" y="200.9824">Turn Orchestration</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="181" x="802" y="200.9824">Match Orchestration, Match Outcome</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="428" x="989" y="200.9824">start(rng) · draw_*(player_id) · discard(...) · declare_closing(...) · settle(): RoundSettlement</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="69" x="547" y="213.082">IRoundScoring</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="69" x="658" y="213.082">Round Scoring</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="173" x="802" y="213.082">Turn Orchestration, Match Outcome</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="335" x="989" y="213.082">record(settlement) · total_of(player_id): int · scoreboard(): Scoreboard</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="77" x="547" y="225.1816">IHandEvaluation</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="77" x="658" y="225.1816">Hand Evaluation</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="125" x="802" y="225.1816">ClassicRule, ApuntadoRule</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="370" x="989" y="225.1816">best_melds(cards, pattern, values): Array[Meld] · points_of(cards, values): int</text><line style="stroke:#000000;stroke-width:1.0;" x1="544" x2="1445" y1="82.3984" y2="82.3984"/><line style="stroke:#000000;stroke-width:1.0;" x1="544" x2="1445" y1="94.498" y2="94.498"/><line style="stroke:#000000;stroke-width:1.0;" x1="544" x2="1445" y1="118.6973" y2="118.6973"/><line style="stroke:#000000;stroke-width:1.0;" x1="544" x2="1445" y1="142.8965" y2="142.8965"/><line style="stroke:#000000;stroke-width:1.0;" x1="544" x2="1445" y1="154.9961" y2="154.9961"/><line style="stroke:#000000;stroke-width:1.0;" x1="544" x2="1445" y1="167.0957" y2="167.0957"/><line style="stroke:#000000;stroke-width:1.0;" x1="544" x2="1445" y1="179.1953" y2="179.1953"/><line style="stroke:#000000;stroke-width:1.0;" x1="544" x2="1445" y1="191.2949" y2="191.2949"/><line style="stroke:#000000;stroke-width:1.0;" x1="544" x2="1445" y1="203.3945" y2="203.3945"/><line style="stroke:#000000;stroke-width:1.0;" x1="544" x2="1445" y1="215.4941" y2="215.4941"/><line style="stroke:#000000;stroke-width:1.0;" x1="544" x2="1445" y1="227.5938" y2="227.5938"/><line style="stroke:#000000;stroke-width:1.0;" x1="544" x2="544" y1="82.3984" y2="227.5938"/><line style="stroke:#000000;stroke-width:1.0;" x1="655" x2="655" y1="82.3984" y2="227.5938"/><line style="stroke:#000000;stroke-width:1.0;" x1="799" x2="799" y1="82.3984" y2="227.5938"/><line style="stroke:#000000;stroke-width:1.0;" x1="986" x2="986" y1="82.3984" y2="227.5938"/><line style="stroke:#000000;stroke-width:1.0;" x1="1445" x2="1445" y1="82.3984" y2="227.5938"/></g><!--MD5=[717308775e135889dfaab9fa968ed8da]
+link Host to Player--><g id="link_Host_Player"><path d="M397.22,148.7988 C408.14,148.7988 419.06,148.7988 429.98,148.7988 " fill="none" id="Host-to-Player" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="none" points="430.31,141.7988,450.31,148.7988,430.31,155.7988,430.31,141.7988" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[b74c2dfcc7e429337ac528acaed08cfb]
+link Player to GameTableUI--><g id="link_Player_GameTableUI"><path d="M466.8,186.3088 C461.1,213.7488 452.55,252.1388 443,285.2988 C437.64,303.9188 430.68,324.2488 424.54,341.2688 " fill="none" id="Player-to-GameTableUI" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="422.84,345.9788,429.6627,338.876,424.5407,341.2769,422.1397,336.1549,422.84,345.9788" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="81" x="450" y="269.9863">robar · descartar</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="67" x="457" y="282.0859">· cerrar ronda</text></g><!--MD5=[6a9b54691f5ac4778688bc62501da13e]
+link Host to GameTableUI--><g id="link_Host_GameTableUI"><path d="M334.81,193.4288 C324.11,220.4388 315.79,255.5388 327,285.2988 C335.02,306.5888 350.26,326.1988 365.51,341.9688 " fill="none" id="Host-to-GameTableUI" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="369.38,345.8988,365.9002,336.6852,365.866,342.3419,360.2092,342.3076,369.38,345.8988" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="62" x="351" y="269.9863">crear partida</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="108" x="328" y="282.0859">· configurar modalidad</text></g><!--MD5=[f0a7444ee3ab49ba45611c083c7d719e]
+link ICardTheme to CardTheming--><g id="link_ICardTheme_CardTheming"><path d="M555.23,380.7988 C568.41,380.7988 581.59,380.7988 594.77,380.7988 " fill="none" id="ICardTheme-CardTheming" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[547d29336fe1e27774ac27a18ecd8b62]
+link GameTableUI to ICardTheme--><g id="link_GameTableUI_ICardTheme"><path d="M496.59,380.7988 C506.63,380.7988 516.67,380.7988 526.7,380.7988 " fill="none" id="GameTableUI-to-ICardTheme" style="stroke:#555555;stroke-width:1.0;"/><path d="M533.6618,372.3416 A9,9 0 0 0 533.6618 389.2561" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[d99236ba9cc230719de942303ba2147b]
+link GameTableUI to IMatchCommandsProxy--><g id="link_GameTableUI_IMatchCommandsProxy"><path d="M423.05,415.6788 C436.17,449.7088 455.87,500.8388 466.17,527.5688 " fill="none" id="GameTableUI-to-IMatchCommandsProxy" style="stroke:#555555;stroke-width:1.0;"/><path d="M476.6397,531.2212 A9,9 0 0 0 460.8514 537.2899" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[2da496e31641bbe021c3e2162eef7626]
+link GameTableUI to IPlayerViewEvents--><g id="link_GameTableUI_IPlayerViewEvents"><path d="M391.56,415.6788 C372.87,450.0088 344.71,501.7488 330.26,528.2788 " fill="none" id="GameTableUI-to-IPlayerViewEvents" style="stroke:#555555;stroke-width:1.0;"/><path d="M334.3484,538.4773 A9,9 0 0 0 319.5002 530.3761" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[cacb1cdcfe4b5f3e897d83f91ea99000]
+link IMatchCommandsProxy to NetworkSession--><g id="link_IMatchCommandsProxy_NetworkSession"><path d="M466.96,555.5688 C455.49,571.2788 429.87,606.3688 409.57,634.1788 " fill="none" id="IMatchCommandsProxy-NetworkSession" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[7653468d58eb280ee7774bd7a922d25a]
+link IPlayerViewEvents to NetworkSession--><g id="link_IPlayerViewEvents_NetworkSession"><path d="M324.94,555.5688 C332.42,571.2788 349.13,606.3688 362.37,634.1788 " fill="none" id="IPlayerViewEvents-NetworkSession" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[81a8bf6d38c899e79996f031e0e1acbc]
+link NetworkSession to IMatchCommands--><g id="link_NetworkSession_IMatchCommands"><path d="M394.77,714.5288 C401.53,733.8088 409.35,756.1088 414.68,771.2988 " fill="none" id="NetworkSession-to-IMatchCommands" style="stroke:#555555;stroke-width:1.0;"/><path d="M425.0382,775.2629 A9,9 0 0 0 409.0707 780.8431" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[0eea39e6db20c8004e1050f38670c614]
+link NetworkSession to IPlayerChannel--><g id="link_NetworkSession_IPlayerChannel"><path d="M365.38,714.4688 C358.1,736.1588 351,763.8188 351,789.2988 C351,789.2988 351,789.2988 351,1106.2988 C351,1145.9988 365.04,1192.0288 371.18,1210.2688 " fill="none" id="NetworkSession-IPlayerChannel" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[efb21e2ed55037020575b5908d4b2a7b]
+link pCommands to IMatchCommands--><g id="link_pCommands_IMatchCommands"><path d="M1062.77,790.2988 C1008.01,790.2988 539.49,790.2988 440.37,790.2988 " fill="none" id="pCommands-IMatchCommands" style="stroke:#555555;stroke-width:1.0;"/><line style="stroke:#555555;stroke-width:1.0;" x1="440.37" x2="430.17" y1="790.2988" y2="790.2988"/></g><!--MD5=[437435fd0b6dcd92bf7f9e60da8b2750]
+link pCommands to MatchOrchestration--><g id="link_pCommands_MatchOrchestration"><path d="M1070.43,796.3588 C1074.91,812.1788 1088.98,861.9188 1099.52,899.1688 " fill="none" id="pCommands-to-MatchOrchestration" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="1100.91,904.1088,1102.318,894.3611,1099.5534,899.2964,1094.6181,896.5317,1100.91,904.1088" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="41" x="1085" y="843.9863">delegate</text></g><!--MD5=[4fb176c7158d214b3325289bc7be2c75]
+link MatchOrchestration to pPersistence--><g id="link_MatchOrchestration_pPersistence"><path d="M1162.9,984.3088 C1178.21,993.9688 1195.59,1003.0488 1213,1008.2988 C1243.86,1017.5988 1474.21,1001.8088 1503,1016.2988 C1510.07,1019.8588 1506.92,1026.7688 1514,1030.2988 C1551.59,1049.0588 1855.98,1016.6788 1892,1038.2988 C1912.46,1050.5788 1922.52,1078.6688 1926.63,1093.9488 " fill="none" id="MatchOrchestration-to-pPersistence" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="1927.88,1098.9388,1929.571,1089.2362,1926.664,1094.089,1921.8112,1091.1819,1927.88,1098.9388" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="41" x="1515" y="1026.9863">delegate</text></g><!--MD5=[dc23331a08c57b424d232601edd32803]
+link pPersistence to IMatchRepository--><g id="link_pPersistence_IMatchRepository"><path d="M1934.71,1108.5388 C1968.14,1121.6288 2138.91,1188.4988 2196.22,1210.9488 " fill="none" id="pPersistence-to-IMatchRepository" style="stroke:#555555;stroke-width:1.0;"/><path d="M2206.0457,1205.7117 A9,9 0 0 0 2199.8639 1221.456" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[ef6442a44564f6025d421d3fb7dbecc0]
+link GameNotification to pPlayerChannel--><g id="link_GameNotification_pPlayerChannel"><path d="M1838.19,978.3788 C1880.41,994.6688 1930.6,1015.6588 1974,1038.2988 C2008.82,1056.4688 2046.96,1083.1288 2065.16,1096.3088 " fill="none" id="GameNotification-to-pPlayerChannel" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="2069.34,1099.3588,2064.4176,1090.8283,2065.2976,1096.4163,2059.7096,1097.2962,2069.34,1099.3588" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="41" x="1957" y="1026.9863">delegate</text></g><!--MD5=[015dc127acf40ad83f372de13fdbe32a]
+link pPlayerChannel to IPlayerChannel--><g id="link_pPlayerChannel_IPlayerChannel"><path d="M2069.17,1108.4988 C2052.9,1113.6088 2010.48,1126.2688 1974,1131.2988 C1640.52,1177.2788 788.88,1110.4588 460,1182.2988 C435.64,1187.6188 409.46,1199.5688 392.47,1208.2488 " fill="none" id="pPlayerChannel-to-IPlayerChannel" style="stroke:#555555;stroke-width:1.0;"/><path d="M389.8405,1219.1918 A9,9 0 0 0 381.9686 1204.2207" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[af6267db8daeb5dc2931195cde67752a]
+link IMatchRepository to MatchPersistence--><g id="link_IMatchRepository_MatchPersistence"><path d="M2216.63,1228.5288 C2221.49,1253.0088 2236.09,1326.5588 2245.24,1372.6988 " fill="none" id="IMatchRepository-MatchPersistence" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[04cc609a491de95f6083c85ab54a177f]
+link MatchPersistence to MatchDB--><g id="link_MatchPersistence_MatchDB"><path d="M2250.04,1452.8188 C2246.76,1495.9988 2241.54,1564.8288 2238.47,1605.2388 " fill="none" id="MatchPersistence-to-MatchDB" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="2238.07,1610.4988,2242.7523,1601.8342,2238.4557,1605.5137,2234.7761,1601.2171,2238.07,1610.4988" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="75" x="2248.5" y="1495.4863">transacción por</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="76" x="2248" y="1507.5859">liquidación (2.4)</text></g><!--MD5=[b4d247ef640ced386323e7c7aa0349f1]
+link MatchOrchestration to IGameEvents--><g id="link_MatchOrchestration_IGameEvents"><path d="M1192.74,944.2988 C1206.08,944.2988 1219.42,944.2988 1232.76,944.2988 " fill="none" id="MatchOrchestration-IGameEvents" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[c12975657899d078d8c4d5ebc72ccf72]
+link MatchOrchestration to IMatchSetup--><g id="link_MatchOrchestration_IMatchSetup"><path d="M1074.92,984.5988 C1043.26,1018.1688 999.36,1064.6988 976.75,1088.6588 " fill="none" id="MatchOrchestration-to-IMatchSetup" style="stroke:#555555;stroke-width:1.0;"/><path d="M977.9647,1099.6917 A9,9 0 0 0 965.659 1088.087" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[1c0972f3e4ed22faad75637107f1f647]
+link MatchOrchestration to IRuleResolver--><g id="link_MatchOrchestration_IRuleResolver"><path d="M1121.96,984.3988 C1136.97,1034.3288 1170.64,1118.8688 1234,1157.2988 C1290.86,1191.7888 1770.58,1156.7988 1832,1182.2988 C1842.37,1186.6088 1851.71,1194.9788 1858.65,1202.5588 " fill="none" id="MatchOrchestration-to-IRuleResolver" style="stroke:#555555;stroke-width:1.0;"/><path d="M1869.628,1202.4405 A9,9 0 0 0 1856.7295 1213.3825" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[68e331ac38c010854b7e96b6e8631093]
+link MatchOrchestration to IRoundPlay--><g id="link_MatchOrchestration_IRoundPlay"><path d="M1104.83,984.3588 C1088.91,1070.1188 1051.15,1268.0888 1040,1277.7988 C1031.09,1285.5588 945.66,1283.9488 934,1285.7988 C871.19,1295.7788 844,1279.2588 795,1319.7988 C772.07,1338.7788 761.09,1372.9688 756.29,1393.8988 " fill="none" id="MatchOrchestration-to-IRoundPlay" style="stroke:#555555;stroke-width:1.0;"/><path d="M763.1738,1402.4164 A9,9 0 0 0 746.6057 1399.011" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[59ae9d73daa4984a742d2e3a6c2cd624]
+link MatchOrchestration to IMatchOutcome--><g id="link_MatchOrchestration_IMatchOutcome"><path d="M1031.38,978.3688 C991.64,995.2988 943.3,1016.8188 901,1038.2988 C866.19,1055.9788 827.1,1079.4388 804.93,1093.0988 " fill="none" id="MatchOrchestration-to-IMatchOutcome" style="stroke:#555555;stroke-width:1.0;"/><path d="M803.3433,1104.0338 A9,9 0 0 0 794.4286 1089.6592" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[aa93e1863373882a2f3744caf8d4b134]
+link MatchOrchestration to IMatchAudit--><g id="link_MatchOrchestration_IMatchAudit"><path d="M1031.17,952.0388 C925.91,961.9888 748.79,983.0888 693,1016.2988 C664.6,1033.1988 643.46,1066.5388 632.48,1086.9788 " fill="none" id="MatchOrchestration-to-IMatchAudit" style="stroke:#555555;stroke-width:1.0;"/><path d="M636.7286,1097.2206 A9,9 0 0 0 621.6878 1089.4827" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[614977e6067d3fa6ce303ddd00249689]
+link MatchOrchestration to IGameRule--><g id="link_MatchOrchestration_IGameRule"><path d="M1104.58,984.3288 C1099.09,1025.7188 1097.64,1090.5988 1132,1131.2988 C1159.41,1163.7588 1182.04,1150.5788 1224,1157.2988 C1256.5,1162.5088 1793.22,1158.5388 1816,1182.2988 C1845.37,1212.9388 1845.87,1247.6388 1816,1277.7988 C1799.79,1294.1588 1003.21,1269.4388 987,1285.7988 C978.87,1294.0088 978.87,1303.5888 987,1311.7988 C1003.32,1328.2788 1805.68,1303.3188 1822,1319.7988 C1888.65,1387.0988 1776.05,1708.8788 1764,1718.7988 C1697.72,1773.3688 1066.83,1709.2088 992,1751.2988 C971.51,1762.8288 958.78,1788.3288 952.58,1804.0388 " fill="none" id="MatchOrchestration-to-IGameRule" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#555555" points="950.72,1808.9588,957.6512,1801.9618,952.4928,1804.2837,950.171,1799.1253,950.72,1808.9588" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="29" x="1010" y="1296.4863">«tipo»</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="73" x="988" y="1308.5859">inyecta la regla</text></g><!--MD5=[b1534d2c57acae15eb82c94232f05578]
+reverse link IGameEvents to GameNotification--><g id="link_IGameEvents_GameNotification"><path d="M1239.4,924.8388 C1237.16,898.6088 1238.11,853.5988 1268.33,839.6288 C1305.28,822.5588 1596.83,824.6388 1634.67,839.6288 C1670.31,853.7588 1701.18,885.2788 1721.32,910.0688 " fill="none" id="IGameEvents-backto-GameNotification" style="stroke:#555555;stroke-width:1.0;"/><path d="M1248.5925,931.0995 A9,9 0 0 0 1231.7783 932.9382" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[b971170811a2e642386823f4fe42a3bb]
+link IMatchSetup to MatchSetup--><g id="link_IMatchSetup_MatchSetup"><path d="M960.99,1114.3488 C959.02,1130.0988 954.58,1165.6288 951.44,1190.7488 " fill="none" id="IMatchSetup-MatchSetup" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[8813a6c98a71990e695cb8d44c3127ad]
+link IMatchOutcome to MatchOutcome--><g id="link_IMatchOutcome_MatchOutcome"><path d="M784.55,1114.3488 C780.12,1128.9488 770.54,1160.5288 763.09,1185.0788 " fill="none" id="IMatchOutcome-MatchOutcome" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[81f7ecae45f9d5e08dbcf4e6c1d7a6de]
+link IMatchAudit to MatchHistory--><g id="link_IMatchAudit_MatchHistory"><path d="M619.04,1114.3488 C610.11,1128.8488 590.86,1160.0988 575.78,1184.5688 " fill="none" id="IMatchAudit-MatchHistory" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[38b6468305ac361ec0d614c3c3b05cc0]
+link MatchOutcome to IRoundPlay--><g id="link_MatchOutcome_IRoundPlay"><path d="M753,1253.6588 C753,1294.3088 753,1361.5488 753,1393.6588 " fill="none" id="MatchOutcome-to-IRoundPlay" style="stroke:#555555;stroke-width:1.0;"/><path d="M761.4572,1400.7006 A9,9 0 0 0 744.5428 1400.7006" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[6b07cb8a2bcc0558fa2ef0cfbd3fc6d6]
+link MatchOutcome to IRoundScoring--><g id="link_MatchOutcome_IRoundScoring"><path d="M705.48,1253.3688 C689.24,1262.9988 670.49,1272.3688 652,1277.7988 C635.98,1282.4988 513.48,1273.6888 502,1285.7988 C358.28,1437.3888 535.5,1728.1588 583.59,1800.6288 " fill="none" id="MatchOutcome-to-IRoundScoring" style="stroke:#555555;stroke-width:1.0;"/><path d="M594.5477,1801.7632 A9,9 0 0 0 580.5151 1811.2069" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[9c7bb67c015e432d07a6878a75f86a9e]
+link MatchOutcome to IGameRule--><g id="link_MatchOutcome_IGameRule"><path d="M787.32,1253.6188 C832.74,1300.3288 910.74,1390.2188 942,1484.7988 C979.82,1599.2288 959.95,1748.1188 951.33,1799.1888 " fill="none" id="MatchOutcome-to-IGameRule" style="stroke:#555555;stroke-width:1.0;"/><path d="M958.4144,1807.7224 A9,9 0 0 0 941.759 1804.7732" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[fd435c583549075383f310421c02636e]
+link MatchHistory to RoundEvents--><g id="link_MatchHistory_RoundEvents"><path d="M508.3,1253.9288 C488.87,1271.0588 468.81,1293.7788 460,1319.7988 C437.63,1385.8888 437.9,1410.6088 460,1476.7988 C480.86,1539.2788 536.55,1596.9988 564.51,1623.1188 " fill="none" id="MatchHistory-to-RoundEvents" style="stroke:#555555;stroke-width:1.0;"/><path d="M575.3657,1621.5945 A9,9 0 0 0 563.9361 1634.0631" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[cb6e4ad32904c957a126a1483c443fcd]
+link MatchSetup to IGameRule--><g id="link_MatchSetup_IGameRule"><path d="M911.37,1247.8588 C894.94,1258.8888 874.82,1270.6488 855,1277.7988 C791.47,1300.7188 598.33,1268.8488 554,1319.7988 C508.2,1372.4388 508.64,1423.7788 554,1476.7988 C632.38,1568.4088 726.36,1445.3888 822,1518.7988 C918.91,1593.1788 942.07,1756.1788 946.87,1803.9188 " fill="none" id="MatchSetup-to-IGameRule" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#555555" points="947.37,1809.1488,950.505,1799.8123,946.8993,1804.171,942.5405,1800.5653,947.37,1809.1488" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="29" x="856" y="1495.4863">«tipo»</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="121" x="810" y="1507.5859">RuleSettings · GameMode</text></g><!--MD5=[40ca9d37833123988d50c8c5a5d5abd6]
+link IRoundPlay to TurnOrchestration--><g id="link_IRoundPlay_TurnOrchestration"><path d="M751.39,1422.0888 C748.85,1435.3288 743.79,1462.0588 740,1484.7988 C733.55,1523.4788 726.98,1567.8088 722.52,1598.7588 " fill="none" id="IRoundPlay-TurnOrchestration" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[3a72393a0a36c00ac93c2d2d515695c4]
+link TurnOrchestration to RoundEvents--><g id="link_TurnOrchestration_RoundEvents"><path d="M630.2,1638.7988 C616.81,1638.7988 603.42,1638.7988 590.03,1638.7988 " fill="none" id="TurnOrchestration-RoundEvents" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[d10e1fa877fd4f90b373601d1c3dd9c6]
+link TurnOrchestration to ICardZones--><g id="link_TurnOrchestration_ICardZones"><path d="M736.75,1679.1888 C755.64,1716.8688 783.26,1771.9388 797.22,1799.7888 " fill="none" id="TurnOrchestration-to-ICardZones" style="stroke:#555555;stroke-width:1.0;"/><path d="M808.0352,1802.4916 A9,9 0 0 0 792.921 1810.085" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[27cdbf72e0e83a4f9a3f25593d14c4a7]
+link TurnOrchestration to IGameRule--><g id="link_TurnOrchestration_IGameRule"><path d="M754.43,1678.9788 C769.86,1693.2488 788.65,1708.3988 808,1718.7988 C855.54,1744.3388 885.63,1714.3888 925,1751.2988 C938.26,1763.7288 943.88,1784.2188 946.26,1799.0688 " fill="none" id="TurnOrchestration-to-IGameRule" style="stroke:#555555;stroke-width:1.0;"/><path d="M955.5287,1805.0026 A9,9 0 0 0 938.7456 1807.1065" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[08da80dd0c3b33d8337c59eb9daef752]
+link TurnOrchestration to IRoundScoring--><g id="link_TurnOrchestration_IRoundScoring"><path d="M689.92,1679.1888 C663.8,1717.1988 625.51,1772.9088 606.53,1800.5188 " fill="none" id="TurnOrchestration-to-IRoundScoring" style="stroke:#555555;stroke-width:1.0;"/><path d="M609.3922,1811.2967 A9,9 0 0 0 595.4575 1801.7091" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[b008b37fe2ce08b719087805249c3ed4]
+link IRoundScoring to RoundScoring--><g id="link_IRoundScoring_RoundScoring"><path d="M595,1827.3988 C595,1850.9988 595,1920.4588 595,1959.6288 " fill="none" id="IRoundScoring-RoundScoring" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[e131930ed5b0fc0bffcf783be57eff68]
+link ICardZones to DeckManagement--><g id="link_ICardZones_DeckManagement"><path d="M807.3,1827.3988 C811.09,1850.9988 822.26,1920.4588 828.55,1959.6288 " fill="none" id="ICardZones-DeckManagement" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[0be24b3e225debf2dfc3f3d16d3582f4]
+link pRuleResolver to IRuleResolver--><g id="link_pRuleResolver_IRuleResolver"><path d="M1350.76,1214.3988 C1366,1201.7888 1409.22,1168.3788 1452,1156.7988 C1529.22,1135.8988 1738.54,1125.1188 1812,1156.7988 C1837.21,1167.6688 1856.66,1195.1988 1865.61,1209.8288 " fill="none" id="pRuleResolver-IRuleResolver" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[6ca65c2c82c296fa879a38fe6044d805]
+link pRuleResolver to RuleSelection--><g id="link_pRuleResolver_RuleSelection"><path d="M1340.21,1225.4188 C1321.41,1245.5388 1251.44,1320.3988 1206.1,1368.8988 " fill="none" id="pRuleResolver-to-RuleSelection" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="1202.61,1372.6388,1211.6756,1368.7899,1206.0221,1368.984,1205.8279,1363.3305,1202.61,1372.6388" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="41" x="1282" y="1302.4863">delegate</text></g><!--MD5=[9ffba25f9f623203bc1886688f8da5df]
+link pGameRule to IGameRule--><g id="link_pGameRule_IGameRule"><path d="M1476.46,1225.4488 C1463.16,1237.4288 1427.86,1266.9688 1392,1277.7988 C1380.19,1281.3688 956.64,1276.9988 948,1285.7988 C939.9,1294.0388 947.42,1300.2588 948,1311.7988 C952.67,1404.1488 963.88,1426.4688 969,1518.7988 C974.12,1611.1088 970.56,1634.3488 971,1726.7988 C971.15,1757.9288 958.14,1793.2688 951.62,1808.9988 " fill="none" id="pGameRule-IGameRule" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[71e569afbdb685e53bd8a372bcec78de]
+link pGameRule to ClassicRule--><g id="link_pGameRule_ClassicRule"><path d="M1484.44,1225.3588 C1498.12,1254.5088 1563.15,1403.4688 1517,1510.7988 C1502.46,1544.6188 1473.99,1573.6488 1447.02,1595.3888 " fill="none" id="pGameRule-to-ClassicRule" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="1443.06,1598.5488,1452.5933,1596.0756,1446.9727,1595.4358,1447.6124,1589.8152,1443.06,1598.5488" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="53" x="1553.5" y="1410.4863">«delegate»</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="92" x="1534" y="1422.5859">si mode = CLASSIC</text></g><!--MD5=[6af1221014c91bee2a8e100aa10811e1]
+link pGameRule to ApuntadoRule--><g id="link_pGameRule_ApuntadoRule"><path d="M1483.11,1225.5888 C1485.75,1236.8488 1493.45,1263.3288 1510,1277.7988 C1532.38,1297.3688 1619.44,1295.8188 1637,1319.7988 C1696.29,1400.7688 1673.4,1527.0688 1655.14,1593.5088 " fill="none" id="pGameRule-to-ApuntadoRule" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="1653.73,1598.5788,1660.001,1590.9845,1655.0734,1593.7627,1652.2952,1588.835,1653.73,1598.5788" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="53" x="1702.5" y="1410.4863">«delegate»</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="106" x="1676" y="1422.5859">si mode = APUNTADO</text></g><!--MD5=[519828f14400fa1b4a23fda7fd048607]
+link RuleSelection to ClassicRule--><g id="link_RuleSelection_ClassicRule"><path d="M1203.8,1452.8188 C1242.15,1492.3988 1301.37,1553.5288 1341.12,1594.5688 " fill="none" id="RuleSelection-to-ClassicRule" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#555555" points="1344.91,1598.4788,1341.5238,1589.2304,1341.4322,1594.8865,1335.7761,1594.7949,1344.91,1598.4788" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="48" x="1256" y="1501.4863">instantiate</text></g><!--MD5=[3f2093eb935ec120ae2bcda8b4d4419c]
+link RuleSelection to ApuntadoRule--><g id="link_RuleSelection_ApuntadoRule"><path d="M1218.61,1452.8388 C1233.03,1461.9588 1249.1,1470.7588 1265,1476.7988 C1286.04,1484.7788 1293.36,1478.6288 1315,1484.7988 C1343.73,1492.9988 1347.89,1504.0688 1377,1510.7988 C1407.36,1517.8188 1488.43,1506.3488 1517,1518.7988 C1554.28,1535.0488 1587.01,1567.7188 1609.47,1594.7288 " fill="none" id="RuleSelection-to-ApuntadoRule" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#555555" points="1612.71,1598.6688,1610.0838,1589.1766,1609.5345,1594.8067,1603.9043,1594.2574,1612.71,1598.6688" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="48" x="1378" y="1501.4863">instantiate</text></g><!--MD5=[4ca6c6540bd10112348ed5700dd9af06]
+link HandEvaluation to IHandEvaluation--><g id="link_HandEvaluation_IHandEvaluation"><path d="M1331.02,1818.2988 C1344.55,1818.2988 1358.09,1818.2988 1371.63,1818.2988 " fill="none" id="HandEvaluation-IHandEvaluation" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[ae52085bfc252d50e82e141695d4cad7]
+link ClassicRule to IHandEvaluation--><g id="link_ClassicRule_IHandEvaluation"><path d="M1382.56,1679.1888 C1382.14,1716.3688 1381.53,1770.4888 1381.21,1798.6688 " fill="none" id="ClassicRule-to-IHandEvaluation" style="stroke:#555555;stroke-width:1.0;"/><path d="M1389.5819,1806.0575 A9,9 0 0 0 1372.6685 1805.8642" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[0b5225ce06979bc10e3cadb8ff8f66c2]
+link ApuntadoRule to IHandEvaluation--><g id="link_ApuntadoRule_IHandEvaluation"><path d="M1583.62,1678.9688 C1524.62,1719.2588 1436.22,1779.5988 1398.78,1805.1588 " fill="none" id="ApuntadoRule-to-IHandEvaluation" style="stroke:#555555;stroke-width:1.0;"/><path d="M1397.7132,1816.1245 A9,9 0 0 0 1388.1697 1802.1596" fill="none" style="stroke:#555555;stroke-width:1.5;"/></g><!--MD5=[863daa36f53625e0e3e4cf0f049014a5]
+link RuleSelection to IHandEvaluation--><g id="link_RuleSelection_IHandEvaluation"><path d="M1148.73,1452.8988 C1123.48,1516.7188 1086.07,1643.6988 1150,1718.7988 C1208.66,1787.7088 1279.08,1696.3688 1351,1751.2988 C1366.29,1762.9788 1374.02,1784.2488 1377.76,1799.4888 " fill="none" id="RuleSelection-to-IHandEvaluation" style="stroke:#555555;stroke-width:1.0;"/><path d="M1387.4764,1804.536 A9,9 0 0 0 1370.9286 1808.0388" fill="none" style="stroke:#555555;stroke-width:1.5;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="35" x="1163" y="1636.4863">inyecta</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="59" x="1151" y="1648.5859">el evaluador</text></g><!--MD5=[f1b339874e168364693ee54a0ef05b92]
+link GameModes to DeckManagement--><g id="link_GameModes_DeckManagement"><path d="M1234.4156,1702.8509 C1233.7833,1704.8337 1233.0278,1706.7648 1232.1344,1708.6255 C1230.3475,1712.3471 1228.0088,1715.7876 1225,1718.7988 C1212.81,1730.9988 1086.14,1720.7188 1070,1726.7988 C1053.57,1732.9888 1048.73,1736.6788 1039,1751.2988 C1005.13,1802.1988 1038.85,1835.0088 1002,1883.7988 C977.69,1915.9888 940.21,1940.3988 906.71,1957.4088 " fill="none" id="GameModes-to-DeckManagement" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#555555" points="902.22,1959.6588,912.0581,1959.199,906.6893,1957.4171,908.4713,1952.0482,902.22,1959.6588" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="29" x="1040" y="1815.9863">«tipo»</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="23" x="1043" y="1828.0859">Card</text></g><!--MD5=[a6a072cb83fdd5e04873c3b8b1a993e2]
+link HandEvaluation to DeckManagement--><g id="link_HandEvaluation_DeckManagement"><path d="M1177.56,1858.5488 C1145.54,1883.7388 1100.98,1915.2788 1057,1934.7988 C1011.04,1955.1988 956.1,1968.2288 912.14,1976.2088 " fill="none" id="HandEvaluation-to-DeckManagement" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#555555" points="907.11,1977.1088,916.6756,1979.4539,912.0312,1976.2244,915.2606,1971.58,907.11,1977.1088" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="29" x="1102" y="1919.4863">«tipo»</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="23" x="1105" y="1931.5859">Card</text></g><!--MD5=[03e0cd9f96acfd9cf238915de9fe525b]
+link MatchOrchestration to GMN122--><g id="link_MatchOrchestration_GMN122"><path d="M1141.71,904.1388 C1163.64,878.0688 1196.03,846.3288 1233,831.7988 C1295.56,807.2088 1771.32,823.3188 1838,831.7988 C1952.91,846.4188 2080.88,881.9288 2168.09,909.1788 " fill="none" id="MatchOrchestration-GMN122" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/></g><!--MD5=[da06e8cd239950819f1d1c29f424a04d]
+link GameModes to GMN125--><g id="link_GameModes_GMN125"><path d="M1238.1658,1703.0796 C1238.2935,1703.3221 1238.4227,1703.5636 1238.5536,1703.8041 C1239.6003,1705.728 1240.7497,1707.5862 1242.0111,1709.3585 C1244.5339,1712.903 1247.505,1716.1038 1251,1718.7988 C1263.17,1728.1788 1788.71,1725.2788 1804,1726.7988 C1910.97,1737.4388 2029.58,1759.2588 2122.97,1778.8088 " fill="none" id="GameModes-GMN125" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/></g><!--MD5=[7fbeef53f303aa67abf45c310482fc4b]
+link MatchPersistence to GMN128--><g id="link_MatchPersistence_GMN128"><path d="M2299.48,1453.0288 C2311.22,1463.2088 2323.7,1474.2788 2335,1484.7988 C2380.37,1527.0288 2430.82,1578.3788 2460.95,1609.5488 " fill="none" id="MatchPersistence-GMN128" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/></g><rect fill="#FFFFFF" height="171.2949" id="_legend" rx="7.5" ry="7.5" style="stroke:#7A7A7A;stroke-width:1.0;" width="560" x="1018.5" y="2073.7988"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="42" x="1023.5" y="2088.4863">Leyenda</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="45" x="1025.5" y="2102.5859">Notación</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="56" x="1174.5" y="2102.5859">Significado</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="62" x="1026.5" y="2114.6855">—○ (lollipop)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="38" x="1175.5" y="2114.6855">Interfaz</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="41" x="1216.5" y="2114.6855">provista</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="3" x="1257.5" y="2114.6855"> </text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="56" x="1026.5" y="2126.7852">—( (socket)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="38" x="1175.5" y="2126.7852">Interfaz</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="47" x="1216.5" y="2126.7852">requerida</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="164" x="1263.5" y="2126.7852">; ○( = ensamblaje ball-and-socket</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="64" x="1026.5" y="2138.8848">▫ en el borde</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="3" x="1172.5" y="2138.8848"> </text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="32" x="1175.5" y="2138.8848">Puerto</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="337" x="1210.5" y="2138.8848">UML: punto de interacción del componente compuesto con su entorno</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="66" x="1026.5" y="2150.9844">→ «delegate»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="395" x="1175.5" y="2150.9844">Conector de delegación: el puerto reenvía a la parte interna que realiza el contrato</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="91" x="1026.5" y="2163.084">- - -&gt; «instantiate»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="293" x="1175.5" y="2163.084">Solo Rule Selection crea reglas concretas (Registry / Factory)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="60" x="1026.5" y="2175.1836">- - -&gt; «tipo»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="241" x="1175.5" y="2175.1836">Dependencia solo de tipo (contrato o value object)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="143" x="1026.5" y="2187.2832">«subsystem» / «rules engine»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="225" x="1175.5" y="2187.2832">Componentes compuestos con puertos propios</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="39" x="1026.5" y="2199.3828">Paquete</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="302" x="1175.5" y="2199.3828">Módulo del monolito modular por dominio · carpeta Godot res://</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="77" x="1026.5" y="2211.4824">«adapter» (gris)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="183" x="1175.5" y="2211.4824">Adaptador hexagonal fuera del núcleo</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="98" x="1026.5" y="2223.582">«Strategy» / «State»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="261" x="1175.5" y="2223.582">Puntos de variación polimórfica (borde verde / ámbar)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="39" x="1026.5" y="2235.6816">«signal»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="256" x="1175.5" y="2235.6816">Interfaz de eventos con señales de Godot (Observer)</text><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2092.8984" y2="2092.8984"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2104.998" y2="2104.998"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2117.0977" y2="2117.0977"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2129.1973" y2="2129.1973"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2141.2969" y2="2141.2969"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2153.3965" y2="2153.3965"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2165.4961" y2="2165.4961"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2177.5957" y2="2177.5957"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2189.6953" y2="2189.6953"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2201.7949" y2="2201.7949"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2213.8945" y2="2213.8945"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2225.9941" y2="2225.9941"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1573.5" y1="2238.0938" y2="2238.0938"/><line style="stroke:#000000;stroke-width:1.0;" x1="1023.5" x2="1023.5" y1="2092.8984" y2="2238.0938"/><line style="stroke:#000000;stroke-width:1.0;" x1="1172.5" x2="1172.5" y1="2092.8984" y2="2238.0938"/><line style="stroke:#000000;stroke-width:1.0;" x1="1573.5" x2="1573.5" y1="2092.8984" y2="2238.0938"/><!--MD5=[8e17b4e018c90d8d97c6b44904fa7174]
+@startuml component-diagram-detailed
+' ============================================================================
+'  E2 · 1.3 Diagrama UML de Componentes Detallado (Interfaces y Puertos)
+'  Sistema Digital de Juego de Cartas (Clásica 4-3-3 & Apuntado a 101)
+'  Monolito modular por dominio (ADR-01, ADR-03) + puertos y adaptadores
+'  Comunicación: síncrona por interfaz + eventos post-commit (ADR-05)
+'  Implementación objetivo: Godot 4.5+ / GDScript
+'  Evoluciona la Figura 4.3 del E1 (vista lógica) a vista detallada:
+'   - Puertos UML explícitos en el borde del Núcleo y del Motor de Reglas
+'   - Conectores de delegación puerto -> componente interno
+'   - Estrategias ClassicRule / ApuntadoRule como componentes separados
+'   - Puerto de persistencia conectado a la BD (sección 2, ADR-04)
+'   - Contratos con operaciones por interfaz (tabla inferior)
+' ============================================================================
+
+title <size:18><b>1.3 Diagrama UML de Componentes Detallado (Interfaces y Puertos)</b></size>\n<size:12>Sistema Digital de Juego de Cartas · Clásica 4-3-3 & Apuntado a 101 · Monolito modular por dominio + puertos y adaptadores · Godot 4.5+ / GDScript</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 12
+skinparam componentStyle uml2
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #333333
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  StereotypeFontSize 10
+  StereotypeFontColor #555555
+}
+skinparam component<<mediator>> {
+  BorderColor #C05600
+  BorderThickness 2
+  BackgroundColor #FFF4E5
+}
+skinparam component<<Strategy>> {
+  BorderColor #1B7F3B
+  BorderThickness 2
+}
+skinparam component<<State>> {
+  BorderColor #B7791F
+  BorderThickness 2
+}
+skinparam component<<adapter>> {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+}
+skinparam component<<subsystem>> {
+  BackgroundColor #FCFCFC
+  BorderColor #3C3C3C
+  BorderThickness 2
+}
+skinparam component<<rules engine>> {
+  BackgroundColor #F1F9F3
+  BorderColor #1B7F3B
+  BorderThickness 2
+}
+skinparam interface {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  FontSize 11
+}
+skinparam package {
+  BorderColor #7A7A7A
+  FontSize 12
+  FontStyle bold
+}
+skinparam database {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+skinparam legend {
+  FontSize 10
+  BackgroundColor #FFFFFF
+  BorderColor #7A7A7A
+}
+skinparam actor {
+  BorderColor #3C3C3C
+  BackgroundColor #FFFFFF
+}
+
+' ============================================================================
+'  ACTORES
+' ============================================================================
+actor "Jugador" as Player
+actor "Administrador\nde Sala" as Host
+Host -|> Player
+
+' ============================================================================
+'  ADAPTADORES PRIMARIOS (driving) · PRESENTACIÓN  (export web)
+' ============================================================================
+package "presentation  ·  res://presentation/\n<size:10><i>adaptador primario (driving) · solo export web</i></size>" as PkgPresentation #EEF1F5 {
+  component "Game Table UI\n<size:10>apuntado.presentation.table</size>" as GameTableUI <<adapter>>
+  component "Card Theming\n<size:10>apuntado.presentation.theme</size>" as CardTheming <<adapter>>
+  interface "ICardTheme" as ICardTheme
+}
+
+' ============================================================================
+'  ADAPTADORES DE INFRAESTRUCTURA · RED
+' ============================================================================
+package "infrastructure.network  ·  res://infrastructure/network/\n<size:10><i>adaptador primario y secundario</i></size>" as PkgNetwork #EEF1F5 {
+  component "Network Session\n<size:10>apuntado.infrastructure.network</size>\n<size:9><i>MultiplayerAPI · RPC · WebSocketMultiplayerPeer</i></size>" as NetworkSession <<adapter>> <<Remote Proxy>>
+  interface "IMatchCommands\n<size:9>(proxy remoto, cliente)</size>" as IMatchCommandsProxy
+  interface "IPlayerViewEvents\n<size:9>«signal»</size>" as IPlayerViewEvents
+  note as NNet
+    <b>Remote Proxy</b>: el cliente reenvía cada
+    comando por RPC; el servidor valida
+    peer_id + token de sesión antes de
+    entrar al puerto <b>pCommands</b> (RNF 6).
+  end note
+}
+
+' ============================================================================
+'  NÚCLEO (componente compuesto con puertos en su borde)
+' ============================================================================
+component "Núcleo de la aplicación\n<size:10>sin dependencias de UI, red ni base de datos</size>" as Core <<subsystem>> {
+
+  portin "pCommands" as pCommands
+  portout "pPersistence" as pPersistence
+  portout "pPlayerChannel" as pPlayerChannel
+
+  package "orchestration  ·  res://orchestration/" as PkgOrchestration #FFF8EE {
+    component "Match Orchestration\n<size:10>apuntado.orchestration</size>\n<size:9><i>autoload MatchOrchestrator</i></size>" as MatchOrchestration <<mediator>> <<facade>>
+    interface "IGameEvents\n<size:9>«signal» post-commit</size>" as IGameEvents
+  }
+
+  package "match  ·  res://match/" as PkgMatch #F4F0FB {
+    component "Match Setup\n<size:10>apuntado.match.setup</size>" as MatchSetup
+    component "Match Outcome\n<size:10>apuntado.match.outcome</size>\n<size:9><i>Match (raíz de agregado)</i></size>" as MatchOutcome
+    component "Match History\n<size:10>apuntado.match.history</size>" as MatchHistory <<append-only log>>
+    interface "IMatchSetup" as IMatchSetup
+    interface "IMatchOutcome" as IMatchOutcome
+    interface "IMatchAudit" as IMatchAudit
+  }
+
+  package "turn  ·  res://turn/" as PkgTurn #FFF6E0 {
+    component "Turn Orchestration\n<size:10>apuntado.turn.orchestration</size>\n<size:9><i>Round · Turn · TurnPhase</i></size>" as TurnOrchestration <<State>>
+    interface "IRoundPlay" as IRoundPlay
+    interface "RoundEvents\n<size:9>«signal» (MoveRecord)</size>" as RoundEvents
+  }
+
+  package "scoring  ·  res://scoring/" as PkgScoring #FDECE3 {
+    component "Round Scoring\n<size:10>apuntado.scoring.round</size>" as RoundScoring
+    interface "IRoundScoring" as IRoundScoring
+  }
+
+  package "deck  ·  res://deck/" as PkgDeck #E4EFFB {
+    component "Deck Management\n<size:10>apuntado.deck</size>" as DeckManagement
+    interface "ICardZones" as ICardZones
+  }
+
+  package "notification  ·  res://notification/" as PkgNotification #E6F4F4 {
+    component "Game Notification\n<size:10>apuntado.notification</size>\n<size:9><i>filtra vista pública / mano privada</i></size>" as GameNotification
+  }
+
+  interface "IRuleResolver" as IRuleResolver
+  interface "IGameRule\n<size:9>contrato de variante</size>" as IGameRule
+
+  ' - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  '  MOTOR DE REGLAS: subsistema con puertos propios (punto de variación)
+  ' - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  component "Rules Engine\n<size:10>apuntado.rules  ·  res://rules/</size>" as RulesEngine <<rules engine>> {
+    portin "pRuleResolver" as pRuleResolver
+    portin "pGameRule" as pGameRule
+
+    component "Rule Selection\n<size:10>apuntado.rules.selection</size>\n<size:9><i>RuleRegistry</i></size>" as RuleSelection <<Registry / Factory>>
+
+    component "Game Modes\n<size:10>apuntado.rules.modes</size>\n<size:9><i>contrato: GameRule @abstract (Template Method)</i></size>" as GameModes {
+      component "ClassicRule\n<size:10>rules/modes/classic_rule.gd</size>\n<size:9>[CUARTA, TERNA, TERNA] · sobrante vacío</size>" as ClassicRule <<Strategy>>
+      component "ApuntadoRule\n<size:10>rules/modes/apuntado_rule.gd</size>\n<size:9>[TERNA ×3] · sobrante < 5 · umbral 101</size>" as ApuntadoRule <<Strategy>>
+    }
+
+    component "Hand Evaluation\n<size:10>apuntado.rules.evaluation</size>\n<size:9><i>HandEvaluator · Meld · CardValueTable</i></size>" as HandEvaluation <<domain service>>
+    interface "IHandEvaluation" as IHandEvaluation
+  }
+}
+
+' - - - Interfaces que cruzan los puertos (fuera de los compuestos) - - -
+interface "IMatchCommands\n<size:9>puerto de entrada</size>" as IMatchCommands
+interface "IMatchRepository\n<size:9>puerto de salida</size>" as IMatchRepository
+interface "IPlayerChannel\n<size:9>puerto de salida</size>" as IPlayerChannel
+
+' ============================================================================
+'  ADAPTADORES SECUNDARIOS (driven) · PERSISTENCIA
+' ============================================================================
+package "infrastructure.persistence  ·  res://infrastructure/persistence/\n<size:10><i>adaptador secundario (driven)</i></size>" as PkgPersistence #EEF1F5 {
+  component "Match Persistence\n<size:10>apuntado.infrastructure.persistence</size>\n<size:9><i>Repository + Data Mapper (2.3)</i></size>" as MatchPersistence <<adapter>>
+}
+database "BD relacional\n<size:10>esquema 2.2 · motor según ADR-04</size>" as MatchDB
+
+' ============================================================================
+'  RELACIONES
+'  provee (lollipop):  X - Interfaz        requiere (socket):  X - -( Interfaz
+'  «delegate»: conector de delegación UML entre un puerto y su parte interna
+' ============================================================================
+
+' - - - Actores -> presentación - - -
+Player - -> GameTableUI : robar · descartar\n· cerrar ronda
+Host - -> GameTableUI : crear partida\n· configurar modalidad
+
+' - - - Presentación - - -
+CardTheming -left- ICardTheme
+GameTableUI -right-( ICardTheme
+GameTableUI - -( IMatchCommandsProxy
+GameTableUI - -( IPlayerViewEvents
+
+' - - - Red (Remote Proxy) - - -
+NetworkSession -up- IMatchCommandsProxy
+NetworkSession -up- IPlayerViewEvents
+NetworkSession - -( IMatchCommands
+NetworkSession - IPlayerChannel
+
+' - - - Puertos del Núcleo - - -
+pCommands - IMatchCommands
+pCommands - -> MatchOrchestration : «delegate»
+MatchOrchestration - -> pPersistence : «delegate»
+pPersistence - -( IMatchRepository
+GameNotification - -> pPlayerChannel : «delegate»
+pPlayerChannel - -( IPlayerChannel
+
+' - - - Persistencia - - -
+MatchPersistence -up- IMatchRepository
+MatchPersistence - -> MatchDB : transacción por\nliquidación (2.4)
+
+' - - - Orquestación (Mediator + Facade) - - -
+MatchOrchestration -right- IGameEvents
+MatchOrchestration - -( IMatchSetup
+MatchOrchestration - -( IRuleResolver
+MatchOrchestration - -( IRoundPlay
+MatchOrchestration - -( IMatchOutcome
+MatchOrchestration - -( IMatchAudit
+MatchOrchestration .[norank].> IGameRule : «tipo»\ninyecta la regla
+
+' - - - Notificación (Observer) - - -
+GameNotification -left-( IGameEvents
+
+' - - - Match - - -
+MatchSetup -up- IMatchSetup
+MatchOutcome -up- IMatchOutcome
+MatchHistory -up- IMatchAudit
+MatchOutcome - -( IRoundPlay
+MatchOutcome - -( IRoundScoring
+MatchOutcome - -( IGameRule
+MatchHistory - -( RoundEvents
+MatchSetup .[norank].> IGameRule : «tipo»\nRuleSettings · GameMode
+
+' - - - Turn (State) - - -
+TurnOrchestration -up- IRoundPlay
+TurnOrchestration - RoundEvents
+TurnOrchestration - -( ICardZones
+TurnOrchestration - -( IGameRule
+TurnOrchestration - -( IRoundScoring
+
+' - - - Scoring / Deck - - -
+RoundScoring -up- IRoundScoring
+DeckManagement -up- ICardZones
+
+' - - - Puertos del Motor de Reglas - - -
+pRuleResolver - IRuleResolver
+pRuleResolver - -> RuleSelection : «delegate»
+pGameRule - IGameRule
+pGameRule - -> ClassicRule : «delegate»\nsi mode = CLASSIC
+pGameRule - -> ApuntadoRule : «delegate»\nsi mode = APUNTADO
+
+' - - - Interno del motor - - -
+RuleSelection ..> ClassicRule : «instantiate»
+RuleSelection ..> ApuntadoRule : «instantiate»
+HandEvaluation - IHandEvaluation
+ClassicRule - -( IHandEvaluation
+ApuntadoRule - -( IHandEvaluation
+RuleSelection - -( IHandEvaluation : inyecta\nel evaluador
+GameModes ..> DeckManagement : «tipo»\nCard
+HandEvaluation ..> DeckManagement : «tipo»\nCard
+
+' ============================================================================
+'  NOTAS
+' ============================================================================
+note right of MatchOrchestration
+  <b>Mediator + Facade</b> (ADR-01, ADR-05): <b>invoca, no decide</b>.
+  1) A3: IRuleResolver.resolve(mode) e inyecta IGameRule
+  2) delega el comando al módulo dueño (llamada síncrona)
+  3) persiste vía pPersistence (snapshot / liquidación)
+  4) emite IGameEvents <b>solo tras el commit</b>
+end note
+
+note bottom of GameModes
+  <b>Desacoplamiento orquestador ↔ reglas</b> (ADR-02, ADR-03)
+  • Turn Orchestration y Match Outcome solo conocen <b>IGameRule</b>,
+    expuesto por el puerto <b>pGameRule</b>; nunca una regla concreta.
+  • Rule Selection es el único que instancia estrategias.
+  • ClassicRule y ApuntadoRule <b>no dependen entre sí</b>
+    (verificado por fitness function, sección 5.2).
+  • Nueva variante = 1 componente en rules/modes + 1 valor
+    en GameMode + 1 register() (≤ 2 archivos existentes).
+  • Las reglas no tocan persistencia ni red: reciben Array[Card]
+    y devuelven value objects (ValidationResult).
+end note
+
+note bottom of MatchPersistence
+  Implementa IMatchRepository (DIP).
+  La liquidación de ronda (penalizaciones +
+  eliminaciones) se guarda en <b>una sola</b>
+  transacción: sin marcadores parciales (2.4).
+end note
+
+note as NContracts
+  <b>Contratos de las interfaces que cruzan puertos o separan módulos</b>
+  |= Interfaz |= Provee |= Requiere |= Operaciones principales |
+  | IMatchCommands | Núcleo (pCommands) | Network Session | create_match(config) · join(match_id, player) · draw_from_deck(player_id)\ndraw_from_discard(player_id) · discard(player_id, card_id) · declare_closing(player_id, card_id) |
+  | IGameRule | Rules Engine (pGameRule) | Turn Orchestration, Match Outcome | validate_closing(cards: Array[Card], discard: Card): ValidationResult\npenalty_for(cards): int · is_eliminated(total: int): bool · is_match_over(active: int): bool |
+  | IRuleResolver | Rules Engine (pRuleResolver) | Match Orchestration | resolve(mode: GameMode, settings: RuleSettings): GameRule |
+  | IMatchRepository | Match Persistence | Núcleo (pPersistence) | load(match_id): Match · save_snapshot(match) · save_settlement(match, settlement) <i>[atómica]</i> |
+  | IPlayerChannel | Network Session | Núcleo (pPlayerChannel) | send_private(player_id, hand_view) · broadcast(public_view) |
+  | IGameEvents «signal» | Match Orchestration | Game Notification | turn_changed · move_performed · round_closed · player_eliminated · match_finished |
+  | IRoundPlay | Turn Orchestration | Match Orchestration, Match Outcome | start(rng) · draw_*(player_id) · discard(...) · declare_closing(...) · settle(): RoundSettlement |
+  | IRoundScoring | Round Scoring | Turn Orchestration, Match Outcome | record(settlement) · total_of(player_id): int · scoreboard(): Scoreboard |
+  | IHandEvaluation | Hand Evaluation | ClassicRule, ApuntadoRule | best_melds(cards, pattern, values): Array[Meld] · points_of(cards, values): int |
+end note
+
+' ============================================================================
+'  LEYENDA
+' ============================================================================
+legend bottom
+  <b>Leyenda</b>
+  |= Notación |= Significado |
+  | —○ (lollipop) | Interfaz <b>provista</b> |
+  | —( (socket) | Interfaz <b>requerida</b>; ○( = ensamblaje ball-and-socket |
+  | ▫ en el borde | <b>Puerto</b> UML: punto de interacción del componente compuesto con su entorno |
+  | → «delegate» | Conector de delegación: el puerto reenvía a la parte interna que realiza el contrato |
+  | - - -> «instantiate» | Solo Rule Selection crea reglas concretas (Registry / Factory) |
+  | - - -> «tipo» | Dependencia solo de tipo (contrato o value object) |
+  | «subsystem» / «rules engine» | Componentes compuestos con puertos propios |
+  | Paquete | Módulo del monolito modular por dominio · carpeta Godot res:// |
+  | «adapter» (gris) | Adaptador hexagonal fuera del núcleo |
+  | «Strategy» / «State» | Puntos de variación polimórfica (borde verde / ámbar) |
+  | «signal» | Interfaz de eventos con señales de Godot (Observer) |
+endlegend
+
+@enduml
+
+@startuml component-diagram-detailed
+
+title <size:18><b>1.3 Diagrama UML de Componentes Detallado (Interfaces y Puertos)</b></size>\n<size:12>Sistema Digital de Juego de Cartas · Clásica 4-3-3 & Apuntado a 101 · Monolito modular por dominio + puertos y adaptadores · Godot 4.5+ / GDScript</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 12
+skinparam componentStyle uml2
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #333333
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  StereotypeFontSize 10
+  StereotypeFontColor #555555
+}
+skinparam component<<mediator>> {
+  BorderColor #C05600
+  BorderThickness 2
+  BackgroundColor #FFF4E5
+}
+skinparam component<<Strategy>> {
+  BorderColor #1B7F3B
+  BorderThickness 2
+}
+skinparam component<<State>> {
+  BorderColor #B7791F
+  BorderThickness 2
+}
+skinparam component<<adapter>> {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+}
+skinparam component<<subsystem>> {
+  BackgroundColor #FCFCFC
+  BorderColor #3C3C3C
+  BorderThickness 2
+}
+skinparam component<<rules engine>> {
+  BackgroundColor #F1F9F3
+  BorderColor #1B7F3B
+  BorderThickness 2
+}
+skinparam interface {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  FontSize 11
+}
+skinparam package {
+  BorderColor #7A7A7A
+  FontSize 12
+  FontStyle bold
+}
+skinparam database {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+skinparam legend {
+  FontSize 10
+  BackgroundColor #FFFFFF
+  BorderColor #7A7A7A
+}
+skinparam actor {
+  BorderColor #3C3C3C
+  BackgroundColor #FFFFFF
+}
+
+actor "Jugador" as Player
+actor "Administrador\nde Sala" as Host
+Host -|> Player
+
+package "presentation  ·  res://presentation/\n<size:10><i>adaptador primario (driving) · solo export web</i></size>" as PkgPresentation #EEF1F5 {
+  component "Game Table UI\n<size:10>apuntado.presentation.table</size>" as GameTableUI <<adapter>>
+  component "Card Theming\n<size:10>apuntado.presentation.theme</size>" as CardTheming <<adapter>>
+  interface "ICardTheme" as ICardTheme
+}
+
+package "infrastructure.network  ·  res://infrastructure/network/\n<size:10><i>adaptador primario y secundario</i></size>" as PkgNetwork #EEF1F5 {
+  component "Network Session\n<size:10>apuntado.infrastructure.network</size>\n<size:9><i>MultiplayerAPI · RPC · WebSocketMultiplayerPeer</i></size>" as NetworkSession <<adapter>> <<Remote Proxy>>
+  interface "IMatchCommands\n<size:9>(proxy remoto, cliente)</size>" as IMatchCommandsProxy
+  interface "IPlayerViewEvents\n<size:9>«signal»</size>" as IPlayerViewEvents
+  note as NNet
+    <b>Remote Proxy</b>: el cliente reenvía cada
+    comando por RPC; el servidor valida
+    peer_id + token de sesión antes de
+    entrar al puerto <b>pCommands</b> (RNF 6).
+  end note
+}
+
+component "Núcleo de la aplicación\n<size:10>sin dependencias de UI, red ni base de datos</size>" as Core <<subsystem>> {
+
+  portin "pCommands" as pCommands
+  portout "pPersistence" as pPersistence
+  portout "pPlayerChannel" as pPlayerChannel
+
+  package "orchestration  ·  res://orchestration/" as PkgOrchestration #FFF8EE {
+    component "Match Orchestration\n<size:10>apuntado.orchestration</size>\n<size:9><i>autoload MatchOrchestrator</i></size>" as MatchOrchestration <<mediator>> <<facade>>
+    interface "IGameEvents\n<size:9>«signal» post-commit</size>" as IGameEvents
+  }
+
+  package "match  ·  res://match/" as PkgMatch #F4F0FB {
+    component "Match Setup\n<size:10>apuntado.match.setup</size>" as MatchSetup
+    component "Match Outcome\n<size:10>apuntado.match.outcome</size>\n<size:9><i>Match (raíz de agregado)</i></size>" as MatchOutcome
+    component "Match History\n<size:10>apuntado.match.history</size>" as MatchHistory <<append-only log>>
+    interface "IMatchSetup" as IMatchSetup
+    interface "IMatchOutcome" as IMatchOutcome
+    interface "IMatchAudit" as IMatchAudit
+  }
+
+  package "turn  ·  res://turn/" as PkgTurn #FFF6E0 {
+    component "Turn Orchestration\n<size:10>apuntado.turn.orchestration</size>\n<size:9><i>Round · Turn · TurnPhase</i></size>" as TurnOrchestration <<State>>
+    interface "IRoundPlay" as IRoundPlay
+    interface "RoundEvents\n<size:9>«signal» (MoveRecord)</size>" as RoundEvents
+  }
+
+  package "scoring  ·  res://scoring/" as PkgScoring #FDECE3 {
+    component "Round Scoring\n<size:10>apuntado.scoring.round</size>" as RoundScoring
+    interface "IRoundScoring" as IRoundScoring
+  }
+
+  package "deck  ·  res://deck/" as PkgDeck #E4EFFB {
+    component "Deck Management\n<size:10>apuntado.deck</size>" as DeckManagement
+    interface "ICardZones" as ICardZones
+  }
+
+  package "notification  ·  res://notification/" as PkgNotification #E6F4F4 {
+    component "Game Notification\n<size:10>apuntado.notification</size>\n<size:9><i>filtra vista pública / mano privada</i></size>" as GameNotification
+  }
+
+  interface "IRuleResolver" as IRuleResolver
+  interface "IGameRule\n<size:9>contrato de variante</size>" as IGameRule
+
+  component "Rules Engine\n<size:10>apuntado.rules  ·  res://rules/</size>" as RulesEngine <<rules engine>> {
+    portin "pRuleResolver" as pRuleResolver
+    portin "pGameRule" as pGameRule
+
+    component "Rule Selection\n<size:10>apuntado.rules.selection</size>\n<size:9><i>RuleRegistry</i></size>" as RuleSelection <<Registry / Factory>>
+
+    component "Game Modes\n<size:10>apuntado.rules.modes</size>\n<size:9><i>contrato: GameRule @abstract (Template Method)</i></size>" as GameModes {
+      component "ClassicRule\n<size:10>rules/modes/classic_rule.gd</size>\n<size:9>[CUARTA, TERNA, TERNA] · sobrante vacío</size>" as ClassicRule <<Strategy>>
+      component "ApuntadoRule\n<size:10>rules/modes/apuntado_rule.gd</size>\n<size:9>[TERNA ×3] · sobrante < 5 · umbral 101</size>" as ApuntadoRule <<Strategy>>
+    }
+
+    component "Hand Evaluation\n<size:10>apuntado.rules.evaluation</size>\n<size:9><i>HandEvaluator · Meld · CardValueTable</i></size>" as HandEvaluation <<domain service>>
+    interface "IHandEvaluation" as IHandEvaluation
+  }
+}
+
+interface "IMatchCommands\n<size:9>puerto de entrada</size>" as IMatchCommands
+interface "IMatchRepository\n<size:9>puerto de salida</size>" as IMatchRepository
+interface "IPlayerChannel\n<size:9>puerto de salida</size>" as IPlayerChannel
+
+package "infrastructure.persistence  ·  res://infrastructure/persistence/\n<size:10><i>adaptador secundario (driven)</i></size>" as PkgPersistence #EEF1F5 {
+  component "Match Persistence\n<size:10>apuntado.infrastructure.persistence</size>\n<size:9><i>Repository + Data Mapper (2.3)</i></size>" as MatchPersistence <<adapter>>
+}
+database "BD relacional\n<size:10>esquema 2.2 · motor según ADR-04</size>" as MatchDB
+
+
+Player - -> GameTableUI : robar · descartar\n· cerrar ronda
+Host - -> GameTableUI : crear partida\n· configurar modalidad
+
+CardTheming -left- ICardTheme
+GameTableUI -right-( ICardTheme
+GameTableUI - -( IMatchCommandsProxy
+GameTableUI - -( IPlayerViewEvents
+
+NetworkSession -up- IMatchCommandsProxy
+NetworkSession -up- IPlayerViewEvents
+NetworkSession - -( IMatchCommands
+NetworkSession - IPlayerChannel
+
+pCommands - IMatchCommands
+pCommands - -> MatchOrchestration : «delegate»
+MatchOrchestration - -> pPersistence : «delegate»
+pPersistence - -( IMatchRepository
+GameNotification - -> pPlayerChannel : «delegate»
+pPlayerChannel - -( IPlayerChannel
+
+MatchPersistence -up- IMatchRepository
+MatchPersistence - -> MatchDB : transacción por\nliquidación (2.4)
+
+MatchOrchestration -right- IGameEvents
+MatchOrchestration - -( IMatchSetup
+MatchOrchestration - -( IRuleResolver
+MatchOrchestration - -( IRoundPlay
+MatchOrchestration - -( IMatchOutcome
+MatchOrchestration - -( IMatchAudit
+MatchOrchestration .[norank].> IGameRule : «tipo»\ninyecta la regla
+
+GameNotification -left-( IGameEvents
+
+MatchSetup -up- IMatchSetup
+MatchOutcome -up- IMatchOutcome
+MatchHistory -up- IMatchAudit
+MatchOutcome - -( IRoundPlay
+MatchOutcome - -( IRoundScoring
+MatchOutcome - -( IGameRule
+MatchHistory - -( RoundEvents
+MatchSetup .[norank].> IGameRule : «tipo»\nRuleSettings · GameMode
+
+TurnOrchestration -up- IRoundPlay
+TurnOrchestration - RoundEvents
+TurnOrchestration - -( ICardZones
+TurnOrchestration - -( IGameRule
+TurnOrchestration - -( IRoundScoring
+
+RoundScoring -up- IRoundScoring
+DeckManagement -up- ICardZones
+
+pRuleResolver - IRuleResolver
+pRuleResolver - -> RuleSelection : «delegate»
+pGameRule - IGameRule
+pGameRule - -> ClassicRule : «delegate»\nsi mode = CLASSIC
+pGameRule - -> ApuntadoRule : «delegate»\nsi mode = APUNTADO
+
+RuleSelection ..> ClassicRule : «instantiate»
+RuleSelection ..> ApuntadoRule : «instantiate»
+HandEvaluation - IHandEvaluation
+ClassicRule - -( IHandEvaluation
+ApuntadoRule - -( IHandEvaluation
+RuleSelection - -( IHandEvaluation : inyecta\nel evaluador
+GameModes ..> DeckManagement : «tipo»\nCard
+HandEvaluation ..> DeckManagement : «tipo»\nCard
+
+note right of MatchOrchestration
+  <b>Mediator + Facade</b> (ADR-01, ADR-05): <b>invoca, no decide</b>.
+  1) A3: IRuleResolver.resolve(mode) e inyecta IGameRule
+  2) delega el comando al módulo dueño (llamada síncrona)
+  3) persiste vía pPersistence (snapshot / liquidación)
+  4) emite IGameEvents <b>solo tras el commit</b>
+end note
+
+note bottom of GameModes
+  <b>Desacoplamiento orquestador ↔ reglas</b> (ADR-02, ADR-03)
+  • Turn Orchestration y Match Outcome solo conocen <b>IGameRule</b>,
+    expuesto por el puerto <b>pGameRule</b>; nunca una regla concreta.
+  • Rule Selection es el único que instancia estrategias.
+  • ClassicRule y ApuntadoRule <b>no dependen entre sí</b>
+    (verificado por fitness function, sección 5.2).
+  • Nueva variante = 1 componente en rules/modes + 1 valor
+    en GameMode + 1 register() (≤ 2 archivos existentes).
+  • Las reglas no tocan persistencia ni red: reciben Array[Card]
+    y devuelven value objects (ValidationResult).
+end note
+
+note bottom of MatchPersistence
+  Implementa IMatchRepository (DIP).
+  La liquidación de ronda (penalizaciones +
+  eliminaciones) se guarda en <b>una sola</b>
+  transacción: sin marcadores parciales (2.4).
+end note
+
+note as NContracts
+  <b>Contratos de las interfaces que cruzan puertos o separan módulos</b>
+  |= Interfaz |= Provee |= Requiere |= Operaciones principales |
+  | IMatchCommands | Núcleo (pCommands) | Network Session | create_match(config) · join(match_id, player) · draw_from_deck(player_id)\ndraw_from_discard(player_id) · discard(player_id, card_id) · declare_closing(player_id, card_id) |
+  | IGameRule | Rules Engine (pGameRule) | Turn Orchestration, Match Outcome | validate_closing(cards: Array[Card], discard: Card): ValidationResult\npenalty_for(cards): int · is_eliminated(total: int): bool · is_match_over(active: int): bool |
+  | IRuleResolver | Rules Engine (pRuleResolver) | Match Orchestration | resolve(mode: GameMode, settings: RuleSettings): GameRule |
+  | IMatchRepository | Match Persistence | Núcleo (pPersistence) | load(match_id): Match · save_snapshot(match) · save_settlement(match, settlement) <i>[atómica]</i> |
+  | IPlayerChannel | Network Session | Núcleo (pPlayerChannel) | send_private(player_id, hand_view) · broadcast(public_view) |
+  | IGameEvents «signal» | Match Orchestration | Game Notification | turn_changed · move_performed · round_closed · player_eliminated · match_finished |
+  | IRoundPlay | Turn Orchestration | Match Orchestration, Match Outcome | start(rng) · draw_*(player_id) · discard(...) · declare_closing(...) · settle(): RoundSettlement |
+  | IRoundScoring | Round Scoring | Turn Orchestration, Match Outcome | record(settlement) · total_of(player_id): int · scoreboard(): Scoreboard |
+  | IHandEvaluation | Hand Evaluation | ClassicRule, ApuntadoRule | best_melds(cards, pattern, values): Array[Meld] · points_of(cards, values): int |
+end note
+
+legend bottom
+  <b>Leyenda</b>
+  |= Notación |= Significado |
+  | —○ (lollipop) | Interfaz <b>provista</b> |
+  | —( (socket) | Interfaz <b>requerida</b>; ○( = ensamblaje ball-and-socket |
+  | ▫ en el borde | <b>Puerto</b> UML: punto de interacción del componente compuesto con su entorno |
+  | → «delegate» | Conector de delegación: el puerto reenvía a la parte interna que realiza el contrato |
+  | - - -> «instantiate» | Solo Rule Selection crea reglas concretas (Registry / Factory) |
+  | - - -> «tipo» | Dependencia solo de tipo (contrato o value object) |
+  | «subsystem» / «rules engine» | Componentes compuestos con puertos propios |
+  | Paquete | Módulo del monolito modular por dominio · carpeta Godot res:// |
+  | «adapter» (gris) | Adaptador hexagonal fuera del núcleo |
+  | «Strategy» / «State» | Puntos de variación polimórfica (borde verde / ámbar) |
+  | «signal» | Interfaz de eventos con señales de Godot (Observer) |
+endlegend
+
+@enduml
+
+PlantUML version 1.2022.12(Sun Oct 23 13:12:26 COT 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="3188px" preserveAspectRatio="none" style="width:3081px;height:3188px;background:#FFFFFF;" version="1.1" viewBox="0 0 3081 3188" width="3081px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="50.2988" id="_title" style="stroke:none;stroke-width:1.0;" width="735" x="1166.46" y="5"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="18" font-weight="bold" lengthAdjust="spacing" textLength="563" x="1252.46" y="29.4375">2.3 Diagrama UML de Clases de Entidad y Mapeo de Persistencia</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="721" x="1173.46" y="45.4043">Dominio (4.4) → Repository + Data Mapper → Entidades de persistencia → Esquema relacional (2.2) · Godot 4.5+ / GDScript</text><!--MD5=[50eff076539e7807324fc266cc2f7469]
+cluster PkgDomain--><g id="cluster_PkgDomain"><path d="M87.42,310.2988 L362.42,310.2988 A3.75,3.75 0 0 1 364.92,312.7988 L371.92,334.8184 L466.42,334.8184 A2.5,2.5 0 0 1 468.92,337.3184 L468.92,2868.2988 A2.5,2.5 0 0 1 466.42,2870.7988 L87.42,2870.7988 A2.5,2.5 0 0 1 84.92,2868.2988 L84.92,312.7988 A2.5,2.5 0 0 1 87.42,310.2988 " fill="#FBFBF7" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="84.92" x2="371.92" y1="334.8184" y2="334.8184"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="270" x="90.92" y="325.9238">Dominio  ·  núcleo (diagrama 4.4, sin cambios)</text></g><!--MD5=[608074a6c9bc605c2835591a8f4e03f9]
+cluster PkgPort--><g id="cluster_PkgPort"><path d="M1409.42,67.2988 L1639.42,67.2988 A3.75,3.75 0 0 1 1641.92,69.7988 L1648.92,91.8184 L1838.42,91.8184 A2.5,2.5 0 0 1 1840.92,94.3184 L1840.92,257.7988 A2.5,2.5 0 0 1 1838.42,260.2988 L1409.42,260.2988 A2.5,2.5 0 0 1 1406.92,257.7988 L1406.92,69.7988 A2.5,2.5 0 0 1 1409.42,67.2988 " fill="#FFF8EE" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="1406.92" x2="1648.92" y1="91.8184" y2="91.8184"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="225" x="1412.92" y="82.9238">Puerto de salida  ·  res://orchestration/</text></g><!--MD5=[255e7afab23e9f345a8ba5921cf7ecad]
+cluster PkgAdapter--><g id="cluster_PkgAdapter"><path d="M2036.42,998.2988 L2405.42,998.2988 A3.75,3.75 0 0 1 2407.92,1000.7988 L2414.92,1022.8184 L2762.42,1022.8184 A2.5,2.5 0 0 1 2764.92,1025.3184 L2764.92,1649.2988 A2.5,2.5 0 0 1 2762.42,1651.7988 L2036.42,1651.7988 A2.5,2.5 0 0 1 2033.92,1649.2988 L2033.92,1000.7988 A2.5,2.5 0 0 1 2036.42,998.2988 " fill="#EEF1F5" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="2033.92" x2="2414.92" y1="1022.8184" y2="1022.8184"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="364" x="2039.92" y="1013.9238">Adaptador de persistencia  ·  res://infrastructure/persistence/</text></g><!--MD5=[8a48dd69aa931f4f761ab11fb4ebcc8b]
+cluster PkgEntities--><g id="cluster_PkgEntities"><path d="M495.42,1427.2988 L906.42,1427.2988 A3.75,3.75 0 0 1 908.92,1429.7988 L915.92,1451.8184 L2007.42,1451.8184 A2.5,2.5 0 0 1 2009.92,1454.3184 L2009.92,2924.2988 A2.5,2.5 0 0 1 2007.42,2926.7988 L495.42,2926.7988 A2.5,2.5 0 0 1 492.92,2924.2988 L492.92,1429.7988 A2.5,2.5 0 0 1 495.42,1427.2988 " fill="#F5F7FA" style="stroke:#7A7A7A;stroke-width:1.5;"/><line style="stroke:#7A7A7A;stroke-width:1.5;" x1="492.92" x2="915.92" y1="1451.8184" y2="1451.8184"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="406" x="498.92" y="1442.9238">Entidades de persistencia  ·  res://infrastructure/persistence/entities/</text></g><!--MD5=[5f0899136ed8f523b18ed05779c24112]
+class Match--><g id="elem_Match"><rect codeLine="64" fill="#FFFFFF" height="70.6797" id="Match" rx="2.5" ry="2.5" style="stroke:#5B3F99;stroke-width:2.0;" width="117" x="335.42" y="368.2988"/><ellipse cx="350.32" cy="390.3789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M352.1481,394.6289 Q351.7419,394.832 351.2888,394.9414 Q350.8356,395.0508 350.3513,395.0508 Q348.57,395.0508 347.6325,393.8945 Q346.7106,392.7227 346.7106,390.5195 Q346.7106,388.3008 347.6325,387.1445 Q348.57,385.9727 350.3513,385.9727 Q350.8356,385.9727 351.2888,386.082 Q351.7575,386.1758 352.1481,386.3945 L352.1481,388.3164 Q351.7106,387.9102 351.2888,387.7227 Q350.8669,387.5195 350.4294,387.5195 Q349.4763,387.5195 348.9919,388.2852 Q348.5075,389.0352 348.5075,390.5195 Q348.5075,391.9883 348.9919,392.7383 Q349.4763,393.4883 350.4294,393.4883 Q350.8669,393.4883 351.2888,393.3008 Q351.7106,393.1133 352.1481,392.707 L352.1481,394.6289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="85" x="363.52" y="384.5811">«aggregate root»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="36" x="388.02" y="402.5645">Match</text><line style="stroke:#5B3F99;stroke-width:2.0;" x1="336.42" x2="451.42" y1="412.459" y2="412.459"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="101" x="343.42" y="430.084">id · host_id · status</text></g><!--MD5=[f56857ea4b48867d6dc11c4401204205]
+class MatchConfig--><g id="elem_MatchConfig"><rect codeLine="67" fill="#FFFFFF" height="70.6797" id="MatchConfig" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="228" x="224.92" y="490.2988"/><ellipse cx="296.42" cy="512.3789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M298.2481,516.6289 Q297.8419,516.832 297.3888,516.9414 Q296.9356,517.0508 296.4513,517.0508 Q294.67,517.0508 293.7325,515.8945 Q292.8106,514.7227 292.8106,512.5195 Q292.8106,510.3008 293.7325,509.1445 Q294.67,507.9727 296.4513,507.9727 Q296.9356,507.9727 297.3888,508.082 Q297.8575,508.1758 298.2481,508.3945 L298.2481,510.3164 Q297.8106,509.9102 297.3888,509.7227 Q296.9669,509.5195 296.5294,509.5195 Q295.5763,509.5195 295.0919,510.2852 Q294.6075,511.0352 294.6075,512.5195 Q294.6075,513.9883 295.0919,514.7383 Q295.5763,515.4883 296.5294,515.4883 Q296.9669,515.4883 297.3888,515.3008 Q297.8106,515.1133 298.2481,514.707 L298.2481,516.6289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="58" x="324.92" y="506.5811">«Resource»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="73" x="317.42" y="524.5645">MatchConfig</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="225.92" x2="451.92" y1="534.459" y2="534.459"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="212" x="232.92" y="552.084">mode · cards_per_player · deck_count</text></g><!--MD5=[5c0909cf8ab8b08c30893828abb3a17e]
+class RuleSettings--><g id="elem_RuleSettings"><rect codeLine="70" fill="#FFFFFF" height="70.6797" id="RuleSettings" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="352" x="100.92" y="612.2988"/><ellipse cx="235.42" cy="634.3789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M237.2481,638.6289 Q236.8419,638.832 236.3888,638.9414 Q235.9356,639.0508 235.4513,639.0508 Q233.67,639.0508 232.7325,637.8945 Q231.8106,636.7227 231.8106,634.5195 Q231.8106,632.3008 232.7325,631.1445 Q233.67,629.9727 235.4513,629.9727 Q235.9356,629.9727 236.3888,630.082 Q236.8575,630.1758 237.2481,630.3945 L237.2481,632.3164 Q236.8106,631.9102 236.3888,631.7227 Q235.9669,631.5195 235.5294,631.5195 Q234.5763,631.5195 234.0919,632.2852 Q233.6075,633.0352 233.6075,634.5195 Q233.6075,635.9883 234.0919,636.7383 Q234.5763,637.4883 235.5294,637.4883 Q235.9669,637.4883 236.3888,637.3008 Q236.8106,637.1133 237.2481,636.707 L237.2481,638.6289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="58" x="262.92" y="628.5811">«Resource»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="71" x="256.42" y="646.5645">RuleSettings</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="101.92" x2="451.92" y1="656.459" y2="656.459"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="336" x="108.92" y="674.084">elimination_threshold · max_leftover_points · jokers_enabled</text></g><!--MD5=[2cb47ba637a0d19583e6199456f6ad0b]
+class Player--><g id="elem_Player"><rect codeLine="73" fill="#FFFFFF" height="70.6797" id="Player" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="167" x="240.42" y="734.2988"/><ellipse cx="299.42" cy="756.3789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M301.2481,760.6289 Q300.8419,760.832 300.3888,760.9414 Q299.9356,761.0508 299.4513,761.0508 Q297.67,761.0508 296.7325,759.8945 Q295.8106,758.7227 295.8106,756.5195 Q295.8106,754.3008 296.7325,753.1445 Q297.67,751.9727 299.4513,751.9727 Q299.9356,751.9727 300.3888,752.082 Q300.8575,752.1758 301.2481,752.3945 L301.2481,754.3164 Q300.8106,753.9102 300.3888,753.7227 Q299.9669,753.5195 299.5294,753.5195 Q298.5763,753.5195 298.0919,754.2852 Q297.6075,755.0352 297.6075,756.5195 Q297.6075,757.9883 298.0919,758.7383 Q298.5763,759.4883 299.5294,759.4883 Q299.9669,759.4883 300.3888,759.3008 Q300.8106,759.1133 301.2481,758.707 L301.2481,760.6289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="41" x="318.42" y="750.5811">«entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="37" x="320.42" y="768.5645">Player</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="241.42" x2="406.42" y1="778.459" y2="778.459"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="151" x="248.42" y="796.084">id · nickname · seat · status</text></g><!--MD5=[d75b0a238b734941260681f0026bbb88]
+class Round--><g id="elem_Round"><rect codeLine="76" fill="#FFFFFF" height="70.6797" id="Round" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="128" x="259.92" y="856.2988"/><ellipse cx="299.57" cy="878.3789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M301.3981,882.6289 Q300.9919,882.832 300.5388,882.9414 Q300.0856,883.0508 299.6013,883.0508 Q297.82,883.0508 296.8825,881.8945 Q295.9606,880.7227 295.9606,878.5195 Q295.9606,876.3008 296.8825,875.1445 Q297.82,873.9727 299.6013,873.9727 Q300.0856,873.9727 300.5388,874.082 Q301.0075,874.1758 301.3981,874.3945 L301.3981,876.3164 Q300.9606,875.9102 300.5388,875.7227 Q300.1169,875.5195 299.6794,875.5195 Q298.7263,875.5195 298.2419,876.2852 Q297.7575,877.0352 297.7575,878.5195 Q297.7575,879.9883 298.2419,880.7383 Q298.7263,881.4883 299.6794,881.4883 Q300.1169,881.4883 300.5388,881.3008 Q300.9606,881.1133 301.3981,880.707 L301.3981,882.6289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="41" x="318.27" y="872.5811">«entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="36" x="320.77" y="890.5645">Round</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="260.92" x2="386.92" y1="900.459" y2="900.459"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="112" x="267.92" y="918.084">number · is_closed()</text></g><!--MD5=[dd91eae41778c45e12552e5329e240e8]
+class Turn--><g id="elem_Turn"><rect codeLine="79" fill="#FFFFFF" height="70.6797" id="Turn" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="153" x="299.42" y="1097.2988"/><ellipse cx="322.42" cy="1119.3789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M324.2481,1123.6289 Q323.8419,1123.832 323.3888,1123.9414 Q322.9356,1124.0508 322.4513,1124.0508 Q320.67,1124.0508 319.7325,1122.8945 Q318.8106,1121.7227 318.8106,1119.5195 Q318.8106,1117.3008 319.7325,1116.1445 Q320.67,1114.9727 322.4513,1114.9727 Q322.9356,1114.9727 323.3888,1115.082 Q323.8575,1115.1758 324.2481,1115.3945 L324.2481,1117.3164 Q323.8106,1116.9102 323.3888,1116.7227 Q322.9669,1116.5195 322.5294,1116.5195 Q321.5763,1116.5195 321.0919,1117.2852 Q320.6075,1118.0352 320.6075,1119.5195 Q320.6075,1120.9883 321.0919,1121.7383 Q321.5763,1122.4883 322.5294,1122.4883 Q322.9669,1122.4883 323.3888,1122.3008 Q323.8106,1122.1133 324.2481,1121.707 L324.2481,1123.6289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="38" x="369.92" y="1113.5811">«State»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="99" x="339.42" y="1131.5645">Turn / TurnPhase</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="300.42" x2="451.42" y1="1141.459" y2="1141.459"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="137" x="307.42" y="1159.084">player_id · number · fase</text></g><!--MD5=[b3a980551af4fb5504d75634056fd54d]
+class Hand--><g id="elem_Hand"><rect codeLine="82" fill="#FFFFFF" height="70.6797" id="Hand" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="116" x="252.92" y="1278.7988"/><ellipse cx="287.17" cy="1300.8789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M288.9981,1305.1289 Q288.5919,1305.332 288.1388,1305.4414 Q287.6856,1305.5508 287.2013,1305.5508 Q285.42,1305.5508 284.4825,1304.3945 Q283.5606,1303.2227 283.5606,1301.0195 Q283.5606,1298.8008 284.4825,1297.6445 Q285.42,1296.4727 287.2013,1296.4727 Q287.6856,1296.4727 288.1388,1296.582 Q288.6075,1296.6758 288.9981,1296.8945 L288.9981,1298.8164 Q288.5606,1298.4102 288.1388,1298.2227 Q287.7169,1298.0195 287.2794,1298.0195 Q286.3263,1298.0195 285.8419,1298.7852 Q285.3575,1299.5352 285.3575,1301.0195 Q285.3575,1302.4883 285.8419,1303.2383 Q286.3263,1303.9883 287.2794,1303.9883 Q287.7169,1303.9883 288.1388,1303.8008 Q288.5606,1303.6133 288.9981,1303.207 L288.9981,1305.1289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="41" x="304.67" y="1295.0811">«entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="30" x="310.17" y="1313.0645">Hand</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="253.92" x2="367.92" y1="1322.959" y2="1322.959"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="100" x="260.92" y="1340.584">owner_id · cards()</text></g><!--MD5=[fe58a72c1adbae51d39c02af9a99bb7b]
+class Zones--><g id="elem_Zones"><rect codeLine="85" fill="#FFFFFF" height="70.6797" id="Zones" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="139" x="241.42" y="1518.7988"/><ellipse cx="255.42" cy="1540.8789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M257.2481,1545.1289 Q256.8419,1545.332 256.3888,1545.4414 Q255.9356,1545.5508 255.4513,1545.5508 Q253.67,1545.5508 252.7325,1544.3945 Q251.8106,1543.2227 251.8106,1541.0195 Q251.8106,1538.8008 252.7325,1537.6445 Q253.67,1536.4727 255.4513,1536.4727 Q255.9356,1536.4727 256.3888,1536.582 Q256.8575,1536.6758 257.2481,1536.8945 L257.2481,1538.8164 Q256.8106,1538.4102 256.3888,1538.2227 Q255.9669,1538.0195 255.5294,1538.0195 Q254.5763,1538.0195 254.0919,1538.7852 Q253.6075,1539.5352 253.6075,1541.0195 Q253.6075,1542.4883 254.0919,1543.2383 Q254.5763,1543.9883 255.5294,1543.9883 Q255.9669,1543.9883 256.3888,1543.8008 Q256.8106,1543.6133 257.2481,1543.207 L257.2481,1545.1289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="41" x="302.42" y="1535.0811">«entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="105" x="270.42" y="1553.0645">Deck / DiscardPile</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="242.42" x2="379.42" y1="1562.959" y2="1562.959"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="81" x="249.42" y="1580.584">_cards (orden)</text></g><!--MD5=[5e305716458bbdabbd2d7f572ed2bae2]
+class Card--><g id="elem_Card"><rect codeLine="88" fill="#FFFFFF" height="70.6797" id="Card" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="143" x="309.42" y="1827.7988"/><ellipse cx="341.42" cy="1849.8789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M343.2481,1854.1289 Q342.8419,1854.332 342.3888,1854.4414 Q341.9356,1854.5508 341.4513,1854.5508 Q339.67,1854.5508 338.7325,1853.3945 Q337.8106,1852.2227 337.8106,1850.0195 Q337.8106,1847.8008 338.7325,1846.6445 Q339.67,1845.4727 341.4513,1845.4727 Q341.9356,1845.4727 342.3888,1845.582 Q342.8575,1845.6758 343.2481,1845.8945 L343.2481,1847.8164 Q342.8106,1847.4102 342.3888,1847.2227 Q341.9669,1847.0195 341.5294,1847.0195 Q340.5763,1847.0195 340.0919,1847.7852 Q339.6075,1848.5352 339.6075,1850.0195 Q339.6075,1851.4883 340.0919,1852.2383 Q340.5763,1852.9883 341.5294,1852.9883 Q341.9669,1852.9883 342.3888,1852.8008 Q342.8106,1852.6133 343.2481,1852.207 L343.2481,1854.1289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="73" x="358.42" y="1844.0811">«value object»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="28" x="380.92" y="1862.0645">Card</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="310.42" x2="451.42" y1="1871.959" y2="1871.959"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="127" x="317.42" y="1889.584">instance_id · rank · suit</text></g><!--MD5=[080f216be9d09c211e71b7826e5990b2]
+class MoveRecord--><g id="elem_MoveRecord"><rect codeLine="91" fill="#FFFFFF" height="70.6797" id="MoveRecord" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="225" x="227.42" y="2186.2988"/><ellipse cx="297.42" cy="2208.3789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M299.2481,2212.6289 Q298.8419,2212.832 298.3888,2212.9414 Q297.9356,2213.0508 297.4513,2213.0508 Q295.67,2213.0508 294.7325,2211.8945 Q293.8106,2210.7227 293.8106,2208.5195 Q293.8106,2206.3008 294.7325,2205.1445 Q295.67,2203.9727 297.4513,2203.9727 Q297.9356,2203.9727 298.3888,2204.082 Q298.8575,2204.1758 299.2481,2204.3945 L299.2481,2206.3164 Q298.8106,2205.9102 298.3888,2205.7227 Q297.9669,2205.5195 297.5294,2205.5195 Q296.5763,2205.5195 296.0919,2206.2852 Q295.6075,2207.0352 295.6075,2208.5195 Q295.6075,2209.9883 296.0919,2210.7383 Q296.5763,2211.4883 297.5294,2211.4883 Q297.9669,2211.4883 298.3888,2211.3008 Q298.8106,2211.1133 299.2481,2210.707 L299.2481,2212.6289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="73" x="318.42" y="2202.5811">«value object»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="73" x="318.42" y="2220.5645">MoveRecord</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="228.42" x2="451.42" y1="2230.459" y2="2230.459"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="209" x="235.42" y="2248.084">sequence · player_id · action · card_id</text></g><!--MD5=[a53ec491550a9145c8576ad1e8615019]
+class RoundSettlement--><g id="elem_RoundSettlement"><rect codeLine="94" fill="#FFFFFF" height="70.6797" id="RoundSettlement" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="132" x="308.92" y="2514.2988"/><ellipse cx="322.92" cy="2536.3789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M324.7481,2540.6289 Q324.3419,2540.832 323.8888,2540.9414 Q323.4356,2541.0508 322.9513,2541.0508 Q321.17,2541.0508 320.2325,2539.8945 Q319.3106,2538.7227 319.3106,2536.5195 Q319.3106,2534.3008 320.2325,2533.1445 Q321.17,2531.9727 322.9513,2531.9727 Q323.4356,2531.9727 323.8888,2532.082 Q324.3575,2532.1758 324.7481,2532.3945 L324.7481,2534.3164 Q324.3106,2533.9102 323.8888,2533.7227 Q323.4669,2533.5195 323.0294,2533.5195 Q322.0763,2533.5195 321.5919,2534.2852 Q321.1075,2535.0352 321.1075,2536.5195 Q321.1075,2537.9883 321.5919,2538.7383 Q322.0763,2539.4883 323.0294,2539.4883 Q323.4669,2539.4883 323.8888,2539.3008 Q324.3106,2539.1133 324.7481,2538.707 L324.7481,2540.6289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="73" x="350.42" y="2530.5811">«value object»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="98" x="337.92" y="2548.5645">RoundSettlement</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="309.92" x2="439.92" y1="2558.459" y2="2558.459"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="110" x="316.92" y="2576.084">closer_id · penalties</text></g><!--MD5=[a6c97c6c1aa30a9aeb51d456b38d6d0e]
+class Scoreboard--><g id="elem_Scoreboard"><rect codeLine="97" fill="#FFFFFF" height="70.6797" id="Scoreboard" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="180" x="186.92" y="2783.7988"/><ellipse cx="236.42" cy="2805.8789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M238.2481,2810.1289 Q237.8419,2810.332 237.3888,2810.4414 Q236.9356,2810.5508 236.4513,2810.5508 Q234.67,2810.5508 233.7325,2809.3945 Q232.8106,2808.2227 232.8106,2806.0195 Q232.8106,2803.8008 233.7325,2802.6445 Q234.67,2801.4727 236.4513,2801.4727 Q236.9356,2801.4727 237.3888,2801.582 Q237.8575,2801.6758 238.2481,2801.8945 L238.2481,2803.8164 Q237.8106,2803.4102 237.3888,2803.2227 Q236.9669,2803.0195 236.5294,2803.0195 Q235.5763,2803.0195 235.0919,2803.7852 Q234.6075,2804.5352 234.6075,2806.0195 Q234.6075,2807.4883 235.0919,2808.2383 Q235.5763,2808.9883 236.5294,2808.9883 Q236.9669,2808.9883 237.3888,2808.8008 Q237.8106,2808.6133 238.2481,2808.207 L238.2481,2810.1289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="73" x="255.42" y="2800.0811">«value object»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="67" x="258.42" y="2818.0645">Scoreboard</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="187.92" x2="365.92" y1="2827.959" y2="2827.959"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="164" x="194.92" y="2845.584">from_settlements() · total_of()</text></g><!--MD5=[c97f994b392e61b01fbfa7eae0467138]
+class IMatchRepository--><g id="elem_IMatchRepository"><rect codeLine="106" fill="#FFFFFF" height="119.3594" id="IMatchRepository" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="402" x="1422.92" y="125.2988"/><ellipse cx="1567.92" cy="153.1992" fill="#A9DCDF" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1567.5294,150.2773 L1566.7169,153.8555 L1568.3575,153.8555 L1567.5294,150.2773 Z M1566.4825,148.6992 L1568.5919,148.6992 L1570.9513,157.4492 L1569.2169,157.4492 L1568.6856,155.293 L1566.3731,155.293 L1565.8419,157.4492 L1564.1075,157.4492 L1566.4825,148.6992 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="32" x="1622.92" y="141.5811">«port»</text><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="63" x="1607.42" y="153.2217">«@abstract»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="100" x="1588.92" y="171.2051">IMatchRepository</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="1423.92" x2="1823.92" y1="181.0996" y2="181.0996"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="173" x="1430.92" y="198.7246">+load(match_id: String): Match</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="207" x="1430.92" y="217.2441">+save_snapshot(match: Match): void</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="386" x="1430.92" y="235.7637">+save_settlement(match: Match, settlement: RoundSettlement): void</text></g><!--MD5=[769735bb70e08e64a29639bcd9312400]
+class SqlMatchRepository--><g id="elem_SqlMatchRepository"><rect codeLine="114" fill="#FFFFFF" height="152.7578" id="SqlMatchRepository" rx="2.5" ry="2.5" style="stroke:#C05600;stroke-width:2.0;" width="402" x="2197.92" y="1056.2988"/><ellipse cx="2335.42" cy="1078.3789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M2337.2481,1082.6289 Q2336.8419,1082.832 2336.3888,1082.9414 Q2335.9356,1083.0508 2335.4513,1083.0508 Q2333.67,1083.0508 2332.7325,1081.8945 Q2331.8106,1080.7227 2331.8106,1078.5195 Q2331.8106,1076.3008 2332.7325,1075.1445 Q2333.67,1073.9727 2335.4513,1073.9727 Q2335.9356,1073.9727 2336.3888,1074.082 Q2336.8575,1074.1758 2337.2481,1074.3945 L2337.2481,1076.3164 Q2336.8106,1075.9102 2336.3888,1075.7227 Q2335.9669,1075.5195 2335.5294,1075.5195 Q2334.5763,1075.5195 2334.0919,1076.2852 Q2333.6075,1077.0352 2333.6075,1078.5195 Q2333.6075,1079.9883 2334.0919,1080.7383 Q2334.5763,1081.4883 2335.5294,1081.4883 Q2335.9669,1081.4883 2336.3888,1081.3008 Q2336.8106,1081.1133 2337.2481,1080.707 L2337.2481,1082.6289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="62" x="2382.92" y="1072.5811">«repository»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="115" x="2356.42" y="1090.5645">SqlMatchRepository</text><line style="stroke:#C05600;stroke-width:2.0;" x1="2198.92" x2="2598.92" y1="1100.459" y2="1100.459"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="100" x="2205.92" y="1118.084">-_db: SqlGateway</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="147" x="2205.92" y="1136.6035">-_mappers: MatchMapper</text><line style="stroke:#C05600;stroke-width:1.0;" x1="2198.92" x2="2598.92" y1="1145.498" y2="1145.498"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="173" x="2205.92" y="1163.123">+load(match_id: String): Match</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="207" x="2205.92" y="1181.6426">+save_snapshot(match: Match): void</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="386" x="2205.92" y="1200.1621">+save_settlement(match: Match, settlement: RoundSettlement): void</text></g><!--MD5=[36679ce83c0944b4a8ebbee5d74fcaf3]
+class MatchMapper--><g id="elem_MatchMapper"><rect codeLine="122" fill="#FFFFFF" height="89.1992" id="MatchMapper" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="355" x="2050.42" y="1269.7988"/><ellipse cx="2181.92" cy="1291.8789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M2183.7481,1296.1289 Q2183.3419,1296.332 2182.8888,1296.4414 Q2182.4356,1296.5508 2181.9513,1296.5508 Q2180.17,1296.5508 2179.2325,1295.3945 Q2178.3106,1294.2227 2178.3106,1292.0195 Q2178.3106,1289.8008 2179.2325,1288.6445 Q2180.17,1287.4727 2181.9513,1287.4727 Q2182.4356,1287.4727 2182.8888,1287.582 Q2183.3575,1287.6758 2183.7481,1287.8945 L2183.7481,1289.8164 Q2183.3106,1289.4102 2182.8888,1289.2227 Q2182.4669,1289.0195 2182.0294,1289.0195 Q2181.0763,1289.0195 2180.5919,1289.7852 Q2180.1075,1290.5352 2180.1075,1292.0195 Q2180.1075,1293.4883 2180.5919,1294.2383 Q2181.0763,1294.9883 2182.0294,1294.9883 Q2182.4669,1294.9883 2182.8888,1294.8008 Q2183.3106,1294.6133 2183.7481,1294.207 L2183.7481,1296.1289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="75" x="2205.42" y="1286.0811">«data mapper»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="80" x="2202.92" y="1304.0645">MatchMapper</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="2051.42" x2="2404.42" y1="1313.959" y2="1313.959"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="253" x="2058.42" y="1331.584">+to_entities(match: Match): MatchRecordSet</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="339" x="2058.42" y="1350.1035">+to_domain(rows: MatchRecordSet, rule: GameRule): Match</text></g><!--MD5=[30053f521cc2d99447f670729a09b9a0]
+class MatchRecordSet--><g id="elem_MatchRecordSet"><rect codeLine="126" fill="#FFFFFF" height="163.2773" id="MatchRecordSet" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="267" x="2094.42" y="1472.7988"/><ellipse cx="2173.92" cy="1494.8789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M2175.7481,1499.1289 Q2175.3419,1499.332 2174.8888,1499.4414 Q2174.4356,1499.5508 2173.9513,1499.5508 Q2172.17,1499.5508 2171.2325,1498.3945 Q2170.3106,1497.2227 2170.3106,1495.0195 Q2170.3106,1492.8008 2171.2325,1491.6445 Q2172.17,1490.4727 2173.9513,1490.4727 Q2174.4356,1490.4727 2174.8888,1490.582 Q2175.3575,1490.6758 2175.7481,1490.8945 L2175.7481,1492.8164 Q2175.3106,1492.4102 2174.8888,1492.2227 Q2174.4669,1492.0195 2174.0294,1492.0195 Q2173.0763,1492.0195 2172.5919,1492.7852 Q2172.1075,1493.5352 2172.1075,1495.0195 Q2172.1075,1496.4883 2172.5919,1497.2383 Q2173.0763,1497.9883 2174.0294,1497.9883 Q2174.4669,1497.9883 2174.8888,1497.8008 Q2175.3106,1497.6133 2175.7481,1497.207 L2175.7481,1499.1289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="34" x="2225.92" y="1489.0811">«DTO»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="96" x="2194.92" y="1507.0645">MatchRecordSet</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="2095.42" x2="2360.42" y1="1516.959" y2="1516.959"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="166" x="2102.42" y="1534.584">+session: GameSessionEntity</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="251" x="2102.42" y="1553.1035">+participants: Array[MatchParticipantEntity]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="162" x="2102.42" y="1571.623">+current_round: RoundEntity</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="180" x="2102.42" y="1590.1426">+hands: Array[HandStateEntity]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="241" x="2102.42" y="1608.6621">+placements: Array[CardPlacementEntity]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="212" x="2102.42" y="1627.1816">+new_moves: Array[TurnMoveEntity]</text></g><!--MD5=[741e6d774d07218f64cd32fa3d4af3cf]
+class SqlGateway--><g id="elem_SqlGateway"><rect codeLine="134" fill="#FFFFFF" height="107.7188" id="SqlGateway" rx="2.5" ry="2.5" style="stroke:#3C3C3C;stroke-width:0.5;" width="313" x="2435.42" y="1260.2988"/><ellipse cx="2551.42" cy="1282.3789" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M2553.2481,1286.6289 Q2552.8419,1286.832 2552.3888,1286.9414 Q2551.9356,1287.0508 2551.4513,1287.0508 Q2549.67,1287.0508 2548.7325,1285.8945 Q2547.8106,1284.7227 2547.8106,1282.5195 Q2547.8106,1280.3008 2548.7325,1279.1445 Q2549.67,1277.9727 2551.4513,1277.9727 Q2551.9356,1277.9727 2552.3888,1278.082 Q2552.8575,1278.1758 2553.2481,1278.3945 L2553.2481,1280.3164 Q2552.8106,1279.9102 2552.3888,1279.7227 Q2551.9669,1279.5195 2551.5294,1279.5195 Q2550.5763,1279.5195 2550.0919,1280.2852 Q2549.6075,1281.0352 2549.6075,1282.5195 Q2549.6075,1283.9883 2550.0919,1284.7383 Q2550.5763,1285.4883 2551.5294,1285.4883 Q2551.9669,1285.4883 2552.3888,1285.3008 Q2552.8106,1285.1133 2553.2481,1284.707 L2553.2481,1286.6289 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="54" x="2579.92" y="1276.5811">«gateway»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="69" x="2572.42" y="1294.5645">SqlGateway</text><line style="stroke:#3C3C3C;stroke-width:0.5;" x1="2436.42" x2="2747.42" y1="1304.459" y2="1304.459"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="297" x="2443.42" y="1322.084">+query(sql: String, params: Array): Array[Dictionary]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="225" x="2443.42" y="1340.6035">+execute(sql: String, params: Array): int</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="206" x="2443.42" y="1359.123">+in_transaction(work: Callable): void</text></g><g id="elem_GMN22"><path d="M2480.92,1523.2988 L2480.92,1585.6973 A0,0 0 0 0 2480.92,1585.6973 L2702.92,1585.6973 A0,0 0 0 0 2702.92,1585.6973 L2702.92,1533.2988 L2692.92,1523.2988 L2595.92,1523.2988 L2591.92,1368.4188 L2587.92,1523.2988 L2480.92,1523.2988 A0,0 0 0 0 2480.92,1523.2988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><path d="M2692.92,1523.2988 L2692.92,1533.2988 L2702.92,1533.2988 L2692.92,1523.2988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="159" x="2488.92" y="1539.9863">Único punto que conoce el driver</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="156" x="2488.92" y="1552.0859">de la BD (addon según ADR-04).</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="197" x="2488.92" y="1564.1855">in_transaction(): BEGIN · work · COMMIT,</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="191" x="2488.92" y="1576.2852">o ROLLBACK si work falla (sección 2.4).</text></g><!--MD5=[eb736b3bab59198e04b8f49a799e20dd]
+class PlayerEntity--><g id="elem_PlayerEntity"><rect codeLine="152" fill="#F2F4F7" height="138.3379" id="PlayerEntity" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:1.5;" width="156" x="1250.92" y="1485.2988"/><ellipse cx="1271.22" cy="1513.4287" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1273.0481,1517.6787 Q1272.6419,1517.8818 1272.1888,1517.9912 Q1271.7356,1518.1006 1271.2513,1518.1006 Q1269.47,1518.1006 1268.5325,1516.9443 Q1267.6106,1515.7725 1267.6106,1513.5693 Q1267.6106,1511.3506 1268.5325,1510.1943 Q1269.47,1509.0225 1271.2513,1509.0225 Q1271.7356,1509.0225 1272.1888,1509.1318 Q1272.6575,1509.2256 1273.0481,1509.4443 L1273.0481,1511.3662 Q1272.6106,1510.96 1272.1888,1510.7725 Q1271.7669,1510.5693 1271.3294,1510.5693 Q1270.3763,1510.5693 1269.8919,1511.335 Q1269.4075,1512.085 1269.4075,1513.5693 Q1269.4075,1515.0381 1269.8919,1515.7881 Q1270.3763,1516.5381 1271.3294,1516.5381 Q1271.7669,1516.5381 1272.1888,1516.3506 Q1272.6106,1516.1631 1273.0481,1515.7568 L1273.0481,1517.6787 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="101" x="1291.12" y="1501.5811">«persistence entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="69" x="1307.12" y="1519.5645">PlayerEntity</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="23" x="1287.62" y="1532.1465">tabla</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="31" x="1313.62" y="1532.1465">player</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="48" x="1347.62" y="1532.1465">(Jugador)</text><line style="stroke:#5A6B7F;stroke-width:1.5;" x1="1251.92" x2="1405.92" y1="1541.5586" y2="1541.5586"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="112" x="1258.92" y="1559.1836">+player_id: int «PK»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="140" x="1258.92" y="1577.7031">+username: String «UQ»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="135" x="1258.92" y="1596.2227">+password_hash: String</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="88" x="1258.92" y="1614.7422">+created_at: int</text></g><!--MD5=[1aa8baaa9317138a076ccdcc23d16b31]
+class GameSessionEntity--><g id="elem_GameSessionEntity"><rect codeLine="159" fill="#F2F4F7" height="305.0137" id="GameSessionEntity" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:1.5;" width="320" x="1415.92" y="1710.7988"/><ellipse cx="1497.42" cy="1738.9287" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1499.2481,1743.1787 Q1498.8419,1743.3818 1498.3888,1743.4912 Q1497.9356,1743.6006 1497.4513,1743.6006 Q1495.67,1743.6006 1494.7325,1742.4443 Q1493.8106,1741.2725 1493.8106,1739.0693 Q1493.8106,1736.8506 1494.7325,1735.6943 Q1495.67,1734.5225 1497.4513,1734.5225 Q1497.9356,1734.5225 1498.3888,1734.6318 Q1498.8575,1734.7256 1499.2481,1734.9443 L1499.2481,1736.8662 Q1498.8106,1736.46 1498.3888,1736.2725 Q1497.9669,1736.0693 1497.5294,1736.0693 Q1496.5763,1736.0693 1496.0919,1736.835 Q1495.6075,1737.585 1495.6075,1739.0693 Q1495.6075,1740.5381 1496.0919,1741.2881 Q1496.5763,1742.0381 1497.5294,1742.0381 Q1497.9669,1742.0381 1498.3888,1741.8506 Q1498.8106,1741.6631 1499.2481,1741.2568 L1499.2481,1743.1787 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="101" x="1540.42" y="1727.0811">«persistence entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="110" x="1535.92" y="1745.0645">GameSessionEntity</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="23" x="1518.42" y="1757.6465">tabla</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="75" x="1544.42" y="1757.6465">match_session</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="41" x="1622.42" y="1757.6465">(Partida)</text><line style="stroke:#5A6B7F;stroke-width:1.5;" x1="1416.92" x2="1734.92" y1="1767.0586" y2="1767.0586"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="171" x="1423.92" y="1784.6836">+session_id: String «PK» UUID</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="179" x="1423.92" y="1803.2031">+host_player_id: int «FK player»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="223" x="1423.92" y="1821.7227">+mode: String {CLASSIC | APUNTADO}</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="304" x="1423.92" y="1840.2422">+status: String {WAITING | IN_PROGRESS | FINISHED}</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="125" x="1423.92" y="1858.7617">+cards_per_player: int</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="93" x="1423.92" y="1877.2813">+deck_count: int</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="148" x="1423.92" y="1895.8008">+elimination_threshold: int</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="141" x="1423.92" y="1914.3203">+max_leftover_points: int</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="123" x="1423.92" y="1932.8398">+jokers_enabled: bool</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="210" x="1423.92" y="1951.3594">+winner_participant_id: int «FK» [0..1]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="70" x="1423.92" y="1969.8789">+version: int</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="88" x="1423.92" y="1988.3984">+created_at: int</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="118" x="1423.92" y="2006.918">+finished_at: int [0..1]</text></g><!--MD5=[94bad3825427f96f52d62a00286452d3]
+class MatchParticipantEntity--><g id="elem_MatchParticipantEntity"><rect codeLine="175" fill="#F2F4F7" height="257.4551" id="MatchParticipantEntity" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:1.5;" width="239" x="1461.42" y="2093.2988"/><ellipse cx="1509.92" cy="2121.4287" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1511.7481,2125.6787 Q1511.3419,2125.8818 1510.8888,2125.9912 Q1510.4356,2126.1006 1509.9513,2126.1006 Q1508.17,2126.1006 1507.2325,2124.9443 Q1506.3106,2123.7725 1506.3106,2121.5693 Q1506.3106,2119.3506 1507.2325,2118.1943 Q1508.17,2117.0225 1509.9513,2117.0225 Q1510.4356,2117.0225 1510.8888,2117.1318 Q1511.3575,2117.2256 1511.7481,2117.4443 L1511.7481,2119.3662 Q1511.3106,2118.96 1510.8888,2118.7725 Q1510.4669,2118.5693 1510.0294,2118.5693 Q1509.0763,2118.5693 1508.5919,2119.335 Q1508.1075,2120.085 1508.1075,2121.5693 Q1508.1075,2123.0381 1508.5919,2123.7881 Q1509.0763,2124.5381 1510.0294,2124.5381 Q1510.4669,2124.5381 1510.8888,2124.3506 Q1511.3106,2124.1631 1511.7481,2123.7568 L1511.7481,2125.6787 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="101" x="1545.42" y="2109.5811">«persistence entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="130" x="1530.92" y="2127.5645">MatchParticipantEntity</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="23" x="1537.92" y="2140.1465">tabla</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="90" x="1563.92" y="2140.1465">match_participant</text><line style="stroke:#5A6B7F;stroke-width:1.5;" x1="1462.42" x2="1699.42" y1="2149.5586" y2="2149.5586"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="137" x="1469.42" y="2167.1836">+participant_id: int «PK»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="223" x="1469.42" y="2185.7031">+session_id: String «FK match_session»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="150" x="1469.42" y="2204.2227">+player_id: int «FK player»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="87" x="1469.42" y="2222.7422">+seat: int {0..4}</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="104" x="1469.42" y="2241.2617">+nickname: String</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="220" x="1469.42" y="2259.7813">+status: String {ACTIVE | ELIMINATED}</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="170" x="1469.42" y="2278.3008">+eliminated_in_round: int [0..1]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="78" x="1469.42" y="2296.8203">+joined_at: int</text><line style="stroke:#5A6B7F;stroke-width:1.0;" x1="1462.42" x2="1699.42" y1="2305.7148" y2="2305.7148"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="116" x="1469.42" y="2323.3398">UQ (session_id, seat)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="143" x="1469.42" y="2341.8594">UQ (session_id, player_id)</text></g><!--MD5=[19141ba0743f09baa40e43d57c7e0e2c]
+class RoundEntity--><g id="elem_RoundEntity"><rect codeLine="189" fill="#F2F4F7" height="275.9746" id="RoundEntity" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:1.5;" width="316" x="1115.92" y="2083.7988"/><ellipse cx="1219.42" cy="2111.9287" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1221.2481,2116.1787 Q1220.8419,2116.3818 1220.3888,2116.4912 Q1219.9356,2116.6006 1219.4513,2116.6006 Q1217.67,2116.6006 1216.7325,2115.4443 Q1215.8106,2114.2725 1215.8106,2112.0693 Q1215.8106,2109.8506 1216.7325,2108.6943 Q1217.67,2107.5225 1219.4513,2107.5225 Q1219.9356,2107.5225 1220.3888,2107.6318 Q1220.8575,2107.7256 1221.2481,2107.9443 L1221.2481,2109.8662 Q1220.8106,2109.46 1220.3888,2109.2725 Q1219.9669,2109.0693 1219.5294,2109.0693 Q1218.5763,2109.0693 1218.0919,2109.835 Q1217.6075,2110.585 1217.6075,2112.0693 Q1217.6075,2113.5381 1218.0919,2114.2881 Q1218.5763,2115.0381 1219.5294,2115.0381 Q1219.9669,2115.0381 1220.3888,2114.8506 Q1220.8106,2114.6631 1221.2481,2114.2568 L1221.2481,2116.1787 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="101" x="1238.42" y="2100.0811">«persistence entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="68" x="1254.92" y="2118.0645">RoundEntity</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="23" x="1241.42" y="2130.6465">tabla</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="28" x="1267.42" y="2130.6465">round</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="38" x="1298.42" y="2130.6465">(Ronda)</text><line style="stroke:#5A6B7F;stroke-width:1.5;" x1="1116.92" x2="1430.92" y1="2140.0586" y2="2140.0586"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="109" x="1123.92" y="2157.6836">+round_id: int «PK»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="223" x="1123.92" y="2176.2031">+session_id: String «FK match_session»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="110" x="1123.92" y="2194.7227">+round_number: int</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="300" x="1123.92" y="2213.2422">+status: String {IN_PROGRESS | CLOSED | SETTLED}</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="194" x="1123.92" y="2231.7617">+turn_participant_id: int «FK» [0..1]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="100" x="1123.92" y="2250.2813">+turn_number: int</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="259" x="1123.92" y="2268.8008">+turn_phase: String {DRAW | DISCARD | END}</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="206" x="1123.92" y="2287.3203">+closer_participant_id: int «FK» [0..1]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="84" x="1123.92" y="2305.8398">+started_at: int</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="111" x="1123.92" y="2324.3594">+closed_at: int [0..1]</text><line style="stroke:#5A6B7F;stroke-width:1.0;" x1="1116.92" x2="1430.92" y1="2333.2539" y2="2333.2539"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="174" x="1123.92" y="2350.8789">UQ (session_id, round_number)</text></g><!--MD5=[756e33a7e2432f20dc876be2bdb8f244]
+class HandStateEntity--><g id="elem_HandStateEntity"><rect codeLine="204" fill="#F2F4F7" height="164.8574" id="HandStateEntity" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:1.5;" width="257" x="710.42" y="2467.2988"/><ellipse cx="750.97" cy="2495.4287" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M752.7981,2499.6787 Q752.3919,2499.8818 751.9387,2499.9912 Q751.4856,2500.1006 751.0012,2500.1006 Q749.22,2500.1006 748.2825,2498.9443 Q747.3606,2497.7725 747.3606,2495.5693 Q747.3606,2493.3506 748.2825,2492.1943 Q749.22,2491.0225 751.0012,2491.0225 Q751.4856,2491.0225 751.9387,2491.1318 Q752.4075,2491.2256 752.7981,2491.4443 L752.7981,2493.3662 Q752.3606,2492.96 751.9387,2492.7725 Q751.5169,2492.5693 751.0794,2492.5693 Q750.1262,2492.5693 749.6419,2493.335 Q749.1575,2494.085 749.1575,2495.5693 Q749.1575,2497.0381 749.6419,2497.7881 Q750.1262,2498.5381 751.0794,2498.5381 Q751.5169,2498.5381 751.9387,2498.3506 Q752.3606,2498.1631 752.7981,2497.7568 L752.7981,2499.6787 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="101" x="803.37" y="2483.5811">«persistence entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="92" x="807.87" y="2501.5645">HandStateEntity</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="23" x="771.87" y="2514.1465">tabla</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="55" x="797.87" y="2514.1465">hand_state</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="80" x="855.87" y="2514.1465">(Mano_Jugador)</text><line style="stroke:#5A6B7F;stroke-width:1.5;" x1="711.42" x2="966.42" y1="2523.5586" y2="2523.5586"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="104" x="718.42" y="2541.1836">+hand_id: int «PK»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="144" x="718.42" y="2559.7031">+round_id: int «FK round»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="241" x="718.42" y="2578.2227">+participant_id: int «FK match_participant»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="125" x="718.42" y="2596.7422">+is_closing_hand: bool</text><line style="stroke:#5A6B7F;stroke-width:1.0;" x1="711.42" x2="966.42" y1="2605.6367" y2="2605.6367"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="159" x="718.42" y="2623.2617">UQ (round_id, participant_id)</text></g><!--MD5=[33ec9e5cc1c4328b1dfad9f8961aefe5]
+class CardEntity--><g id="elem_CardEntity"><rect codeLine="213" fill="#F2F4F7" height="119.8184" id="CardEntity" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:1.5;" width="171" x="509.42" y="2489.7988"/><ellipse cx="532.42" cy="2517.9287" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M534.2481,2522.1787 Q533.8419,2522.3818 533.3888,2522.4912 Q532.9356,2522.6006 532.4513,2522.6006 Q530.67,2522.6006 529.7325,2521.4443 Q528.8106,2520.2725 528.8106,2518.0693 Q528.8106,2515.8506 529.7325,2514.6943 Q530.67,2513.5225 532.4513,2513.5225 Q532.9356,2513.5225 533.3888,2513.6318 Q533.8575,2513.7256 534.2481,2513.9443 L534.2481,2515.8662 Q533.8106,2515.46 533.3888,2515.2725 Q532.9669,2515.0693 532.5294,2515.0693 Q531.5763,2515.0693 531.0919,2515.835 Q530.6075,2516.585 530.6075,2518.0693 Q530.6075,2519.5381 531.0919,2520.2881 Q531.5763,2521.0381 532.5294,2521.0381 Q532.9669,2521.0381 533.3888,2520.8506 Q533.8106,2520.6631 534.2481,2520.2568 L534.2481,2522.1787 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="101" x="557.42" y="2506.0811">«persistence entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="60" x="577.92" y="2524.0645">CardEntity</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="23" x="549.42" y="2536.6465">tabla</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="22" x="575.42" y="2536.6465">card</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="66" x="600.42" y="2536.6465">(catálogo fijo)</text><line style="stroke:#5A6B7F;stroke-width:1.5;" x1="510.42" x2="679.42" y1="2546.0586" y2="2546.0586"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="155" x="517.42" y="2563.6836">+card_instance_id: int «PK»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="93" x="517.42" y="2582.2031">+rank: int {0..13}</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="98" x="517.42" y="2600.7227">+suit: String [0..1]</text></g><!--MD5=[cf3e5ce361f58af261421dc932b932b6]
+class CardPlacementEntity--><g id="elem_CardPlacementEntity"><rect codeLine="219" fill="#F2F4F7" height="183.377" id="CardPlacementEntity" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:1.5;" width="297" x="1417.42" y="2727.7988"/><ellipse cx="1499.42" cy="2755.9287" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1501.2481,2760.1787 Q1500.8419,2760.3818 1500.3888,2760.4912 Q1499.9356,2760.6006 1499.4513,2760.6006 Q1497.67,2760.6006 1496.7325,2759.4443 Q1495.8106,2758.2725 1495.8106,2756.0693 Q1495.8106,2753.8506 1496.7325,2752.6943 Q1497.67,2751.5225 1499.4513,2751.5225 Q1499.9356,2751.5225 1500.3888,2751.6318 Q1500.8575,2751.7256 1501.2481,2751.9443 L1501.2481,2753.8662 Q1500.8106,2753.46 1500.3888,2753.2725 Q1499.9669,2753.0693 1499.5294,2753.0693 Q1498.5763,2753.0693 1498.0919,2753.835 Q1497.6075,2754.585 1497.6075,2756.0693 Q1497.6075,2757.5381 1498.0919,2758.2881 Q1498.5763,2759.0381 1499.5294,2759.0381 Q1499.9669,2759.0381 1500.3888,2758.8506 Q1500.8106,2758.6631 1501.2481,2758.2568 L1501.2481,2760.1787 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="101" x="1530.42" y="2744.0811">«persistence entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="121" x="1520.42" y="2762.0645">CardPlacementEntity</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="23" x="1528.42" y="2774.6465">tabla</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="79" x="1554.42" y="2774.6465">card_placement</text><line style="stroke:#5A6B7F;stroke-width:1.5;" x1="1418.42" x2="1713.42" y1="2784.0586" y2="2784.0586"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="166" x="1425.42" y="2801.6836">+round_id: int «PK, FK round»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="205" x="1425.42" y="2820.2031">+card_instance_id: int «PK, FK card»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="231" x="1425.42" y="2838.7227">+zone: String {DECK | DISCARD | HAND}</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="197" x="1425.42" y="2857.2422">+hand_id: int «FK hand_state» [0..1]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="72" x="1425.42" y="2875.7617">+position: int</text><line style="stroke:#5A6B7F;stroke-width:1.0;" x1="1418.42" x2="1713.42" y1="2884.6563" y2="2884.6563"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="281" x="1425.42" y="2902.2813">CHECK (zone = 'HAND') = (hand_id IS NOT NULL)</text></g><!--MD5=[d906b614cad92c654ba35ddc726213a1]
+class TurnMoveEntity--><g id="elem_TurnMoveEntity"><rect codeLine="229" fill="#F2F4F7" height="220.416" id="TurnMoveEntity" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:1.5;" width="561" x="997.42" y="2439.7988"/><ellipse cx="1192.92" cy="2467.9287" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1194.7481,2472.1787 Q1194.3419,2472.3818 1193.8888,2472.4912 Q1193.4356,2472.6006 1192.9513,2472.6006 Q1191.17,2472.6006 1190.2325,2471.4443 Q1189.3106,2470.2725 1189.3106,2468.0693 Q1189.3106,2465.8506 1190.2325,2464.6943 Q1191.17,2463.5225 1192.9513,2463.5225 Q1193.4356,2463.5225 1193.8888,2463.6318 Q1194.3575,2463.7256 1194.7481,2463.9443 L1194.7481,2465.8662 Q1194.3106,2465.46 1193.8888,2465.2725 Q1193.4669,2465.0693 1193.0294,2465.0693 Q1192.0763,2465.0693 1191.5919,2465.835 Q1191.1075,2466.585 1191.1075,2468.0693 Q1191.1075,2469.5381 1191.5919,2470.2881 Q1192.0763,2471.0381 1193.0294,2471.0381 Q1193.4669,2471.0381 1193.8888,2470.8506 Q1194.3106,2470.6631 1194.7481,2470.2568 L1194.7481,2472.1787 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="101" x="1242.42" y="2456.0811">«persistence entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="91" x="1247.42" y="2474.0645">TurnMoveEntity</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="23" x="1213.92" y="2486.6465">tabla</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="52" x="1239.92" y="2486.6465">turn_move</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="77" x="1294.92" y="2486.6465">(Turno_Jugada)</text><line style="stroke:#5A6B7F;stroke-width:1.5;" x1="998.42" x2="1557.42" y1="2496.0586" y2="2496.0586"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="108" x="1005.42" y="2513.6836">+move_id: int «PK»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="144" x="1005.42" y="2532.2031">+round_id: int «FK round»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="83" x="1005.42" y="2550.7227">+sequence: int</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="241" x="1005.42" y="2569.2422">+participant_id: int «FK match_participant»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="545" x="1005.42" y="2587.7617">+action: String {DRAW_FROM_DECK | DRAW_FROM_DISCARD | DISCARD | DECLARE_CLOSING}</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="213" x="1005.42" y="2606.2813">+card_instance_id: int «FK card» [0..1]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="110" x="1005.42" y="2624.8008">+created_at_ms: int</text><line style="stroke:#5A6B7F;stroke-width:1.0;" x1="998.42" x2="1557.42" y1="2633.6953" y2="2633.6953"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="138" x="1005.42" y="2651.3203">UQ (round_id, sequence)</text></g><!--MD5=[77e9d5a80ee5fd303a444c490b258de7]
+class RoundScoreEntity--><g id="elem_RoundScoreEntity"><rect codeLine="241" fill="#F2F4F7" height="119.8184" id="RoundScoreEntity" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:1.5;" width="279" x="1714.42" y="2489.7988"/><ellipse cx="1796.92" cy="2517.9287" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1798.7481,2522.1787 Q1798.3419,2522.3818 1797.8888,2522.4912 Q1797.4356,2522.6006 1796.9513,2522.6006 Q1795.17,2522.6006 1794.2325,2521.4443 Q1793.3106,2520.2725 1793.3106,2518.0693 Q1793.3106,2515.8506 1794.2325,2514.6943 Q1795.17,2513.5225 1796.9513,2513.5225 Q1797.4356,2513.5225 1797.8888,2513.6318 Q1798.3575,2513.7256 1798.7481,2513.9443 L1798.7481,2515.8662 Q1798.3106,2515.46 1797.8888,2515.2725 Q1797.4669,2515.0693 1797.0294,2515.0693 Q1796.0763,2515.0693 1795.5919,2515.835 Q1795.1075,2516.585 1795.1075,2518.0693 Q1795.1075,2519.5381 1795.5919,2520.2881 Q1796.0763,2521.0381 1797.0294,2521.0381 Q1797.4669,2521.0381 1797.8888,2520.8506 Q1798.3106,2520.6631 1798.7481,2520.2568 L1798.7481,2522.1787 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="101" x="1818.42" y="2506.0811">«persistence entity»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="102" x="1817.92" y="2524.0645">RoundScoreEntity</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="23" x="1825.42" y="2536.6465">tabla</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="61" x="1851.42" y="2536.6465">round_score</text><line style="stroke:#5A6B7F;stroke-width:1.5;" x1="1715.42" x2="1992.42" y1="2546.0586" y2="2546.0586"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="166" x="1722.42" y="2563.6836">+round_id: int «PK, FK round»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="263" x="1722.42" y="2582.2031">+participant_id: int «PK, FK match_participant»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="93" x="1722.42" y="2600.7227">+score_delta: int</text></g><!--MD5=[0a06179d14e2a30fb64e88b85e5a10f1]
+class CumulativeScoreView--><g id="elem_CumulativeScoreView"><rect codeLine="247" fill="#F2F4F7" height="146.3379" id="CumulativeScoreView" rx="2.5" ry="2.5" style="stroke:#5A6B7F;stroke-width:0.5;" width="263" x="1730.42" y="2148.7988"/><ellipse cx="1744.42" cy="2176.9287" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1746.2481,2181.1787 Q1745.8419,2181.3818 1745.3888,2181.4912 Q1744.9356,2181.6006 1744.4513,2181.6006 Q1742.67,2181.6006 1741.7325,2180.4443 Q1740.8106,2179.2725 1740.8106,2177.0693 Q1740.8106,2174.8506 1741.7325,2173.6943 Q1742.67,2172.5225 1744.4513,2172.5225 Q1744.9356,2172.5225 1745.3888,2172.6318 Q1745.8575,2172.7256 1746.2481,2172.9443 L1746.2481,2174.8662 Q1745.8106,2174.46 1745.3888,2174.2725 Q1744.9669,2174.0693 1744.5294,2174.0693 Q1743.5763,2174.0693 1743.0919,2174.835 Q1742.6075,2175.585 1742.6075,2177.0693 Q1742.6075,2178.5381 1743.0919,2179.2881 Q1743.5763,2180.0381 1744.5294,2180.0381 Q1744.9669,2180.0381 1745.3888,2179.8506 Q1745.8106,2179.6631 1746.2481,2179.2568 L1746.2481,2181.1787 Z " fill="#000000"/><text fill="#555555" font-family="DejaVu Sans" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="63" x="1842.42" y="2165.0811">«table view»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="127" x="1810.42" y="2183.0645">CumulativeScoreView</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="22" x="1759.42" y="2195.6465">vista</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="99" x="1784.42" y="2195.6465">v_cumulative_score</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="102" x="1886.42" y="2195.6465">(Puntaje_Acumulado)</text><line style="stroke:#5A6B7F;stroke-width:0.5;" x1="1731.42" x2="1992.42" y1="2205.0586" y2="2205.0586"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="105" x="1738.42" y="2222.6836">+session_id: String</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="104" x="1738.42" y="2241.2031">+participant_id: int</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="110" x="1738.42" y="2259.7227">+rounds_played: int</text><line style="stroke:#5A6B7F;stroke-width:0.5;" x1="1731.42" x2="1992.42" y1="2268.6172" y2="2268.6172"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="12" lengthAdjust="spacing" textLength="168" x="1738.42" y="2286.2422">+total: int = SUM(score_delta)</text></g><g id="elem_GMN80"><path d="M2025.92,1813.7988 L2025.92,1859.2988 L1736.16,1863.2988 L2025.92,1867.2988 L2025.92,1912.4961 A0,0 0 0 0 2025.92,1912.4961 L2397.92,1912.4961 A0,0 0 0 0 2397.92,1912.4961 L2397.92,1823.7988 L2387.92,1813.7988 L2025.92,1813.7988 A0,0 0 0 0 2025.92,1813.7988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><path d="M2387.92,1813.7988 L2387.92,1823.7988 L2397.92,1823.7988 L2387.92,1813.7988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="180" x="2033.92" y="1830.4863">Match + MatchConfig + RuleSettings</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="88" x="2216.92" y="1830.4863">se aplanan en una</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="279" x="2033.92" y="1842.5859">sola tabla: todos sus atributos dependen solo de session_id</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="127" x="2033.92" y="1854.6855">(relación 1:1, cumple 3FN).</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="122" x="2033.92" y="1866.7852">GameRule no se persiste</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="151" x="2155.92" y="1866.7852">: es comportamiento. Al cargar,</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="298" x="2033.92" y="1878.8848">RuleRegistry.resolve(mode, settings) reconstruye la estrategia.</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="194" x="2033.92" y="1890.9844">Una variante nueva = un valor nuevo en</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="27" x="2230.92" y="1890.9844">mode</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="3" x="2257.92" y="1890.9844">:</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="114" x="2263.92" y="1890.9844">sin cambio de esquema</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="3" x="2377.92" y="1890.9844">.</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="37" x="2033.92" y="1903.084">version</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="235" x="2070.92" y="1903.084">: control optimista de concurrencia (sección 2.4).</text></g><g id="elem_GMN83"><path d="M2025.92,2775.7988 L2025.92,2815.2988 L1714.46,2819.2988 L2025.92,2823.2988 L2025.92,2862.3965 A0,0 0 0 0 2025.92,2862.3965 L2305.92,2862.3965 A0,0 0 0 0 2305.92,2862.3965 L2305.92,2785.7988 L2295.92,2775.7988 L2025.92,2775.7988 A0,0 0 0 0 2025.92,2775.7988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><path d="M2295.92,2775.7988 L2295.92,2785.7988 L2305.92,2785.7988 L2295.92,2775.7988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="177" x="2033.92" y="2792.4863">Invariante de conservación en la BD:</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="255" x="2033.92" y="2804.5859">PK (round_id, card_instance_id) impide que una carta</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="187" x="2033.92" y="2816.6855">esté en dos lugares de la misma ronda.</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="53" x="2033.92" y="2828.7852">Reemplaza</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-style="italic" lengthAdjust="spacing" textLength="53" x="2089.92" y="2828.7852">cards_data</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="114" x="2145.92" y="2828.7852">en JSON: cumple 1FN y</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="240" x="2033.92" y="2840.8848">permite reconstruir Deck, DiscardPile y cada Hand</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="209" x="2033.92" y="2852.9844">(orden = position) para reconexión (RNF 4).</text></g><g id="elem_GMN86"><path d="M2026.42,2494.2988 L2026.42,2545.7988 L1993.58,2549.7988 L2026.42,2553.7988 L2026.42,2605.0957 A0,0 0 0 0 2026.42,2605.0957 L2311.42,2605.0957 A0,0 0 0 0 2311.42,2605.0957 L2311.42,2504.2988 L2301.42,2494.2988 L2026.42,2494.2988 A0,0 0 0 0 2026.42,2494.2988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><path d="M2301.42,2494.2988 L2301.42,2504.2988 L2311.42,2504.2988 L2301.42,2494.2988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="68" x="2034.42" y="2510.9863">Guarda solo el</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="80" x="2105.42" y="2510.9863">delta de la ronda</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="55" x="2188.42" y="2510.9863">por jugador</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="233" x="2034.42" y="2523.0859">(penalización o +10 de quien cierra, RD07/RD13).</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="64" x="2034.42" y="2535.1855">El acumulado</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="76" x="2101.42" y="2535.1855">no se almacena</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="101" x="2177.42" y="2535.1855">: v_cumulative_score</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="242" x="2034.42" y="2547.2852">lo deriva, igual que Scoreboard.from_settlements()</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="245" x="2034.42" y="2559.3848">en el dominio. Evita la dependencia transitiva (3FN)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="168" x="2034.42" y="2571.4844">y que el total contradiga el historial.</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="232" x="2034.42" y="2583.584">Clásica: 1 ronda por partida. Apuntado: N rondas</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="260" x="2034.42" y="2595.6836">hasta el umbral (relación 1:N match_session → round).</text></g><g id="elem_GMN89"><path d="M2780.92,1089.2988 L2780.92,1128.7988 L2600.14,1132.7988 L2780.92,1136.7988 L2780.92,1175.8965 A0,0 0 0 0 2780.92,1175.8965 L3074.92,1175.8965 A0,0 0 0 0 3074.92,1175.8965 L3074.92,1099.2988 L3064.92,1089.2988 L2780.92,1089.2988 A0,0 0 0 0 2780.92,1089.2988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><path d="M3064.92,1089.2988 L3064.92,1099.2988 L3074.92,1099.2988 L3064.92,1089.2988 " fill="#FFFDE7" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="65" x="2788.92" y="1105.9863">Data Mapper:</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="166" x="2856.92" y="1105.9863">el dominio no sabe que existe SQL;</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="173" x="2788.92" y="1118.0859">las entidades no conocen las reglas.</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="138" x="2788.92" y="1130.1855">save_settlement() escribe en</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" font-weight="bold" lengthAdjust="spacing" textLength="79" x="2929.92" y="1130.1855">una transacción</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="3" x="3008.92" y="1130.1855">:</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="212" x="2788.92" y="1142.2852">round.status = SETTLED · filas round_score ·</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="269" x="2788.92" y="1154.3848">match_participant.status = ELIMINATED · match_session</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="201" x="2788.92" y="1166.4844">(status, winner, version + 1). Todo o nada.</text></g><!--MD5=[1fdf936c3c94abbb407ab5fc0dd11bff]
+link PlayerEntity to MatchParticipantEntity--><g id="link_PlayerEntity_MatchParticipantEntity"><path codeLine="258" d="M1312.74,1623.6888 C1294.21,1718.4188 1274.62,1891.8788 1343.92,2015.7988 C1370.69,2063.6788 1404.61,2048.8788 1446.92,2083.7988 C1451.67,2087.7188 1456.43,2091.7788 1461.18,2095.9588 " fill="none" id="PlayerEntity-MatchParticipantEntity" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#333333" points="1349.1194,1867.1646,1349.1926,1859.5565,1344.7067,1860.9665,1349.1194,1867.1646" style="stroke:#333333;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="41" x="1356.92" y="1866.9863">participa</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="4" x="1304.6589" y="1643.3449">1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="17" x="1441.8933" y="2077.0478">0..*</text></g><!--MD5=[8cc62d5d0a895f43270c44c295ea5efe]
+link PlayerEntity to GameSessionEntity--><g id="link_PlayerEntity_GameSessionEntity"><path codeLine="259" d="M1337.65,1623.2988 C1342.52,1644.4788 1350.11,1667.1388 1361.92,1685.7988 C1362.09,1686.0688 1385.05,1705.0488 1415.87,1730.4688 " fill="none" id="PlayerEntity-GameSessionEntity" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#333333" points="1368.2782,1680.0796,1365.9113,1672.8486,1362.1131,1675.6208,1368.2782,1680.0796" style="stroke:#333333;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="54" x="1374.92" y="1680.4863">anfitrión de</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="4" x="1332.1673" y="1643.3952">1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="17" x="1389.142" y="1719.7769">0..*</text></g><!--MD5=[412f8c871a77346f79f37c050d89b54a]
+reverse link GameSessionEntity to MatchParticipantEntity--><g id="link_GameSessionEntity_MatchParticipantEntity"><path codeLine="260" d="M1578.23,2029.2988 C1578.53,2050.7288 1578.84,2072.4088 1579.13,2093.0988 " fill="none" id="GameSessionEntity-backto-MatchParticipantEntity" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="1578.05,2016.0088,1574.1361,2022.0654,1578.2214,2028.0076,1582.1353,2021.9511,1578.05,2016.0088" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#333333" points="1581.8636,2045.849,1579.6147,2053.1175,1584.3166,2053.0512,1581.8636,2045.849" style="stroke:#333333;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="72" x="1590.92" y="2053.4863">ocupa asientos</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="4" x="1571.9594" y="2035.4828">1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="6" x="1570.7375" y="2080.8731">5</text></g><!--MD5=[dadb6898c21d1f23310ba8c4ad83ed50]
+reverse link GameSessionEntity to RoundEntity--><g id="link_GameSessionEntity_RoundEntity"><path codeLine="261" d="M1438.91,2026.0388 C1422.61,2045.2788 1406.09,2064.7788 1390.12,2083.6288 " fill="none" id="GameSessionEntity-backto-RoundEntity" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="1447.41,2016.0088,1440.4793,2018,1439.6516,2025.1635,1446.5824,2023.1723,1447.41,2016.0088" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="33" x="1427.92" y="2053.4863">rondas</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="4" x="1434.9915" y="2035.4828">1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="17" x="1376.9005" y="2071.3261">0..*</text></g><!--MD5=[59341833c1ecc40c6405401e84171611]
+reverse link RoundEntity to HandStateEntity--><g id="link_RoundEntity_HandStateEntity"><path codeLine="262" d="M1103.8,2290.2588 C1052.69,2315.3288 998.63,2347.0288 954.92,2384.7988 C928.13,2407.9388 904.35,2438.5088 885.41,2466.9888 " fill="none" id="RoundEntity-backto-HandStateEntity" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="1115.69,2284.5188,1108.5471,2283.5295,1104.8866,2289.7425,1112.0295,2290.7318,1115.69,2284.5188" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="69" x="957.92" y="2403.4863">manos activas</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="4" x="1101.832" y="2282.8599">1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="18" x="868.4599" y="2454.8828">2..5</text></g><!--MD5=[2f37eb7c5b10ff4e8873ad7d3bfa598b]
+link MatchParticipantEntity to HandStateEntity--><g id="link_MatchParticipantEntity_HandStateEntity"><path codeLine="263" d="M1461.13,2349.2588 C1456.43,2352.9288 1451.69,2356.4588 1446.92,2359.7988 C1398.55,2393.7188 1383.16,2400.1988 1325.92,2414.7988 C1177.81,2452.5688 1125.95,2385.9088 982.92,2439.7988 C965.02,2446.5388 947.48,2456.2588 931.13,2467.1588 " fill="none" id="MatchParticipantEntity-HandStateEntity" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="4" x="1447.5865" y="2352.2151">1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="17" x="919.4073" y="2454.7845">0..*</text></g><!--MD5=[d01105f63567bfc79c17bf1b8d77e689]
+reverse link RoundEntity to TurnMoveEntity--><g id="link_RoundEntity_TurnMoveEntity"><path codeLine="264" d="M1275.77,2373.2288 C1276.04,2395.6088 1276.32,2418.2988 1276.58,2439.5988 " fill="none" id="RoundEntity-backto-TurnMoveEntity" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="1275.6,2360.1088,1271.6728,2366.1567,1275.745,2372.108,1279.6722,2366.06,1275.6,2360.1088" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="37" x="1278.92" y="2403.4863">jugadas</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="4" x="1269.4804" y="2379.3437">1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="17" x="1256.7845" y="2427.3341">0..*</text></g><!--MD5=[1f29fa8e9508592072678adbbe1b1819]
+link MatchParticipantEntity to TurnMoveEntity--><g id="link_MatchParticipantEntity_TurnMoveEntity"><path codeLine="265" d="M1682.94,2350.4988 C1689.79,2372.8788 1688.88,2395.2288 1673.92,2414.7988 C1648.19,2448.4588 1622.34,2427.0788 1581.92,2439.7988 C1574.3,2442.1988 1566.58,2444.6688 1558.81,2447.1888 " fill="none" id="MatchParticipantEntity-TurnMoveEntity" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#333333" points="1686.7644,2402.3067,1693.9178,2399.7149,1691.0282,2396.0052,1686.7644,2402.3067" style="stroke:#333333;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="32" x="1698.92" y="2403.4863">realiza</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="4" x="1682.9131" y="2370.5057">1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="17" x="1568.55" y="2439.934">0..*</text></g><!--MD5=[0278bc9afea8980ce4d099555eea25a2]
+reverse link RoundEntity to RoundScoreEntity--><g id="link_RoundEntity_RoundScoreEntity"><path codeLine="266" d="M1444.13,2358.5088 C1445.06,2358.9488 1445.99,2359.3788 1446.92,2359.7988 C1502.48,2385.0388 1528.16,2355.9388 1581.92,2384.7988 C1598.26,2393.5688 1595.14,2405.0688 1610.92,2414.7988 C1642.63,2434.3488 1657.32,2423.7288 1690.92,2439.7988 C1719.79,2453.6088 1749.43,2471.9688 1775.39,2489.6788 " fill="none" id="RoundEntity-backto-RoundScoreEntity" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="1432.07,2352.5288,1435.6723,2358.7757,1442.8241,2357.8532,1439.2218,2351.6063,1432.07,2352.5288" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="50" x="1613.92" y="2403.4863">liquidación</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="4" x="1441.9241" y="2370.9391">1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="17" x="1746.0959" y="2477.5062">0..*</text></g><!--MD5=[56f16316e7f036fc99349a38b7186817]
+link MatchParticipantEntity to RoundScoreEntity--><g id="link_MatchParticipantEntity_RoundScoreEntity"><path codeLine="267" d="M1700.72,2347.8988 C1705.76,2352.0188 1710.83,2356.0088 1715.92,2359.7988 C1734.89,2373.9388 1746.04,2368.2188 1762.92,2384.7988 C1792.88,2414.2388 1815.76,2455.6488 1831.08,2489.4988 " fill="none" id="MatchParticipantEntity-RoundScoreEntity" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="4" x="1710.2641" y="2350.7722">1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="17" x="1808.2251" y="2477.3054">0..*</text></g><!--MD5=[ece03828e1e7d30f873522327998568b]
+reverse link RoundEntity to CardPlacementEntity--><g id="link_RoundEntity_CardPlacementEntity"><path codeLine="268" d="M1442.82,2356.8888 C1444.19,2357.8588 1445.56,2358.8388 1446.92,2359.7988 C1501.37,2398.3388 1538.64,2383.1788 1573.92,2439.7988 C1636.03,2539.4888 1616.68,2586.5388 1599.92,2702.7988 C1598.74,2710.9688 1597.12,2719.3688 1595.21,2727.7388 " fill="none" id="RoundEntity-backto-CardPlacementEntity" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="1432.26,2349.2688,1434.7821,2356.0245,1441.9882,2356.2947,1439.466,2349.5391,1432.26,2349.2688" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="59" x="1618.92" y="2553.4863">ubica cartas</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="4" x="1442.1233" y="2350.7462">1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="28" x="1566.269" y="2715.4816">0..108</text></g><!--MD5=[6c4f6cc437cb5667fd1df55dc9e1323f]
+link CardEntity to CardPlacementEntity--><g id="link_CardEntity_CardPlacementEntity"><path codeLine="269" d="M637.27,2609.9288 C653.55,2628.6188 673.64,2647.5788 695.92,2659.7988 C817.73,2726.6388 1202.2,2778.1988 1417.02,2802.6688 " fill="none" id="CardEntity-CardPlacementEntity" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="4" x="635.7042" y="2629.5101">1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="17" x="1390.2991" y="2797.1566">0..*</text></g><!--MD5=[03abd8d08c06a6adbe42c0297cc4d40f]
+link HandStateEntity to CardPlacementEntity--><g id="link_HandStateEntity_CardPlacementEntity"><path codeLine="270" d="M930.17,2632.3388 C946.76,2643.3888 964.64,2653.1888 982.92,2659.7988 C1040.35,2680.5488 1484.57,2646.2388 1531.92,2684.7988 C1545.37,2695.7488 1553.92,2711.1988 1559.28,2727.7288 " fill="none" id="HandStateEntity-CardPlacementEntity" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="41" x="1548.92" y="2697.4863">contiene</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="16" x="919.1524" y="2651.8175">0..1</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="20" x="1535.7946" y="2715.4708">0..11</text></g><!--MD5=[522c7cf8ba7f6fb0b4289bad86cd6cfa]
+link CumulativeScoreView to RoundScoreEntity--><g id="link_CumulativeScoreView_RoundScoreEntity"><path codeLine="271" d="M1860.14,2295.1488 C1858.75,2351.8488 1856.84,2429.9988 1855.5,2484.5188 " fill="none" id="CumulativeScoreView-to-RoundScoreEntity" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#555555" points="1855.37,2489.7188,1859.5746,2480.8126,1855.4843,2484.7201,1851.5767,2480.6298,1855.37,2489.7188" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="42" x="1889.92" y="2397.4863">«derive»</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="100" x="1860.92" y="2409.5859">SUM por participante</text></g><!--MD5=[e39764d274be3c2a73ce0097f61f92a0]
+reverse link IMatchRepository to SqlMatchRepository--><g id="link_IMatchRepository_SqlMatchRepository"><path codeLine="276" d="M1844.72,212.1888 C1955.29,239.0588 2065.92,293.3088 2065.92,402.7988 C2065.92,402.7988 2065.92,402.7988 2065.92,892.7988 C2065.92,971.0788 2127.4,1026.2088 2197.53,1063.6388 " fill="none" id="IMatchRepository-backto-SqlMatchRepository" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="1843.13,218.9988,1825.2,207.7088,1846.25,205.3588,1843.13,218.9988" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[a8d5827ddb9dc1271e4cc345e167a92b]
+link SqlMatchRepository to MatchMapper--><g id="link_SqlMatchRepository_MatchMapper"><path codeLine="277" d="M2326.9,1209.3988 C2308.65,1228.5588 2289.57,1248.5888 2273.08,1265.8988 " fill="none" id="SqlMatchRepository-to-MatchMapper" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="2269.39,1269.7688,2278.4938,1266.0111,2272.8386,1266.1485,2272.7013,1260.4933,2269.39,1269.7688" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[25e79e2dfba3f348ae9afa0ef4c6f6a8]
+link SqlMatchRepository to SqlGateway--><g id="link_SqlMatchRepository_SqlGateway"><path codeLine="278" d="M2480.21,1209.3988 C2497.11,1225.1288 2514.66,1241.4388 2530.69,1256.3588 " fill="none" id="SqlMatchRepository-to-SqlGateway" style="stroke:#555555;stroke-width:1.0;"/><polygon fill="#555555" points="2534.74,1260.1188,2530.891,1251.0532,2531.0852,1256.7067,2525.4317,1256.9009,2534.74,1260.1188" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[5f9ecfa08635d919bed5b9afa4b60621]
+link MatchMapper to MatchRecordSet--><g id="link_MatchMapper_MatchRecordSet"><path codeLine="279" d="M2227.92,1358.9488 C2227.92,1389.1388 2227.92,1430.3088 2227.92,1466.9888 " fill="none" id="MatchMapper-to-MatchRecordSet" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#555555" points="2227.92,1472.3688,2231.92,1463.3688,2227.92,1467.3688,2223.92,1463.3688,2227.92,1472.3688" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="31" x="2230.92" y="1405.9863">create</text></g><!--MD5=[c51b6f1001b12f7b37e83cb40d8b3279]
+link MatchRecordSet to GameSessionEntity--><g id="link_MatchRecordSet_GameSessionEntity"><path codeLine="280" d="M2094.23,1619.2888 C2066.07,1632.7188 2036.54,1646.7488 2008.92,1659.7988 C1920.45,1701.5888 1821.63,1747.8388 1740.75,1785.5788 " fill="none" id="MatchRecordSet-to-GameSessionEntity" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#555555" points="1735.94,1787.8188,1745.7874,1787.6478,1740.4731,1785.7091,1742.4118,1780.3948,1735.94,1787.8188" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[388f195c70c0553d3d231e7c49775061]
+link MatchRecordSet to RoundEntity--><g id="link_MatchRecordSet_RoundEntity"><path codeLine="281" d="M2354.66,1635.7988 C2378.25,1657.1188 2399.63,1682.2688 2412.92,1710.7988 C2470.16,1833.6788 2505.35,1916.6388 2412.92,2015.7988 C2339.56,2094.5088 1547.24,2044.8888 1446.92,2083.7988 C1443.48,2085.1288 1440.06,2086.5588 1436.65,2088.0688 " fill="none" id="MatchRecordSet-to-RoundEntity" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#555555" points="1432.02,2090.1788,1441.8684,2090.0844,1436.5694,2088.1044,1438.5494,2082.8054,1432.02,2090.1788" style="stroke:#555555;stroke-width:1.0;"/></g><!--MD5=[13975f4d58e6b908cc09fab32e375551]
+link IMatchRepository to Match--><g id="link_IMatchRepository_Match"><path codeLine="282" d="M1422.88,221.2688 C1138.92,271.3688 635.2,360.2288 457.85,391.5188 " fill="none" id="IMatchRepository-to-Match" style="stroke:#555555;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#555555" points="452.7,392.4288,462.2602,394.796,457.6232,391.5558,460.8633,386.9189,452.7,392.4288" style="stroke:#555555;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="72" x="1084.92" y="288.9863">carga / guarda</text></g><!--MD5=[56aae7aafe807f0970d7b5adb4990094]
+link Match to GameSessionEntity--><g id="link_Match_GameSessionEntity"><path codeLine="287" d="M452.44,404.2088 C699.17,402.4588 1641.92,403.7188 1641.92,524.7988 C1641.92,524.7988 1641.92,524.7988 1641.92,1555.2988 C1641.92,1604.8388 1633.6,1657.8988 1622.87,1705.7288 " fill="none" id="Match-to-GameSessionEntity" style="stroke:#5B3F99;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#5B3F99" points="1621.76,1710.6388,1627.6441,1702.7409,1622.8613,1705.7616,1619.8406,1700.9788,1621.76,1710.6388" style="stroke:#5B3F99;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="38" x="1644.92" y="895.4863">maps to</text></g><!--MD5=[3c41f1462d65d937f1e692472645f41a]
+link MatchConfig to GameSessionEntity--><g id="link_MatchConfig_GameSessionEntity"><path codeLine="288" d="M453.06,526.1788 C756.63,526.0388 1560.92,536.1188 1560.92,646.7988 C1560.92,646.7988 1560.92,646.7988 1560.92,1555.2988 C1560.92,1604.0788 1562.83,1657.1688 1565.29,1705.2788 " fill="none" id="MatchConfig-to-GameSessionEntity" style="stroke:#5B3F99;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#5B3F99" points="1565.56,1710.5088,1569.0911,1701.3147,1565.3025,1705.5155,1561.1017,1701.7268,1565.56,1710.5088" style="stroke:#5B3F99;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="50" x="1565.92" y="964.9863">«maps to»</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="54" x="1563.92" y="977.0859">(columnas)</text></g><!--MD5=[82bdc1ae71f0ae3c5a4c0799431707ed]
+link RuleSettings to GameSessionEntity--><g id="link_RuleSettings_GameSessionEntity"><path codeLine="289" d="M452.96,648.9788 C781.47,651.6688 1454.92,669.3188 1454.92,768.7988 C1454.92,768.7988 1454.92,768.7988 1454.92,1555.2988 C1454.92,1606.2588 1469.53,1658.8588 1488.59,1705.8188 " fill="none" id="RuleSettings-to-GameSessionEntity" style="stroke:#5B3F99;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#5B3F99" points="1490.57,1710.6388,1490.8527,1700.794,1488.6713,1706.0134,1483.4519,1703.832,1490.57,1710.6388" style="stroke:#5B3F99;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="50" x="1459.92" y="1130.4863">«maps to»</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="54" x="1457.92" y="1142.5859">(columnas)</text></g><!--MD5=[fccad87c20ff835a19bc84fca057dfe4]
+link Player to MatchParticipantEntity--><g id="link_Player_MatchParticipantEntity"><path codeLine="290" d="M407.49,775.4488 C603.81,787.4888 1077.92,823.5288 1077.92,890.7988 C1077.92,890.7988 1077.92,890.7988 1077.92,1864.2988 C1077.92,2055.1188 1289.46,1976.0088 1446.92,2083.7988 C1450.37,2086.1588 1453.81,2088.6288 1457.23,2091.1688 " fill="none" id="Player-to-MatchParticipantEntity" style="stroke:#5B3F99;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#5B3F99" points="1461.22,2094.1988,1456.4396,2085.5879,1457.2269,2091.1897,1451.625,2091.9769,1461.22,2094.1988" style="stroke:#5B3F99;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="38" x="1080.92" y="1317.9863">maps to</text></g><!--MD5=[14be09b8e15e577ed18f5a47e3674472]
+link Round to RoundEntity--><g id="link_Round_RoundEntity"><path codeLine="291" d="M306.34,927.6388 C277.91,989.3388 230.3,1119.7188 284.92,1209.2988 C310.69,1251.5588 350.34,1223.9388 383.92,1260.2988 C630.85,1527.6888 440.35,1760.6688 699.92,2015.7988 C810.83,2124.8088 983.57,2176.2188 1110.59,2200.2388 " fill="none" id="Round-to-RoundEntity" style="stroke:#5B3F99;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#5B3F99" points="1115.85,2201.2188,1107.7335,2195.6401,1110.9343,2200.3043,1106.2702,2203.5052,1115.85,2201.2188" style="stroke:#5B3F99;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="38" x="485.92" y="1405.9863">maps to</text></g><!--MD5=[724f08d1045d7c832af471bfab722560]
+link Turn to RoundEntity--><g id="link_Turn_RoundEntity"><path codeLine="292" d="M452.5,1139.9588 C554.69,1152.8388 722.92,1192.3988 722.92,1313.2988 C722.92,1313.2988 722.92,1313.2988 722.92,1864.2988 C722.92,2050.6988 947.94,2144.4488 1110.39,2187.8488 " fill="none" id="Turn-to-RoundEntity" style="stroke:#5B3F99;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#5B3F99" points="1115.66,2189.2388,1107.9752,2183.079,1110.8248,2187.9657,1105.9381,2190.8153,1115.66,2189.2388" style="stroke:#5B3F99;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="50" x="725.92" y="1551.9863">«maps to»</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="29" x="736.42" y="1564.0859">turn_*</text></g><!--MD5=[ccf6f6e7c5904978a7f2b200a1b7f33e]
+link Hand to HandStateEntity--><g id="link_Hand_HandStateEntity"><path codeLine="293" d="M273.08,1350.0188 C255.53,1368.6488 236.48,1393.1388 226.92,1419.2988 C191.06,1517.4688 145.33,2280.0888 212.92,2359.7988 C283.28,2442.7788 596.04,2396.6588 695.92,2439.7988 C711.11,2446.3588 726.15,2454.8788 740.43,2464.2588 " fill="none" id="Hand-to-HandStateEntity" style="stroke:#5B3F99;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#5B3F99" points="744.84,2467.1988,739.5572,2458.8867,740.6754,2464.4319,735.1301,2465.5501,744.84,2467.1988" style="stroke:#5B3F99;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="38" x="192.92" y="1866.9863">maps to</text></g><!--MD5=[897dc5e75f53672d6f713a704dcca188]
+link Zones to CardPlacementEntity--><g id="link_Zones_CardPlacementEntity"><path codeLine="294" d="M307.31,1590.0288 C296.59,1691.0888 264.19,1980.1088 240.92,2015.7988 C210.15,2062.9988 161.05,2034.4088 133.92,2083.7988 C6,2316.6688 75,2509.2488 293.92,2659.7988 C472.28,2782.4588 1114.12,2810.2188 1412.02,2816.4888 " fill="none" id="Zones-to-CardPlacementEntity" style="stroke:#5B3F99;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#5B3F99" points="1417.25,2816.5988,1408.3318,2812.4197,1412.251,2816.4988,1408.1718,2820.4181,1417.25,2816.5988" style="stroke:#5B3F99;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="50" x="148.42" y="2219.4863">«maps to»</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="73" x="136.92" y="2231.5859">zone + position</text></g><!--MD5=[74be391751dc6660e54c2d289c316386]
+link Card to CardEntity--><g id="link_Card_CardEntity"><path codeLine="295" d="M395.99,1898.8288 C414.37,1941.7088 445.74,2017.3088 467.92,2083.7988 C514.96,2224.8188 557.87,2394.0288 579.73,2484.4088 " fill="none" id="Card-to-CardEntity" style="stroke:#5B3F99;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#5B3F99" points="580.95,2489.4488,582.7349,2479.7631,579.781,2484.5874,574.9566,2481.6335,580.95,2489.4488" style="stroke:#5B3F99;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="38" x="549.92" y="2225.4863">maps to</text></g><!--MD5=[947912c004e5c00f9863a19b18fad00e]
+link MoveRecord to TurnMoveEntity--><g id="link_MoveRecord_TurnMoveEntity"><path codeLine="296" d="M368.44,2257.5788 C396.77,2289.5788 443.2,2335.6388 493.92,2359.7988 C692.73,2454.5188 769.99,2383.5988 982.92,2439.7988 C986.04,2440.6188 989.17,2441.4688 992.31,2442.3288 " fill="none" id="MoveRecord-to-TurnMoveEntity" style="stroke:#5B3F99;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#5B3F99" points="997.26,2443.6988,989.6656,2437.4278,992.4438,2442.3554,987.5162,2445.1337,997.26,2443.6988" style="stroke:#5B3F99;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="38" x="786.92" y="2403.4863">maps to</text></g><!--MD5=[5f3e304266879a9487525d5ceb22af5d]
+link RoundSettlement to RoundScoreEntity--><g id="link_RoundSettlement_RoundScoreEntity"><path codeLine="297" d="M401.9,2514.1288 C423.63,2488.4288 456.62,2455.5988 493.92,2439.7988 C616.39,2387.9188 1564.8,2397.5688 1690.92,2439.7988 C1721.96,2450.1888 1752.61,2468.2288 1778.81,2486.7288 " fill="none" id="RoundSettlement-to-RoundScoreEntity" style="stroke:#5B3F99;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#5B3F99" points="1782.97,2489.6988,1777.9601,2481.2194,1778.8975,2486.798,1773.3188,2487.7354,1782.97,2489.6988" style="stroke:#5B3F99;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="50" x="1053.92" y="2397.4863">«maps to»</text><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="79" x="1039.42" y="2409.5859">1 fila por jugador</text></g><!--MD5=[ead4e31544c27efeda190e3755df2cf0]
+link Scoreboard to CumulativeScoreView--><g id="link_Scoreboard_CumulativeScoreView"><path codeLine="298" d="M342.84,2783.6088 C384.84,2763.3488 441.12,2739.5188 493.92,2727.7988 C942.95,2628.1688 1068.27,2701.5488 1527.92,2684.7988 C1572.3,2683.1788 2296.01,2691.6888 2326.92,2659.7988 C2394.97,2589.5888 2379.44,2522.2688 2326.92,2439.7988 C2255.19,2327.1588 2108.03,2272.0288 1998.37,2245.6788 " fill="none" id="Scoreboard-to-CumulativeScoreView" style="stroke:#5B3F99;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#5B3F99" points="1993.51,2244.5288,2001.3419,2250.5005,1998.3746,2245.6844,2003.1908,2242.7171,1993.51,2244.5288" style="stroke:#5B3F99;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;DejaVu Sans&quot;" font-size="10" lengthAdjust="spacing" textLength="38" x="2374.92" y="2553.4863">maps to</text></g><!--MD5=[3ff5cc6562ffc924ff29ce1a7396a2bc]
+link Match to MatchConfig--><!--MD5=[fea0bdae54fd63bc506cc5efe3c9ca72]
+link MatchConfig to RuleSettings--><!--MD5=[5401c4dd0f823cb96b94af6a0161ad46]
+link RuleSettings to Player--><!--MD5=[cd6f531b155aeedd552f6f069f04b4d3]
+link Player to Round--><!--MD5=[c7db1d6b3f1b159da7039dc5c02cede1]
+link Round to Turn--><!--MD5=[3a9fd19987c3150a5c22cedb9dc0d9b6]
+link Turn to Hand--><!--MD5=[a6bed7f3de9ea73d62dd791c30c779cf]
+link Hand to Zones--><!--MD5=[6d03ec1c8231930ccbc56a93558bb9c9]
+link Zones to Card--><!--MD5=[3c75e858e7b3ec09e487297b992748ad]
+link Card to MoveRecord--><!--MD5=[75a51604497616db770165140bde59cd]
+link MoveRecord to RoundSettlement--><!--MD5=[ace4d8c498817588ab8c3a5db2c444ec]
+link RoundSettlement to Scoreboard--><rect fill="#FFFFFF" height="223.3945" id="_legend" rx="7.5" ry="7.5" style="stroke:#000000;stroke-width:1.0;" width="737" x="1165.46" y="2944.7988"/><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="58" x="1172.46" y="2965.3613">Leyenda</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="65" x="1177.46" y="2986.3008">Elemento</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="79" x="1392.46" y="2986.3008">Significado</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="171" x="1178.46" y="3007.2402">«persistence entity» (gris)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="496" x="1393.46" y="3007.2402">Clase de datos anémica: una por tabla del esquema 2.2; sin lógica de juego</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="203" x="1178.46" y="3028.1797">«table view» (borde punteado)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="222" x="1393.46" y="3028.1797">Vista SQL derivada; no se escribe</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="151" x="1178.46" y="3049.1191">«PK» / «FK tabla» / UQ</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="319" x="1393.46" y="3049.1191">Clave primaria / foránea / restricción de unicidad</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="33" x="1178.46" y="3070.0586">[0..1]</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="116" x="1393.46" y="3070.0586">Columna anulable</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="46" x="1178.46" y="3090.998">{A ∣ B}</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="228" x="1393.46" y="3090.998">Dominio cerrado del valor (CHECK)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="172" x="1178.46" y="3111.9375">- - -&gt; «maps to» (morado)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="431" x="1393.46" y="3111.9375">Trazabilidad: qué clase del dominio 4.4 se guarda en qué entidad</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="196" x="1178.46" y="3132.877">«repository» / «data mapper»</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="382" x="1393.46" y="3132.877">Implementación del puerto IMatchRepository (sección 1.3)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="86" x="1178.46" y="3153.8164">Tiempos (int)</text><text fill="#000000" font-family="&quot;DejaVu Sans&quot;" font-size="14" lengthAdjust="spacing" textLength="312" x="1393.46" y="3153.8164">Epoch en ms (Time.get_unix_time_from_system)</text><line style="stroke:#000000;stroke-width:1.0;" x1="1172.46" x2="1895.46" y1="2970.7383" y2="2970.7383"/><line style="stroke:#000000;stroke-width:1.0;" x1="1172.46" x2="1895.46" y1="2991.6777" y2="2991.6777"/><line style="stroke:#000000;stroke-width:1.0;" x1="1172.46" x2="1895.46" y1="3012.6172" y2="3012.6172"/><line style="stroke:#000000;stroke-width:1.0;" x1="1172.46" x2="1895.46" y1="3033.5566" y2="3033.5566"/><line style="stroke:#000000;stroke-width:1.0;" x1="1172.46" x2="1895.46" y1="3054.4961" y2="3054.4961"/><line style="stroke:#000000;stroke-width:1.0;" x1="1172.46" x2="1895.46" y1="3075.4355" y2="3075.4355"/><line style="stroke:#000000;stroke-width:1.0;" x1="1172.46" x2="1895.46" y1="3096.375" y2="3096.375"/><line style="stroke:#000000;stroke-width:1.0;" x1="1172.46" x2="1895.46" y1="3117.3145" y2="3117.3145"/><line style="stroke:#000000;stroke-width:1.0;" x1="1172.46" x2="1895.46" y1="3138.2539" y2="3138.2539"/><line style="stroke:#000000;stroke-width:1.0;" x1="1172.46" x2="1895.46" y1="3159.1934" y2="3159.1934"/><line style="stroke:#000000;stroke-width:1.0;" x1="1172.46" x2="1172.46" y1="2970.7383" y2="3159.1934"/><line style="stroke:#000000;stroke-width:1.0;" x1="1387.46" x2="1387.46" y1="2970.7383" y2="3159.1934"/><line style="stroke:#000000;stroke-width:1.0;" x1="1895.46" x2="1895.46" y1="2970.7383" y2="3159.1934"/><!--MD5=[b64636466d0cc662ca01ad144123187b]
+@startuml persistence-class-diagram
+' ============================================================================
+'  E2 · 2.3 Diagrama UML de Clases de Entidad y Mapeo de Persistencia
+'  Sistema Digital de Juego de Cartas (Clásica 4-3-3 & Apuntado a 101)
+'  Continúa el diagrama de dominio 4.4 (E1) hacia la persistencia.
+'  Patrones: Repository (puerto IMatchRepository, sección 1.3) + Data Mapper.
+'  Las entidades de persistencia son anémicas: solo datos, sin reglas de juego.
+'  Implementación objetivo: Godot 4.5+ / GDScript · BD relacional (ADR-04)
+' ============================================================================
+
+title <size:18><b>2.3 Diagrama UML de Clases de Entidad y Mapeo de Persistencia</b></size>\n<size:12>Dominio (4.4) → Repository + Data Mapper → Entidades de persistencia → Esquema relacional (2.2) · Godot 4.5+ / GDScript</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 12
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #333333
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 50
+skinparam padding 2
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  StereotypeFontSize 10
+  StereotypeFontColor #555555
+}
+skinparam class<<aggregate root>> {
+  BorderColor #5B3F99
+  BorderThickness 2
+}
+skinparam class<<persistence entity>> {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+  BorderThickness 1.5
+}
+skinparam class<<table view>> {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+  BorderStyle dashed
+}
+skinparam class<<repository>> {
+  BorderColor #C05600
+  BorderThickness 2
+}
+skinparam package {
+  BorderColor #7A7A7A
+  FontSize 13
+  FontStyle bold
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+hide empty methods
+hide empty fields
+
+' ============================================================================
+'  1. DOMINIO (de 4.4, solo las clases que se persisten; atributos resumidos)
+' ============================================================================
+package "Dominio  ·  núcleo (diagrama 4.4, sin cambios)" as PkgDomain #FBFBF7 {
+  class "Match" as Match <<aggregate root>> {
+    id · host_id · status
+  }
+  class "MatchConfig" as MatchConfig <<Resource>> {
+    mode · cards_per_player · deck_count
+  }
+  class "RuleSettings" as RuleSettings <<Resource>> {
+    elimination_threshold · max_leftover_points · jokers_enabled
+  }
+  class "Player" as Player <<entity>> {
+    id · nickname · seat · status
+  }
+  class "Round" as Round <<entity>> {
+    number · is_closed()
+  }
+  class "Turn / TurnPhase" as Turn <<State>> {
+    player_id · number · fase
+  }
+  class "Hand" as Hand <<entity>> {
+    owner_id · cards()
+  }
+  class "Deck / DiscardPile" as Zones <<entity>> {
+    _cards (orden)
+  }
+  class "Card" as Card <<value object>> {
+    instance_id · rank · suit
+  }
+  class "MoveRecord" as MoveRecord <<value object>> {
+    sequence · player_id · action · card_id
+  }
+  class "RoundSettlement" as RoundSettlement <<value object>> {
+    closer_id · penalties
+  }
+  class "Scoreboard" as Scoreboard <<value object>> {
+    from_settlements() · total_of()
+  }
+}
+
+' ============================================================================
+'  2. PUERTO + MAPEO  (Repository + Data Mapper)
+' ============================================================================
+package "Puerto de salida  ·  res://orchestration/" as PkgPort #FFF8EE {
+  abstract class "IMatchRepository" as IMatchRepository <<port>> <<@abstract>> {
+    + {abstract} load(match_id: String): Match
+    + {abstract} save_snapshot(match: Match): void
+    + {abstract} save_settlement(match: Match, settlement: RoundSettlement): void
+  }
+}
+
+package "Adaptador de persistencia  ·  res://infrastructure/persistence/" as PkgAdapter #EEF1F5 {
+  class "SqlMatchRepository" as SqlMatchRepository <<repository>> {
+    - _db: SqlGateway
+    - _mappers: MatchMapper
+    - -
+    + load(match_id: String): Match
+    + save_snapshot(match: Match): void
+    + save_settlement(match: Match, settlement: RoundSettlement): void
+  }
+  class "MatchMapper" as MatchMapper <<data mapper>> {
+    + to_entities(match: Match): MatchRecordSet
+    + to_domain(rows: MatchRecordSet, rule: GameRule): Match
+  }
+  class "MatchRecordSet" as MatchRecordSet <<DTO>> {
+    + session: GameSessionEntity
+    + participants: Array[MatchParticipantEntity]
+    + current_round: RoundEntity
+    + hands: Array[HandStateEntity]
+    + placements: Array[CardPlacementEntity]
+    + new_moves: Array[TurnMoveEntity]
+  }
+  class "SqlGateway" as SqlGateway <<gateway>> {
+    + query(sql: String, params: Array): Array[Dictionary]
+    + execute(sql: String, params: Array): int
+    + in_transaction(work: Callable): void
+  }
+  note bottom of SqlGateway
+    Único punto que conoce el driver
+    de la BD (addon según ADR-04).
+    in_transaction(): BEGIN · work · COMMIT,
+    o ROLLBACK si work falla (sección 2.4).
+  end note
+}
+
+' ============================================================================
+'  3. ENTIDADES DE PERSISTENCIA (anémicas) · una clase por tabla del esquema 2.2
+' ============================================================================
+package "Entidades de persistencia  ·  res://infrastructure/persistence/entities/" as PkgEntities #F5F7FA {
+
+  class "PlayerEntity\n<size:10>tabla <b>player</b> (Jugador)</size>" as PlayerEntity <<persistence entity>> {
+    + player_id: int «PK»
+    + username: String «UQ»
+    + password_hash: String
+    + created_at: int
+  }
+
+  class "GameSessionEntity\n<size:10>tabla <b>match_session</b> (Partida)</size>" as GameSessionEntity <<persistence entity>> {
+    + session_id: String «PK» UUID
+    + host_player_id: int «FK player»
+    + mode: String {CLASSIC | APUNTADO}
+    + status: String {WAITING | IN_PROGRESS | FINISHED}
+    + cards_per_player: int
+    + deck_count: int
+    + elimination_threshold: int
+    + max_leftover_points: int
+    + jokers_enabled: bool
+    + winner_participant_id: int «FK» [0..1]
+    + version: int
+    + created_at: int
+    + finished_at: int [0..1]
+  }
+
+  class "MatchParticipantEntity\n<size:10>tabla <b>match_participant</b></size>" as MatchParticipantEntity <<persistence entity>> {
+    + participant_id: int «PK»
+    + session_id: String «FK match_session»
+    + player_id: int «FK player»
+    + seat: int {0..4}
+    + nickname: String
+    + status: String {ACTIVE | ELIMINATED}
+    + eliminated_in_round: int [0..1]
+    + joined_at: int
+    - -
+    UQ (session_id, seat)
+    UQ (session_id, player_id)
+  }
+
+  class "RoundEntity\n<size:10>tabla <b>round</b> (Ronda)</size>" as RoundEntity <<persistence entity>> {
+    + round_id: int «PK»
+    + session_id: String «FK match_session»
+    + round_number: int
+    + status: String {IN_PROGRESS | CLOSED | SETTLED}
+    + turn_participant_id: int «FK» [0..1]
+    + turn_number: int
+    + turn_phase: String {DRAW | DISCARD | END}
+    + closer_participant_id: int «FK» [0..1]
+    + started_at: int
+    + closed_at: int [0..1]
+    - -
+    UQ (session_id, round_number)
+  }
+
+  class "HandStateEntity\n<size:10>tabla <b>hand_state</b> (Mano_Jugador)</size>" as HandStateEntity <<persistence entity>> {
+    + hand_id: int «PK»
+    + round_id: int «FK round»
+    + participant_id: int «FK match_participant»
+    + is_closing_hand: bool
+    - -
+    UQ (round_id, participant_id)
+  }
+
+  class "CardEntity\n<size:10>tabla <b>card</b> (catálogo fijo)</size>" as CardEntity <<persistence entity>> {
+    + card_instance_id: int «PK»
+    + rank: int {0..13}
+    + suit: String [0..1]
+  }
+
+  class "CardPlacementEntity\n<size:10>tabla <b>card_placement</b></size>" as CardPlacementEntity <<persistence entity>> {
+    + round_id: int «PK, FK round»
+    + card_instance_id: int «PK, FK card»
+    + zone: String {DECK | DISCARD | HAND}
+    + hand_id: int «FK hand_state» [0..1]
+    + position: int
+    - -
+    CHECK (zone = 'HAND') = (hand_id IS NOT NULL)
+  }
+
+  class "TurnMoveEntity\n<size:10>tabla <b>turn_move</b> (Turno_Jugada)</size>" as TurnMoveEntity <<persistence entity>> {
+    + move_id: int «PK»
+    + round_id: int «FK round»
+    + sequence: int
+    + participant_id: int «FK match_participant»
+    + action: String {DRAW_FROM_DECK | DRAW_FROM_DISCARD | DISCARD | DECLARE_CLOSING}
+    + card_instance_id: int «FK card» [0..1]
+    + created_at_ms: int
+    - -
+    UQ (round_id, sequence)
+  }
+
+  class "RoundScoreEntity\n<size:10>tabla <b>round_score</b></size>" as RoundScoreEntity <<persistence entity>> {
+    + round_id: int «PK, FK round»
+    + participant_id: int «PK, FK match_participant»
+    + score_delta: int
+  }
+
+  class "CumulativeScoreView\n<size:10>vista <b>v_cumulative_score</b> (Puntaje_Acumulado)</size>" as CumulativeScoreView <<table view>> {
+    + session_id: String
+    + participant_id: int
+    + total: int = SUM(score_delta)
+    + rounds_played: int
+  }
+}
+
+' ============================================================================
+'  RELACIONES · entidades (multiplicidades = cardinalidades del esquema 2.2)
+' ============================================================================
+PlayerEntity "1" - - "0..*" MatchParticipantEntity : participa >
+PlayerEntity "1" - - "0..*" GameSessionEntity : anfitrión de >
+GameSessionEntity "1" *- - "5" MatchParticipantEntity : ocupa asientos <
+GameSessionEntity "1" *- - "0..*" RoundEntity : rondas
+RoundEntity "1" *- - "2..5" HandStateEntity : manos activas
+MatchParticipantEntity "1" - - "0..*" HandStateEntity
+RoundEntity "1" *- - "0..*" TurnMoveEntity : jugadas
+MatchParticipantEntity "1" - - "0..*" TurnMoveEntity : realiza >
+RoundEntity "1" *- - "0..*" RoundScoreEntity : liquidación
+MatchParticipantEntity "1" - - "0..*" RoundScoreEntity
+RoundEntity "1" *- - "0..108" CardPlacementEntity : ubica cartas
+CardEntity "1" - - "0..*" CardPlacementEntity
+HandStateEntity "0..1" - - "0..11" CardPlacementEntity : contiene
+CumulativeScoreView ..> RoundScoreEntity : «derive»\nSUM por participante
+
+' ============================================================================
+'  RELACIONES · Repository + Data Mapper
+' ============================================================================
+IMatchRepository <|.. SqlMatchRepository
+SqlMatchRepository - -> MatchMapper
+SqlMatchRepository - -> SqlGateway
+MatchMapper ..> MatchRecordSet : «create»
+MatchRecordSet ..> GameSessionEntity
+MatchRecordSet ..> RoundEntity
+IMatchRepository ..> Match : carga / guarda
+
+' ============================================================================
+'  TRAZABILIDAD · dominio → entidad  («maps to», dependencias punteadas)
+' ============================================================================
+Match .right[#5B3F99].> GameSessionEntity : «maps to»
+MatchConfig .right[#5B3F99].> GameSessionEntity : «maps to»\n(columnas)
+RuleSettings .right[#5B3F99].> GameSessionEntity : «maps to»\n(columnas)
+Player .right[#5B3F99].> MatchParticipantEntity : «maps to»
+Round .right[#5B3F99].> RoundEntity : «maps to»
+Turn .right[#5B3F99].> RoundEntity : «maps to»\nturn_*
+Hand .right[#5B3F99].> HandStateEntity : «maps to»
+Zones .right[#5B3F99].> CardPlacementEntity : «maps to»\nzone + position
+Card .right[#5B3F99].> CardEntity : «maps to»
+MoveRecord .right[#5B3F99].> TurnMoveEntity : «maps to»
+RoundSettlement .right[#5B3F99].> RoundScoreEntity : «maps to»\n1 fila por jugador
+Scoreboard .right[#5B3F99].> CumulativeScoreView : «maps to»
+
+' - - - columna vertical del dominio (solo layout) - - -
+Match -[hidden]down- MatchConfig
+MatchConfig -[hidden]down- RuleSettings
+RuleSettings -[hidden]down- Player
+Player -[hidden]down- Round
+Round -[hidden]down- Turn
+Turn -[hidden]down- Hand
+Hand -[hidden]down- Zones
+Zones -[hidden]down- Card
+Card -[hidden]down- MoveRecord
+MoveRecord -[hidden]down- RoundSettlement
+RoundSettlement -[hidden]down- Scoreboard
+
+' ============================================================================
+'  NOTAS DE DISEÑO
+' ============================================================================
+note right of GameSessionEntity
+  <b>Match + MatchConfig + RuleSettings</b> se aplanan en una
+  sola tabla: todos sus atributos dependen solo de session_id
+  (relación 1:1, cumple 3FN).
+  <b>GameRule no se persiste</b>: es comportamiento. Al cargar,
+  RuleRegistry.resolve(mode, settings) reconstruye la estrategia.
+  Una variante nueva = un valor nuevo en <i>mode</i>: <b>sin cambio de esquema</b>.
+  <b>version</b>: control optimista de concurrencia (sección 2.4).
+end note
+
+note right of CardPlacementEntity
+  <b>Invariante de conservación en la BD:</b>
+  PK (round_id, card_instance_id) impide que una carta
+  esté en dos lugares de la misma ronda.
+  Reemplaza <i>cards_data</i> en JSON: cumple 1FN y
+  permite reconstruir Deck, DiscardPile y cada Hand
+  (orden = position) para reconexión (RNF 4).
+end note
+
+note right of RoundScoreEntity
+  Guarda solo el <b>delta de la ronda</b> por jugador
+  (penalización o +10 de quien cierra, RD07/RD13).
+  El acumulado <b>no se almacena</b>: v_cumulative_score
+  lo deriva, igual que Scoreboard.from_settlements()
+  en el dominio. Evita la dependencia transitiva (3FN)
+  y que el total contradiga el historial.
+  Clásica: 1 ronda por partida. Apuntado: N rondas
+  hasta el umbral (relación 1:N match_session → round).
+end note
+
+note left of SqlMatchRepository
+  <b>Data Mapper:</b> el dominio no sabe que existe SQL;
+  las entidades no conocen las reglas.
+  save_settlement() escribe en <b>una transacción</b>:
+  round.status = SETTLED · filas round_score ·
+  match_participant.status = ELIMINATED · match_session
+  (status, winner, version + 1). Todo o nada.
+end note
+
+legend bottom
+  <b>Leyenda</b>
+  |= Elemento |= Significado |
+  | «persistence entity» (gris) | Clase de datos anémica: una por tabla del esquema 2.2; sin lógica de juego |
+  | «table view» (borde punteado) | Vista SQL derivada; no se escribe |
+  | «PK» / «FK tabla» / UQ | Clave primaria / foránea / restricción de unicidad |
+  | [0..1] | Columna anulable |
+  | {A ∣ B} | Dominio cerrado del valor (CHECK) |
+  | - - -> «maps to» (morado) | Trazabilidad: qué clase del dominio 4.4 se guarda en qué entidad |
+  | «repository» / «data mapper» | Implementación del puerto IMatchRepository (sección 1.3) |
+  | Tiempos (int) | Epoch en ms (Time.get_unix_time_from_system) |
+endlegend
+
+@enduml
+
+@startuml persistence-class-diagram
+
+title <size:18><b>2.3 Diagrama UML de Clases de Entidad y Mapeo de Persistencia</b></size>\n<size:12>Dominio (4.4) → Repository + Data Mapper → Entidades de persistencia → Esquema relacional (2.2) · Godot 4.5+ / GDScript</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 12
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #333333
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 50
+skinparam padding 2
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  StereotypeFontSize 10
+  StereotypeFontColor #555555
+}
+skinparam class<<aggregate root>> {
+  BorderColor #5B3F99
+  BorderThickness 2
+}
+skinparam class<<persistence entity>> {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+  BorderThickness 1.5
+}
+skinparam class<<table view>> {
+  BackgroundColor #F2F4F7
+  BorderColor #5A6B7F
+  BorderStyle dashed
+}
+skinparam class<<repository>> {
+  BorderColor #C05600
+  BorderThickness 2
+}
+skinparam package {
+  BorderColor #7A7A7A
+  FontSize 13
+  FontStyle bold
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+hide empty methods
+hide empty fields
+
+package "Dominio  ·  núcleo (diagrama 4.4, sin cambios)" as PkgDomain #FBFBF7 {
+  class "Match" as Match <<aggregate root>> {
+    id · host_id · status
+  }
+  class "MatchConfig" as MatchConfig <<Resource>> {
+    mode · cards_per_player · deck_count
+  }
+  class "RuleSettings" as RuleSettings <<Resource>> {
+    elimination_threshold · max_leftover_points · jokers_enabled
+  }
+  class "Player" as Player <<entity>> {
+    id · nickname · seat · status
+  }
+  class "Round" as Round <<entity>> {
+    number · is_closed()
+  }
+  class "Turn / TurnPhase" as Turn <<State>> {
+    player_id · number · fase
+  }
+  class "Hand" as Hand <<entity>> {
+    owner_id · cards()
+  }
+  class "Deck / DiscardPile" as Zones <<entity>> {
+    _cards (orden)
+  }
+  class "Card" as Card <<value object>> {
+    instance_id · rank · suit
+  }
+  class "MoveRecord" as MoveRecord <<value object>> {
+    sequence · player_id · action · card_id
+  }
+  class "RoundSettlement" as RoundSettlement <<value object>> {
+    closer_id · penalties
+  }
+  class "Scoreboard" as Scoreboard <<value object>> {
+    from_settlements() · total_of()
+  }
+}
+
+package "Puerto de salida  ·  res://orchestration/" as PkgPort #FFF8EE {
+  abstract class "IMatchRepository" as IMatchRepository <<port>> <<@abstract>> {
+    + {abstract} load(match_id: String): Match
+    + {abstract} save_snapshot(match: Match): void
+    + {abstract} save_settlement(match: Match, settlement: RoundSettlement): void
+  }
+}
+
+package "Adaptador de persistencia  ·  res://infrastructure/persistence/" as PkgAdapter #EEF1F5 {
+  class "SqlMatchRepository" as SqlMatchRepository <<repository>> {
+    - _db: SqlGateway
+    - _mappers: MatchMapper
+    - -
+    + load(match_id: String): Match
+    + save_snapshot(match: Match): void
+    + save_settlement(match: Match, settlement: RoundSettlement): void
+  }
+  class "MatchMapper" as MatchMapper <<data mapper>> {
+    + to_entities(match: Match): MatchRecordSet
+    + to_domain(rows: MatchRecordSet, rule: GameRule): Match
+  }
+  class "MatchRecordSet" as MatchRecordSet <<DTO>> {
+    + session: GameSessionEntity
+    + participants: Array[MatchParticipantEntity]
+    + current_round: RoundEntity
+    + hands: Array[HandStateEntity]
+    + placements: Array[CardPlacementEntity]
+    + new_moves: Array[TurnMoveEntity]
+  }
+  class "SqlGateway" as SqlGateway <<gateway>> {
+    + query(sql: String, params: Array): Array[Dictionary]
+    + execute(sql: String, params: Array): int
+    + in_transaction(work: Callable): void
+  }
+  note bottom of SqlGateway
+    Único punto que conoce el driver
+    de la BD (addon según ADR-04).
+    in_transaction(): BEGIN · work · COMMIT,
+    o ROLLBACK si work falla (sección 2.4).
+  end note
+}
+
+package "Entidades de persistencia  ·  res://infrastructure/persistence/entities/" as PkgEntities #F5F7FA {
+
+  class "PlayerEntity\n<size:10>tabla <b>player</b> (Jugador)</size>" as PlayerEntity <<persistence entity>> {
+    + player_id: int «PK»
+    + username: String «UQ»
+    + password_hash: String
+    + created_at: int
+  }
+
+  class "GameSessionEntity\n<size:10>tabla <b>match_session</b> (Partida)</size>" as GameSessionEntity <<persistence entity>> {
+    + session_id: String «PK» UUID
+    + host_player_id: int «FK player»
+    + mode: String {CLASSIC | APUNTADO}
+    + status: String {WAITING | IN_PROGRESS | FINISHED}
+    + cards_per_player: int
+    + deck_count: int
+    + elimination_threshold: int
+    + max_leftover_points: int
+    + jokers_enabled: bool
+    + winner_participant_id: int «FK» [0..1]
+    + version: int
+    + created_at: int
+    + finished_at: int [0..1]
+  }
+
+  class "MatchParticipantEntity\n<size:10>tabla <b>match_participant</b></size>" as MatchParticipantEntity <<persistence entity>> {
+    + participant_id: int «PK»
+    + session_id: String «FK match_session»
+    + player_id: int «FK player»
+    + seat: int {0..4}
+    + nickname: String
+    + status: String {ACTIVE | ELIMINATED}
+    + eliminated_in_round: int [0..1]
+    + joined_at: int
+    - -
+    UQ (session_id, seat)
+    UQ (session_id, player_id)
+  }
+
+  class "RoundEntity\n<size:10>tabla <b>round</b> (Ronda)</size>" as RoundEntity <<persistence entity>> {
+    + round_id: int «PK»
+    + session_id: String «FK match_session»
+    + round_number: int
+    + status: String {IN_PROGRESS | CLOSED | SETTLED}
+    + turn_participant_id: int «FK» [0..1]
+    + turn_number: int
+    + turn_phase: String {DRAW | DISCARD | END}
+    + closer_participant_id: int «FK» [0..1]
+    + started_at: int
+    + closed_at: int [0..1]
+    - -
+    UQ (session_id, round_number)
+  }
+
+  class "HandStateEntity\n<size:10>tabla <b>hand_state</b> (Mano_Jugador)</size>" as HandStateEntity <<persistence entity>> {
+    + hand_id: int «PK»
+    + round_id: int «FK round»
+    + participant_id: int «FK match_participant»
+    + is_closing_hand: bool
+    - -
+    UQ (round_id, participant_id)
+  }
+
+  class "CardEntity\n<size:10>tabla <b>card</b> (catálogo fijo)</size>" as CardEntity <<persistence entity>> {
+    + card_instance_id: int «PK»
+    + rank: int {0..13}
+    + suit: String [0..1]
+  }
+
+  class "CardPlacementEntity\n<size:10>tabla <b>card_placement</b></size>" as CardPlacementEntity <<persistence entity>> {
+    + round_id: int «PK, FK round»
+    + card_instance_id: int «PK, FK card»
+    + zone: String {DECK | DISCARD | HAND}
+    + hand_id: int «FK hand_state» [0..1]
+    + position: int
+    - -
+    CHECK (zone = 'HAND') = (hand_id IS NOT NULL)
+  }
+
+  class "TurnMoveEntity\n<size:10>tabla <b>turn_move</b> (Turno_Jugada)</size>" as TurnMoveEntity <<persistence entity>> {
+    + move_id: int «PK»
+    + round_id: int «FK round»
+    + sequence: int
+    + participant_id: int «FK match_participant»
+    + action: String {DRAW_FROM_DECK | DRAW_FROM_DISCARD | DISCARD | DECLARE_CLOSING}
+    + card_instance_id: int «FK card» [0..1]
+    + created_at_ms: int
+    - -
+    UQ (round_id, sequence)
+  }
+
+  class "RoundScoreEntity\n<size:10>tabla <b>round_score</b></size>" as RoundScoreEntity <<persistence entity>> {
+    + round_id: int «PK, FK round»
+    + participant_id: int «PK, FK match_participant»
+    + score_delta: int
+  }
+
+  class "CumulativeScoreView\n<size:10>vista <b>v_cumulative_score</b> (Puntaje_Acumulado)</size>" as CumulativeScoreView <<table view>> {
+    + session_id: String
+    + participant_id: int
+    + total: int = SUM(score_delta)
+    + rounds_played: int
+  }
+}
+
+PlayerEntity "1" - - "0..*" MatchParticipantEntity : participa >
+PlayerEntity "1" - - "0..*" GameSessionEntity : anfitrión de >
+GameSessionEntity "1" *- - "5" MatchParticipantEntity : ocupa asientos <
+GameSessionEntity "1" *- - "0..*" RoundEntity : rondas
+RoundEntity "1" *- - "2..5" HandStateEntity : manos activas
+MatchParticipantEntity "1" - - "0..*" HandStateEntity
+RoundEntity "1" *- - "0..*" TurnMoveEntity : jugadas
+MatchParticipantEntity "1" - - "0..*" TurnMoveEntity : realiza >
+RoundEntity "1" *- - "0..*" RoundScoreEntity : liquidación
+MatchParticipantEntity "1" - - "0..*" RoundScoreEntity
+RoundEntity "1" *- - "0..108" CardPlacementEntity : ubica cartas
+CardEntity "1" - - "0..*" CardPlacementEntity
+HandStateEntity "0..1" - - "0..11" CardPlacementEntity : contiene
+CumulativeScoreView ..> RoundScoreEntity : «derive»\nSUM por participante
+
+IMatchRepository <|.. SqlMatchRepository
+SqlMatchRepository - -> MatchMapper
+SqlMatchRepository - -> SqlGateway
+MatchMapper ..> MatchRecordSet : «create»
+MatchRecordSet ..> GameSessionEntity
+MatchRecordSet ..> RoundEntity
+IMatchRepository ..> Match : carga / guarda
+
+Match .right[#5B3F99].> GameSessionEntity : «maps to»
+MatchConfig .right[#5B3F99].> GameSessionEntity : «maps to»\n(columnas)
+RuleSettings .right[#5B3F99].> GameSessionEntity : «maps to»\n(columnas)
+Player .right[#5B3F99].> MatchParticipantEntity : «maps to»
+Round .right[#5B3F99].> RoundEntity : «maps to»
+Turn .right[#5B3F99].> RoundEntity : «maps to»\nturn_*
+Hand .right[#5B3F99].> HandStateEntity : «maps to»
+Zones .right[#5B3F99].> CardPlacementEntity : «maps to»\nzone + position
+Card .right[#5B3F99].> CardEntity : «maps to»
+MoveRecord .right[#5B3F99].> TurnMoveEntity : «maps to»
+RoundSettlement .right[#5B3F99].> RoundScoreEntity : «maps to»\n1 fila por jugador
+Scoreboard .right[#5B3F99].> CumulativeScoreView : «maps to»
+
+Match -[hidden]down- MatchConfig
+MatchConfig -[hidden]down- RuleSettings
+RuleSettings -[hidden]down- Player
+Player -[hidden]down- Round
+Round -[hidden]down- Turn
+Turn -[hidden]down- Hand
+Hand -[hidden]down- Zones
+Zones -[hidden]down- Card
+Card -[hidden]down- MoveRecord
+MoveRecord -[hidden]down- RoundSettlement
+RoundSettlement -[hidden]down- Scoreboard
+
+note right of GameSessionEntity
+  <b>Match + MatchConfig + RuleSettings</b> se aplanan en una
+  sola tabla: todos sus atributos dependen solo de session_id
+  (relación 1:1, cumple 3FN).
+  <b>GameRule no se persiste</b>: es comportamiento. Al cargar,
+  RuleRegistry.resolve(mode, settings) reconstruye la estrategia.
+  Una variante nueva = un valor nuevo en <i>mode</i>: <b>sin cambio de esquema</b>.
+  <b>version</b>: control optimista de concurrencia (sección 2.4).
+end note
+
+note right of CardPlacementEntity
+  <b>Invariante de conservación en la BD:</b>
+  PK (round_id, card_instance_id) impide que una carta
+  esté en dos lugares de la misma ronda.
+  Reemplaza <i>cards_data</i> en JSON: cumple 1FN y
+  permite reconstruir Deck, DiscardPile y cada Hand
+  (orden = position) para reconexión (RNF 4).
+end note
+
+note right of RoundScoreEntity
+  Guarda solo el <b>delta de la ronda</b> por jugador
+  (penalización o +10 de quien cierra, RD07/RD13).
+  El acumulado <b>no se almacena</b>: v_cumulative_score
+  lo deriva, igual que Scoreboard.from_settlements()
+  en el dominio. Evita la dependencia transitiva (3FN)
+  y que el total contradiga el historial.
+  Clásica: 1 ronda por partida. Apuntado: N rondas
+  hasta el umbral (relación 1:N match_session → round).
+end note
+
+note left of SqlMatchRepository
+  <b>Data Mapper:</b> el dominio no sabe que existe SQL;
+  las entidades no conocen las reglas.
+  save_settlement() escribe en <b>una transacción</b>:
+  round.status = SETTLED · filas round_score ·
+  match_participant.status = ELIMINATED · match_session
+  (status, winner, version + 1). Todo o nada.
+end note
+
+legend bottom
+  <b>Leyenda</b>
+  |= Elemento |= Significado |
+  | «persistence entity» (gris) | Clase de datos anémica: una por tabla del esquema 2.2; sin lógica de juego |
+  | «table view» (borde punteado) | Vista SQL derivada; no se escribe |
+  | «PK» / «FK tabla» / UQ | Clave primaria / foránea / restricción de unicidad |
+  | [0..1] | Columna anulable |
+  | {A ∣ B} | Dominio cerrado del valor (CHECK) |
+  | - - -> «maps to» (morado) | Trazabilidad: qué clase del dominio 4.4 se guarda en qué entidad |
+  | «repository» / «data mapper» | Implementación del puerto IMatchRepository (sección 1.3) |
+  | Tiempos (int) | Epoch en ms (Time.get_unix_time_from_system) |
+endlegend
+
+@enduml
+
+PlantUML version 1.2022.12(Sun Oct 23 13:12:26 COT 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
