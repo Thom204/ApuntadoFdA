@@ -1,6 +1,6 @@
 # ADR-02: Implementar las reglas de victoria como estrategias intercambiables dentro del monolito modular
 
-- **Estado:** Proposed
+- **Estado:** Superseded by [ADR-03](./0003-reglas-como-plugins-en-tiempo-de-ejecucion.md)
 - **Fecha:** [2026-09-28]
 - **Autor(es):** [Daniel Restrepo]
 - **Revisores:** [docente / equipo]

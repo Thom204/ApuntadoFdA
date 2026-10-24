@@ -1,7 +1,10 @@
 # ADR-03: Monolito modular con módulo de reglas extensible por plug-ins en tiempo de ejecución
 
-**ESTADO:** Accepted. Reemplaza a ADR-02 (ADR-02 pasa a *Superseded by ADR-03*).
-
+- **ESTADO:** Accepted. Reemplaza a ADR-02 (ADR-02 pasa a *Superseded by ADR-03*).
+- **Fecha:** [2026-10-24]
+- **Autor(es):** [Daniel Restrepo]
+- **Revisores:** [Thomas, Angelika]
+- **Relacionado con:** [ADR-01](./0001-particionamiento-por-dominio.md), secciones 1.1, 1.3, 2.3 y 5.2
 ---
 
 **CONTEXTO**
