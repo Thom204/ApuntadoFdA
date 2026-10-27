@@ -1,9 +1,9 @@
 # ADR-03: Monolito modular con módulo de reglas extensible por plug-ins en tiempo de ejecución
 
 - **ESTADO:** Accepted. Reemplaza a ADR-02 (ADR-02 pasa a *Superseded by ADR-03*).
-- **Fecha:** [2026-10-24]
-- **Autor(es):** [Daniel Restrepo]
-- **Revisores:** [Thomas, Angelika]
+- **Fecha:** 2026-10-24
+- **Autor(es):** Daniel Restrepo
+- **Revisores:** Thomas, Angelika
 - **Relacionado con:** [ADR-01](./0001-particionamiento-por-dominio.md), secciones 1.1, 1.3, 2.3 y 5.2
 ---
 
@@ -148,8 +148,8 @@ No se recompila ni se re-exporta el núcleo, y no se modifica ningún archivo ex
 **NOTAS**
 
 - **Autor:** Daniel Restrepo Faciolince
-- **Fecha:** 24-10-2026
-- **Aprobado por:** [pendiente: revisión de Angelika Moya Bolaños y Thomas Monnier Granda]
+- **Fecha:** 2026-10-24
+- **Aprobado por:** Angelika M y Thomas M
 - **Reemplaza a:** ADR-02 (Strategy en tiempo de compilación). Se conservan su patrón Strategy y su Template Method.
 - **Relacionado con:** ADR-01 (particionamiento por dominio), ADR-04 (la columna `mode` almacena el identificador del plug-in), ADR-05 (comunicación síncrona en proceso), secciones 1.1, 1.3, 2.3 y 5.2, DA-01 a DA-04, RD08, RNF 5 y RNF 6.
 - **Referencias:** Richards y Ford (2025), caps. 11 (*Modular Monolith*), 13 (*Microkernel*: *Plug-In Components*, *Registry*, *Contracts*, *Common Risks*, *Governance*) y 21 (*Architectural Decisions*).

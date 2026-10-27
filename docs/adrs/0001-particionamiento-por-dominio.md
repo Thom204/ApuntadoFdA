@@ -1,9 +1,9 @@
 # ADR-01: Particionar el sistema por dominio del juego mediante un monolito modular
 
-- **Estado:** Proposed
-- **Fecha:** [2026-09-28]
-- **Autor(es):** [Daniel Restrepo]
-- **Revisores:** [docente / equipo]
+- **Estado:** Accepted
+- **Fecha:** 2026-09-28
+- **Autor(es):** Daniel Restrepo
+- **Revisores:** Angelika M y Thomas M
 - **Relacionado con:** [ADR-02](./0002-reglas-como-estrategias.md), secciones 4.1, 4.3 y 4.5
 
 ## Contexto
@@ -56,4 +56,9 @@ En la revisión de código se rechazan las cadenas de llamadas sobre objetos de 
 
 ## Notas
 
-[Daniel, fecha de aprobación, revisores]
+- **Autor:** Daniel Restrepo Faciolince
+- **Fecha:** 2026-09-28
+- **Aprobado por:** Angelika M y Thomas M
+- **Relacionado con:** [ADR-02](./0002-reglas-como-estrategias.md), [ADR-03](./0003-reglas-como-plugins-en-tiempo-de-ejecucion.md), [ADR-05](./0005-comandos-sincronos-y-eventos-post-commit.md), secciones 4.1, 4.3 y 4.5 (E1)
+- **Referencias:** Richards y Ford (2025), caps. 11 (*Module Communication*: *mediator approach*), 19 (*use synchronous communication by default, asynchronous when necessary*) y 21 (*Architectural Decisions*).
+- **Archivo en el repositorio:** `docs\adrs\0001-particionamiento-por-dominio.md`

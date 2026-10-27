@@ -1,9 +1,9 @@
 # ADR-02: Implementar las reglas de victoria como estrategias intercambiables dentro del monolito modular
 
 - **Estado:** Superseded by [ADR-03](./0003-reglas-como-plugins-en-tiempo-de-ejecucion.md)
-- **Fecha:** [2026-09-28]
-- **Autor(es):** [Daniel Restrepo]
-- **Revisores:** [docente / equipo]
+- **Fecha:** 2026-09-28
+- **Autor(es):** Daniel Restrepo
+- **Revisores:** Angelika M y Thomas M
 - **Relacionado con:** [ADR-01](./0001-particionamiento-por-dominio.md), secciones 4.4 y 4.5, RNF 1 y RNF 6
 
 ## Contexto
@@ -60,4 +60,9 @@ En la revisión de cada regla nueva se verifica el límite del RNF 1 (máximo 2 
 
 ## Notas
 
-[Daniel, fecha de aprobación, revisores]
+- **Autor:** Daniel Restrepo Faciolince
+- **Fecha:** 2026-09-28
+- **Aprobado por:** Angelika M y Thomas M
+- **Relacionado con:** [ADR-01](./0001-particionamiento-por-dominio.md), [ADR-03](./0003-reglas-como-plugins-en-tiempo-de-ejecucion.md), secciones 4.4 y 4.5 (E1), RNF 1 y RNF 6
+- **Referencias:** Richards y Ford (2025), caps. 11 (*Module Communication*: *mediator approach*), 19 (*use synchronous communication by default, asynchronous when necessary*) y 21 (*Architectural Decisions*).
+- **Archivo en el repositorio:** `docs\adrs\0002-reglas-como-estrategias.md`
