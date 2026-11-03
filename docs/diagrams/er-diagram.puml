@@ -1,0 +1,167 @@
+@startuml er-diagram
+' ============================================================================
+'  E2 · 2.2 Modelo Entidad-Relación lógico (esquema relacional, 3FN)
+'  Sistema Digital de Juego de Cartas (Clásica 4-3-3 & Apuntado a 101)
+'  Coincide atributo por atributo con las entidades del diagrama 2.3.
+'  Notación: pata de gallo (IE). Motor: SQLite en el servidor (ADR-04).
+' ============================================================================
+
+title <size:16><b>2.2 Modelo Entidad-Relación lógico del esquema de persistencia</b></size>\n<size:11>9 tablas + 1 vista · 3FN · SQLite en el servidor (ADR-04) · convención de puntaje del E1: eliminación con total ≤ −101</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam dpi 180
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 11
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 70
+skinparam ArrowColor #555555
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  HeaderBackgroundColor #A9CCEB
+}
+skinparam entity {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+}
+hide circle
+hide methods
+
+entity "player\n<size:9>Jugador</size>" as player {
+  * <b>player_id</b> : INTEGER <<PK>>
+  --
+  * username : TEXT <<UQ>>
+  * password_hash : TEXT
+  * created_at : INTEGER
+}
+
+entity "match_session\n<size:9>Partida / Sala</size>" as session {
+  * <b>session_id</b> : TEXT (UUID) <<PK>>
+  --
+  * host_player_id : INTEGER <<FK>>
+  * mode : TEXT «id de plug-in»
+  * status : TEXT {WAITING|IN_PROGRESS|FINISHED}
+  * cards_per_player : INTEGER
+  * deck_count : INTEGER
+  * elimination_threshold : INTEGER
+  * max_leftover_points : INTEGER
+  * jokers_enabled : INTEGER (bool)
+  winner_participant_id : INTEGER <<FK>>
+  * version : INTEGER
+  * created_at : INTEGER
+  finished_at : INTEGER
+}
+
+entity "match_participant\n<size:9>Participación</size>" as participant {
+  * <b>participant_id</b> : INTEGER <<PK>>
+  --
+  * session_id : TEXT <<FK>>
+  * player_id : INTEGER <<FK>>
+  * seat : INTEGER {0..4}
+  * nickname : TEXT
+  * status : TEXT {ACTIVE|ELIMINATED}
+  eliminated_in_round : INTEGER
+  * joined_at : INTEGER
+  ..
+  UQ (session_id, seat)
+  UQ (session_id, player_id)
+}
+
+entity "round\n<size:9>Ronda</size>" as round {
+  * <b>round_id</b> : INTEGER <<PK>>
+  --
+  * session_id : TEXT <<FK>>
+  * round_number : INTEGER
+  * status : TEXT {IN_PROGRESS|CLOSED|SETTLED}
+  turn_participant_id : INTEGER <<FK>>
+  * turn_number : INTEGER
+  * turn_phase : TEXT {DRAW|DISCARD|END}
+  closer_participant_id : INTEGER <<FK>>
+  * started_at : INTEGER
+  closed_at : INTEGER
+  ..
+  UQ (session_id, round_number)
+}
+
+entity "hand_state\n<size:9>Mano_Jugador</size>" as hand {
+  * <b>hand_id</b> : INTEGER <<PK>>
+  --
+  * round_id : INTEGER <<FK>>
+  * participant_id : INTEGER <<FK>>
+  * is_closing_hand : INTEGER (bool)
+  ..
+  UQ (round_id, participant_id)
+}
+
+entity "card\n<size:9>Catálogo fijo (108)</size>" as card {
+  * <b>card_instance_id</b> : INTEGER <<PK>>
+  --
+  * rank : INTEGER {0..13}
+  suit : TEXT
+}
+
+entity "card_placement\n<size:9>Ubicación por ronda</size>" as placement {
+  * <b>round_id</b> : INTEGER <<PK, FK>>
+  * <b>card_instance_id</b> : INTEGER <<PK, FK>>
+  --
+  * zone : TEXT {DECK|DISCARD|HAND}
+  hand_id : INTEGER <<FK>>
+  * position : INTEGER
+  ..
+  CHECK (zone = 'HAND') = (hand_id IS NOT NULL)
+}
+
+entity "turn_move\n<size:9>Turno_Jugada</size>" as move {
+  * <b>move_id</b> : INTEGER <<PK>>
+  --
+  * round_id : INTEGER <<FK>>
+  * sequence : INTEGER
+  * participant_id : INTEGER <<FK>>
+  * action : TEXT {DRAW_FROM_DECK|DRAW_FROM_DISCARD|DISCARD|DECLARE_CLOSING}
+  card_instance_id : INTEGER <<FK>>
+  * is_automatic : INTEGER (bool)
+  * created_at_ms : INTEGER
+  ..
+  UQ (round_id, sequence)
+}
+
+entity "round_score\n<size:9>Puntaje de ronda</size>" as score {
+  * <b>round_id</b> : INTEGER <<PK, FK>>
+  * <b>participant_id</b> : INTEGER <<PK, FK>>
+  --
+  * score_delta : INTEGER (con signo)
+}
+
+entity "v_cumulative_score\n<size:9>Puntaje_Acumulado (vista)</size>" as view #EEEEEE {
+  session_id : TEXT
+  participant_id : INTEGER
+  {field} total : INTEGER = SUM(score_delta)
+  {field} rounds_played : INTEGER = COUNT(*)
+}
+
+' --- Relaciones (pata de gallo: || uno · o| cero o uno · |{ uno o más · o{ cero o más) ---
+player ||--o{ participant : participa
+player ||--o{ session : anfitrión
+session ||--|{ participant : "5 asientos"
+session ||--o{ round : rondas
+participant |o--o| session : ganador
+participant |o--o{ round : "turno / cierre"
+round ||--|{ hand : "2..5 manos"
+participant ||--o{ hand
+round ||--o{ placement : "0..108"
+card ||--o{ placement
+hand |o--o{ placement : "0..11"
+round ||--o{ move : jugadas
+participant ||--o{ move : realiza
+round ||--o{ score : liquidación
+participant ||--o{ score
+score ..> view : «derive»
+
+legend bottom
+  <b>Leyenda</b> · * = NOT NULL · sin * = anulable · <<PK>> clave primaria · <<FK>> clave foránea · UQ = único
+  {A|B} = CHECK de dominio cerrado · tiempos en ms desde epoch · mode sin CHECK: el catálogo lo valida RuleRegistry (ADR-03)
+endlegend
+
+@enduml

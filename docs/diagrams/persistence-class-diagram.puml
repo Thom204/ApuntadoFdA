@@ -61,7 +61,7 @@ hide empty fields
 ' ============================================================================
 '  1. DOMINIO (de 4.4, solo las clases que se persisten; atributos resumidos)
 ' ============================================================================
-package "Dominio  ·  núcleo (diagrama 4.4, sin cambios)" as PkgDomain #FBFBF7 {
+package "Dominio  ·  núcleo (diagrama 4.4, actualizado por ADR-03)" as PkgDomain #FBFBF7 {
   class "Match" as Match <<aggregate root>> {
     id · host_id · status
   }
@@ -160,7 +160,7 @@ package "Entidades de persistencia  ·  res://infrastructure/persistence/entitie
   class "GameSessionEntity\n<size:10>tabla <b>match_session</b> (Partida)</size>" as GameSessionEntity <<persistence entity>> {
     + session_id: String «PK» UUID
     + host_player_id: int «FK player»
-    + mode: String {CLASSIC | APUNTADO}
+    + mode: String «id de plug-in» (p. ej. "classic", "apuntado")
     + status: String {WAITING | IN_PROGRESS | FINISHED}
     + cards_per_player: int
     + deck_count: int
@@ -234,6 +234,7 @@ package "Entidades de persistencia  ·  res://infrastructure/persistence/entitie
     + participant_id: int «FK match_participant»
     + action: String {DRAW_FROM_DECK | DRAW_FROM_DISCARD | DISCARD | DECLARE_CLOSING}
     + card_instance_id: int «FK card» [0..1]
+    + is_automatic: bool
     + created_at_ms: int
     --
     UQ (round_id, sequence)
@@ -319,8 +320,9 @@ note right of GameSessionEntity
   sola tabla: todos sus atributos dependen solo de session_id
   (relación 1:1, cumple 3FN).
   <b>GameRule no se persiste</b>: es comportamiento. Al cargar,
-  RuleRegistry.resolve(mode, settings) reconstruye la estrategia.
-  Una variante nueva = un valor nuevo en <i>mode</i>: <b>sin cambio de esquema</b>.
+  RuleRegistry.resolve(mode, settings) reconstruye la regla del plug-in.
+  <i>mode</i> guarda el <b>id del plug-in</b> (sin CHECK ni enum): una variante
+  nueva es un id nuevo, <b>sin cambio de esquema ni migración</b> (ADR-03).
   <b>version</b>: control optimista de concurrencia (sección 2.4).
 end note
 

@@ -263,12 +263,32 @@ package "apuntado.rules  ·  res://rules/" as PkgRules #E7F4EA {
     # settings: RuleSettings
     # evaluator: HandEvaluator
     --
-    + validate_closing(cards: Array[Card], discard: Card): ValidationResult
+    + {static} CONTRACT_VERSION: int = 1 {readOnly}
+    --
+    + {abstract} cards_to_deal(ctx: RoundContext): int
+    + validate_closing(cards: Array[Card], discard: Card, ctx: RoundContext): ValidationResult
     + penalty_for(cards: Array[Card]): int
     + {abstract} is_eliminated(total_score: int): bool
-    + {abstract} is_match_over(active_players: int): bool
-    # {abstract} _closing_pattern(): Array[MeldKind]
+    + {abstract} is_match_over(ctx: MatchContext): bool
+    + {abstract} select_winner(ctx: MatchContext): StringName
+    # {abstract} _closing_pattern(ctx: RoundContext): Array[MeldSpec]
     # {abstract} _accepts_leftover(leftover: Array[Card], points: int): bool
+  }
+
+  class RoundContext <<value object>> {
+    + round_number: int {readOnly}
+    + active_players: Array[StringName] {readOnly}
+  }
+
+  class MatchContext <<value object>> {
+    + active_players: Array[StringName] {readOnly}
+    + scoreboard: Scoreboard {readOnly}
+    + rounds_played: int {readOnly}
+  }
+
+  class MeldSpec <<value object>> {
+    + type: MeldType [0..1] {readOnly}
+    + min_size: int {readOnly}
   }
 
   class "ValidationResult\n<size:10><i>(ResultadoValidacion)</i></size>" as ValidationResult <<value object>> {
@@ -291,69 +311,76 @@ package "apuntado.rules  ·  res://rules/" as PkgRules #E7F4EA {
   }
 
   class RuleSettings <<Resource>> {
-    + elimination_threshold: int = 101
+    + elimination_threshold: int = -101
     + max_leftover_points: int = 5
     + jokers_enabled: bool = false
     + card_values: CardValueTable
   }
 
-  enum GameMode <<catálogo>> {
-    CLASSIC
-    APUNTADO
+  class "GameMode\n<size:10><i>(StringName · catálogo abierto)</i></size>" as GameMode <<identificador>> {
+    + id: StringName {readOnly}
   }
 
   note left of GameMode
-    <b>Contrato de reglas (H5):</b> script propio sin
-    comportamiento (res://rules/game_mode.gd).
-    MatchConfig lo usa sin conocer RuleRegistry;
-    una modalidad nueva no modifica GameRule.
+    <b>Catálogo abierto (ADR-03):</b> el id del plug-in
+    (p. ej. &"classic", &"apuntado"). Ya no es un enum:
+    los valores válidos los da RuleRegistry.available_modes().
+    MatchConfig lo usa sin conocer las reglas concretas.
   end note
 
   note top of GameRule
-    <b>Strategy (ADR-02) + Template Method.</b> validate_closing() fija el algoritmo:
-    1) cartas − descarte  2) evaluator.best_melds(_closing_pattern())  3) _accepts_leftover()
+    <b>Contrato v1 (ADR-03): Strategy + Template Method.</b> validate_closing() fija el algoritmo:
+    1) cartas − descarte  2) evaluator.best_melds(_closing_pattern(ctx))  3) _accepts_leftover()
     Recibe Array[Card] (copia de Hand.cards()), nunca la entidad Hand: la regla no puede alterar una mano (H4).
     <b>Classic:</b> [CUARTA, TERNA, TERNA] · sobrante vacío · nunca elimina · termina con el primer cierre válido.
-    <b>Apuntado:</b> [TERNA ×3] · sobrante < max_leftover_points (5) · elimina si total ≥ elimination_threshold (101)
-    · termina con ≤ 1 jugador activo.  Parámetros = datos (RuleSettings); comportamiento = Strategy.
+    <b>Apuntado:</b> [TERNA ×3] · sobrante < max_leftover_points (5) · elimina si total ≤ elimination_threshold (−101; RF09)
+    · termina con ≤ 1 jugador activo.  Parámetros = datos (RuleSettings); comportamiento = plug-in.
+    Los contextos son value objects inmutables: la regla recibe datos y devuelve datos (H4).
   end note
-  package "rules.modes  ·  res://rules/modes/" as PkgModes #D5ECDB {
-    class "ClassicRule\n<size:10><i>(ReglaClasicaCuartaTerna)</i></size>" as ClassicRule <<Resource>> {
+  package "rules.modes  ·  res://rules/modes/<id>/  ·  plug-ins .pck (ADR-03)" as PkgModes #D5ECDB {
+    class "ClassicRule\n<size:10><i>(ReglaClasicaCuartaTerna)</i></size>" as ClassicRule <<plug-in>> {
+      + cards_to_deal(ctx: RoundContext): int
       + is_eliminated(total_score: int): bool
-      + is_match_over(active_players: int): bool
-      # _closing_pattern(): Array[MeldKind]
+      + is_match_over(ctx: MatchContext): bool
+      + select_winner(ctx: MatchContext): StringName
+      # _closing_pattern(ctx: RoundContext): Array[MeldSpec]
       # _accepts_leftover(leftover: Array[Card], points: int): bool
     }
 
-    class "ApuntadoRule\n<size:10><i>(ReglaApuntado101)</i></size>" as ApuntadoRule <<Resource>> {
+    class "ApuntadoRule\n<size:10><i>(ReglaApuntado101)</i></size>" as ApuntadoRule <<plug-in>> {
+      + cards_to_deal(ctx: RoundContext): int
       + is_eliminated(total_score: int): bool
-      + is_match_over(active_players: int): bool
-      # _closing_pattern(): Array[MeldKind]
+      + is_match_over(ctx: MatchContext): bool
+      + select_winner(ctx: MatchContext): StringName
+      # _closing_pattern(ctx: RoundContext): Array[MeldSpec]
       # _accepts_leftover(leftover: Array[Card], points: int): bool
     }
   }
 
   package "rules.selection  ·  res://rules/selection/" as PkgSelection #D5ECDB {
-    class RuleRegistry <<Registry / Factory>> {
-      - _catalog: Dictionary[GameMode, Script]
+    class RuleRegistry <<Registry · Plug-in Loader>> {
+      - _catalog: Dictionary[StringName, Dictionary]
       - _evaluator: HandEvaluator
       --
-      + register(mode: GameMode, rule_script: Script): void
-      + resolve(mode: GameMode, settings: RuleSettings): GameRule
+      + load_plugins(dir: String): void
+      + available_modes(): Array[StringName]
+      + resolve(mode: StringName, settings: RuleSettings): GameRule
+      - _validate(cfg: ConfigFile, script: Script): bool
     }
 
     note bottom of RuleRegistry
-      Único punto que conoce las reglas
-      concretas; Match y Round dependen
+      Único punto que instancia reglas, y solo
+      por carga dinámica (plugin.cfg), sin
+      referencia estática. Match y Round dependen
       solo de GameRule (DIP). Nueva modalidad:
-      1 archivo en modes/ + 1 valor en GameMode
-      + 1 register() (RNF 1: ≤ 2 existentes).
+      2 archivos nuevos en un .pck, 0 modificados,
+      sin recompilar (RNF 1, ADR-03).
     end note
   }
 
   package "rules.evaluation  ·  res://rules/evaluation/" as PkgEvaluation #D5ECDB {
     class HandEvaluator <<domain service>> {
-      + best_melds(cards: Array[Card], pattern: Array[MeldKind], values: CardValueTable): Array[Meld]
+      + best_melds(cards: Array[Card], pattern: Array[MeldSpec], values: CardValueTable): Array[Meld]
       + is_valid_meld(cards: Array[Card]): bool
       + points_of(cards: Array[Card], values: CardValueTable): int
     }
@@ -498,8 +525,13 @@ Round "1" -------> "1" GameRule : delega cierre\ny penalización >
 RuleRegistry .> GameRule : <<create>>
 GameRule <|-- ClassicRule
 GameRule <|-- ApuntadoRule
-RuleRegistry ..> ClassicRule : <<register>>
-RuleRegistry ..> ApuntadoRule : <<register>>
+RuleRegistry ..> ClassicRule : <<instantiate>>\ndinámico (plugin.cfg)
+RuleRegistry ..> ApuntadoRule : <<instantiate>>\ndinámico (plugin.cfg)
+GameRule ..> RoundContext : recibe
+GameRule ..> MatchContext : recibe
+GameRule ..> MeldSpec : patrón de cierre
+MatchContext ..> Scoreboard : marcador
+MeldSpec ..> MeldType
 RuleRegistry ..> GameMode : clave del\ncatálogo
 MatchConfig ..> GameMode : mode
 GameRule ...> ValidationResult : <<create>>
