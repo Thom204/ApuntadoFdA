@@ -1,0 +1,52 @@
+name: Pruebas y fitness functions
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  # Debe coincidir EXACTAMENTE con la versión de Godot del proyecto y con la de addons/gut
+  # (GUT 9.5.0 -> Godot 4.5.x, GUT 9.6.1 -> Godot 4.6.x, GUT 9.7.1 -> Godot 4.7.x).
+  GODOT_VERSION: "4.5-stable"
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    # Si el proyecto de Godot no está en la raíz del repositorio, descomenta y ajusta:
+    # defaults:
+    #   run:
+    #     working-directory: juego
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Descargar Godot ${{ env.GODOT_VERSION }}
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          sudo mv "Godot_v${GODOT_VERSION}_linux.x86_64" /usr/local/bin/godot
+          godot --version
+
+      # Sin este paso Godot no conoce los class_name del proyecto en un clon limpio (.godot/ no se versiona).
+      - name: Importar el proyecto
+        run: godot --headless --import
+
+      - name: Pruebas unitarias (D-22)
+        run: >
+          godot --headless -s res://addons/gut/gut_cmdln.gd
+          -gdir=res://tests/unit/ -ginclude_subdirs
+          -gjunit_xml_file=res://tests/results/junit_unit.xml -gexit
+
+      - name: Fitness functions de arquitectura (D-23)
+        if: always()
+        run: >
+          godot --headless -s res://addons/gut/gut_cmdln.gd
+          -gdir=res://tests/architecture/ -ginclude_subdirs
+          -gjunit_xml_file=res://tests/results/junit_architecture.xml -gexit
+
+      - name: Publicar resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-gut
+          path: tests/results/*.xml
