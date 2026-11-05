@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="GutTests" failures="2" tests="28" >
+  <testsuite name="tests/architecture/test_arch_support.gd" tests="21" failures="0" skipped="0" time="0.008011" >
+      <testcase name="test_sanitize_quita_comentarios_y_vacia_textos" assertions="2" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000163" >
+      </testcase>
+      <testcase name="test_sanitize_conserva_numeracion_de_lineas_en_textos_multilinea" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000151" >
+      </testcase>
+      <testcase name="test_sanitize_no_confunde_numeral_dentro_de_un_texto" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.00008" >
+      </testcase>
+      <testcase name="test_detecta_preload_load_y_extends_por_ruta" assertions="3" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000266" >
+      </testcase>
+      <testcase name="test_detecta_dependencia_por_class_name_y_autoload" assertions="2" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.00014" >
+      </testcase>
+      <testcase name="test_ignora_referencias_en_comentarios_y_textos" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000139" >
+      </testcase>
+      <testcase name="test_detecta_dependencias_en_escenas" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000085" >
+      </testcase>
+      <testcase name="test_module_of_usa_el_prefijo_mas_largo" assertions="3" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000164" >
+      </testcase>
+      <testcase name="test_forbidden_dependencies_reporta_la_violacion" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000115" >
+      </testcase>
+      <testcase name="test_forbidden_dependencies_no_reporta_dependencias_permitidas" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.0001" >
+      </testcase>
+      <testcase name="test_find_cycle_detecta_un_ciclo_de_tres_modulos" assertions="2" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000126" >
+      </testcase>
+      <testcase name="test_find_cycle_acepta_un_grafo_aciclico" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000104" >
+      </testcase>
+      <testcase name="test_variantes_distintas_no_pueden_depender_entre_si" assertions="2" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000157" >
+      </testcase>
+      <testcase name="test_forbidden_usages_encuentra_apis_prohibidas_con_linea" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.003669" >
+      </testcase>
+      <testcase name="test_cc_de_una_funcion_lineal_es_1" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000855" >
+      </testcase>
+      <testcase name="test_cc_cuenta_if_elif_y_no_cuenta_else" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000478" >
+      </testcase>
+      <testcase name="test_cc_cuenta_bucles_operadores_y_ternario" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000351" >
+      </testcase>
+      <testcase name="test_cc_cuenta_las_ramas_de_match_sin_la_comodin" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000205" >
+      </testcase>
+      <testcase name="test_cc_cuenta_ramas_de_match_escritas_en_una_sola_linea" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000165" >
+      </testcase>
+      <testcase name="test_cc_ignora_palabras_clave_en_textos_y_comentarios" assertions="1" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000221" >
+      </testcase>
+      <testcase name="test_cc_separa_funciones_y_soporta_encabezados_multilinea" assertions="3" status="pass" classname="tests/architecture/test_arch_support.gd" time="0.000277" >
+      </testcase>
+      </testsuite>
+  <testsuite name="tests/architecture/test_fitness_00_sanity.gd" tests="2" failures="0" skipped="9" time="0.014915" >
+      <testcase name="test_el_analisis_encuentra_scripts" assertions="1" status="pass" classname="tests/architecture/test_fitness_00_sanity.gd" time="0.007207" >
+      </testcase>
+      <testcase name="test_cada_modulo_declarado_tiene_archivos" assertions="1" status="pending" classname="tests/architecture/test_fitness_00_sanity.gd" time="0.007708" >
+      <skipped message="pending"><![CDATA[Módulo sin archivos todavía: res://infrastructure/network/ (si la carpeta cambió de nombre, ajusta ArchConfig.MODULES)]]></skipped></testcase>
+      </testsuite>
+  <testsuite name="tests/architecture/test_fitness_01_capas.gd" tests="2" failures="2" skipped="0" time="0.001106" >
+      <testcase name="test_ff01_la_presentacion_y_el_nucleo_respetan_las_capas" assertions="1" status="fail" classname="tests/architecture/test_fitness_01_capas.gd" time="0.000433" >
+      <failure message="failed"><![CDATA[FF-01 violada (1):
+        [presentation] no debe depender de [infrastructure.persistence]:  res://presentation/table/violation_example.gd -> res://infrastructure/persistence/match_repository.gd
+            at line 17]]></failure></testcase>
+      <testcase name="test_ff04_presentacion_nucleo_no_usan_apis_de_ui_red_ni_persistencia" assertions="1" status="fail" classname="tests/architecture/test_fitness_01_capas.gd" time="0.000673" >
+      <failure message="failed"><![CDATA[FF-04 violada (1):
+        res://presentation/table/violation_example.gd:12 usa `Sqlite3FileHandle`
+            at line 39]]></failure></testcase>
+      </testsuite>
+  <testsuite name="tests/architecture/test_fitness_02_dependencias.gd" tests="2" failures="0" skipped="0" time="0.000257" >
+      <testcase name="test_ff02_las_modalidades_no_dependen_entre_si" assertions="1" status="pass" classname="tests/architecture/test_fitness_02_dependencias.gd" time="0.000143" >
+      </testcase>
+      <testcase name="test_ff03_no_hay_ciclos_entre_modulos" assertions="1" status="pass" classname="tests/architecture/test_fitness_02_dependencias.gd" time="0.000114" >
+      </testcase>
+      </testsuite>
+  <testsuite name="tests/architecture/test_fitness_03_complejidad.gd" tests="1" failures="0" skipped="0" time="0.006328" >
+      <testcase name="test_ff05_ninguna_funcion_supera_el_limite_de_complejidad" assertions="1" status="pass" classname="tests/architecture/test_fitness_03_complejidad.gd" time="0.006328" >
+      </testcase>
+      </testsuite>
+  </testsuites>

@@ -18,12 +18,23 @@ func test_ff01_la_presentacion_y_el_nucleo_respetan_las_capas() -> void:
 		"FF-01 violada (%d):\n  %s" % [violations.size(), "\n  ".join(violations)])
 
 
-func test_ff04_el_nucleo_no_usa_apis_de_ui_red_ni_persistencia() -> void:
+func test_ff04_presentacion_nucleo_no_usan_apis_de_ui_red_ni_persistencia() -> void:
 	var core_files: Array = []
+	var nbd_files:Array = []
+	
 	for f: String in _graph["files"]:
 		if f.get_extension() == "gd" and Scanner.module_of(f, Config.MODULES) in Config.CORE_MODULES:
 			core_files.append(f)
-	var violations := Scanner.forbidden_usages(
-		core_files, Config.FORBIDDEN_IN_CORE_IDENTIFIERS, Config.FORBIDDEN_IN_CORE_PATTERNS)
-	assert_true(violations.is_empty(),
-		"FF-04 violada (%d):\n  %s" % [violations.size(), "\n  ".join(violations)])
+		if f.get_extension() == "gd" and Scanner.module_of(f, Config.MODULES) in Config.NDB_MODULES:
+			nbd_files.append(f)
+			
+	var violations1 := Scanner.forbidden_usages(core_files, 
+												Config.FORBIDDEN_IN_CORE_IDENTIFIERS, 
+												Config.FORBIDDEN_IN_CORE_PATTERNS)
+
+	var violations2 = Scanner.forbidden_usages(nbd_files, 
+												Config.FORBIDDEN_OUTSIDE_PERSISTANCE, 
+												Config.FORBIDDEN_IN_CORE_PATTERNS)
+
+	assert_true(violations1.is_empty() and violations2.is_empty(),
+		"FF-04 violada (%d):\n  %s" % [violations1.size() + violations2.size(), "\n  ".join(violations1).join(violations2)])

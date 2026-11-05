@@ -25,7 +25,11 @@ const EXCLUDED_PATHS := ["res://addons/", "res://tests/", "res://.godot/"]
 
 ## Módulos del núcleo: reglas de juego, estado de partida y coordinación (D-05).
 const CORE_MODULES := [
-	"match", "turn", "scoring", "rules", "deck", "orchestration", "notification",
+	"match", "turn", "scoring", "rules", "deck", "orchestration", "notification"
+]
+
+const NDB_MODULES := [
+	"match", "turn", "scoring", "rules", "deck", "orchestration", "notification", "presentation", "network"
 ]
 
 ## FF-02: grupos de archivos que representan modalidades. Ningún archivo de un grupo
@@ -43,9 +47,13 @@ const ENFORCE_ACYCLIC_MODULES := true
 const FORBIDDEN_IN_CORE_IDENTIFIERS := [
 	"Control", "CanvasItem", "Node2D", "Node3D",
 	"HTTPRequest", "HTTPClient", "WebSocketPeer", "WebSocketMultiplayerPeer",
-	"ENetMultiplayerPeer", "MultiplayerPeer", "MultiplayerAPI",
+	"ENetMultiplayerPeer", "MultiplayerPeer", "MultiplayerAPI","Sqlite3FileHandle"
 ]
 const FORBIDDEN_IN_CORE_PATTERNS := ["@rpc"]
+
+const FORBIDDEN_OUTSIDE_PERSISTANCE := [
+	"Sqlite3FileHandle"
+]
 
 ## FF-05: límite de complejidad ciclomática por función (D-23) y carpetas donde se exige.
 ## Empezar por el motor de reglas y ampliar la lista a medida que el código lo permita.
