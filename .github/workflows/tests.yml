@@ -8,19 +8,23 @@ on:
 env:
   # Debe coincidir EXACTAMENTE con la versión de Godot del proyecto y con la de addons/gut
   # (GUT 9.5.0 -> Godot 4.5.x, GUT 9.6.1 -> Godot 4.6.x, GUT 9.7.1 -> Godot 4.7.x).
-  GODOT_VERSION: "4.5-stable"
+  GODOT_VERSION: "4.5.1-stable"
 
 jobs:
   pruebas:
     runs-on: ubuntu-latest
-    # Si el proyecto de Godot no está en la raíz del repositorio, descomenta y ajusta:
-    # defaults:
-    #   run:
-    #     working-directory: juego
+    # El proyecto de Godot (project.godot) vive en game/, no en la raíz del repositorio.
+    # Ojo: working-directory solo aplica a los pasos `run:`; las acciones (`uses:`)
+    # siguen resolviendo rutas desde la raíz.
+    defaults:
+      run:
+        working-directory: game
     steps:
       - uses: actions/checkout@v4
 
+      # Se descarga fuera de game/ para no dejar el zip dentro de res://.
       - name: Descargar Godot ${{ env.GODOT_VERSION }}
+        working-directory: ${{ runner.temp }}
         run: |
           wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
           unzip -q "Godot_v${GODOT_VERSION}_linux.x86_64.zip"
@@ -31,10 +35,10 @@ jobs:
       - name: Importar el proyecto
         run: godot --headless --import
 
-      - name: Pruebas unitarias (D-22)
+      - name: Pruebas unitarias y de contrato de reglas (D-22, ADR-03)
         run: >
           godot --headless -s res://addons/gut/gut_cmdln.gd
-          -gdir=res://tests/unit/ -ginclude_subdirs
+          -gdir=res://tests/unit/,res://tests/contract/ -ginclude_subdirs
           -gjunit_xml_file=res://tests/results/junit_unit.xml -gexit
 
       - name: Fitness functions de arquitectura (D-23)
@@ -49,4 +53,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: resultados-gut
-          path: tests/results/*.xml
+          path: game/tests/results/*.xml
