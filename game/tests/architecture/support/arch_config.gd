@@ -58,7 +58,7 @@ const FORBIDDEN_OUTSIDE_PERSISTANCE := [
 ## FF-05: límite de complejidad ciclomática por función (D-23) y carpetas donde se exige.
 ## Empezar por el motor de reglas y ampliar la lista a medida que el código lo permita.
 const CC_LIMIT := 10
-const CC_SCOPE := ["res://rules/"]
+const CC_SCOPE := ["res://rules/", "res://turn/", "res://match/", "res://scoring/", "res://deck/", "res://orchestration/"]
 
 ## FF-01: dependencias prohibidas por módulo  { módulo: [módulos que NO puede usar] }.
 static func forbidden_dependencies() -> Dictionary:
