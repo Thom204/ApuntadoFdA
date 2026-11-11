@@ -32,9 +32,9 @@ func test_ff04_presentacion_nucleo_no_usan_apis_de_ui_red_ni_persistencia() -> v
 												Config.FORBIDDEN_IN_CORE_IDENTIFIERS, 
 												Config.FORBIDDEN_IN_CORE_PATTERNS)
 
-	var violations2 = Scanner.forbidden_usages(nbd_files, 
-												Config.FORBIDDEN_OUTSIDE_PERSISTANCE, 
-												Config.FORBIDDEN_IN_CORE_PATTERNS)
+	var violations2 := Scanner.forbidden_usages(nbd_files,
+			Config.FORBIDDEN_OUTSIDE_PERSISTANCE, Config.FORBIDDEN_IN_CORE_PATTERNS)
 
-	assert_true(violations1.is_empty() and violations2.is_empty(),
-		"FF-04 violada (%d):\n  %s" % [violations1.size() + violations2.size(), "\n  ".join(violations1).join(violations2)])
+	var violations: Array[String] = violations1 + violations2
+	assert_true(violations.is_empty(),
+		"FF-04 violada (%d):\n  %s" % [violations.size(), "\n  ".join(violations)])

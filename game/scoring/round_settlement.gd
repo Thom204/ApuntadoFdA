@@ -1,7 +1,8 @@
 class_name RoundSettlement
 extends RefCounted
 ## Liquidación de una ronda (value object): variación de puntaje de cada jugador.
-## Penalización positiva para los perdedores y closer_score_delta para quien cerró.
+## Variación con signo de la ronda: negativa para los perdedores (sus cartas sueltas)
+## y closer_score_delta (+10) para quien cerró.
 
 var round_number: int:
 	get:

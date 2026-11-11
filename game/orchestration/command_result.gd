@@ -1,21 +1,7 @@
 class_name CommandResult
 extends RefCounted
-## Respuesta de un comando de IMatchCommands. `message` es el texto para el jugador.
-
-const _MESSAGES := {
-	&"NOT_PLAYER_TURN": "No es tu turno.",
-	&"ACTION_NOT_ALLOWED": "Esa acción no está permitida ahora: primero roba una carta y luego descarta o cierra.",
-	&"ROUND_CLOSED": "La ronda ya está cerrada.",
-	&"CARD_NOT_IN_HAND": "Esa carta no está en tu mano.",
-	&"DISCARD_EMPTY": "El pozo de descarte está vacío.",
-	&"DECK_EMPTY": "No quedan cartas para robar.",
-	&"NO_MATCH": "No hay una partida en curso.",
-	&"MATCH_FINISHED": "La partida ya terminó.",
-	&"ROUND_IN_PROGRESS": "La ronda actual sigue en juego.",
-	&"UNKNOWN_MODE": "La modalidad elegida no está disponible.",
-	&"INVALID_CONFIG": "La partida necesita entre 2 y 5 jugadores con nombres distintos.",
-	&"PERSISTENCE_FAILED": "No se pudo guardar la partida. Intenta de nuevo.",
-}
+## Respuesta de un comando de IMatchCommands. `error` es un código de ErrorCatalog y
+## `message` el texto para el jugador.
 
 var ok: bool:
 	get:
@@ -25,9 +11,9 @@ var error: StringName:
 		return _error
 var message: String:
 	get:
-		if _error == &"INVALID_CLOSING" and _validation != null:
+		if _error == ErrorCatalog.INVALID_CLOSING and _validation != null:
 			return _validation.message
-		return _MESSAGES.get(_error, "")
+		return ErrorCatalog.message_for(_error)
 var validation: ValidationResult:
 	get:
 		return _validation

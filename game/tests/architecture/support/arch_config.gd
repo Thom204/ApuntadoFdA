@@ -28,8 +28,10 @@ const CORE_MODULES := [
 	"match", "turn", "scoring", "rules", "deck", "orchestration", "notification"
 ]
 
+## Módulos que no pueden tocar el binding de SQLite: todos salvo la persistencia (ADR-04).
 const NDB_MODULES := [
-	"match", "turn", "scoring", "rules", "deck", "orchestration", "notification", "presentation", "network"
+	"match", "turn", "scoring", "rules", "deck", "orchestration", "notification", "presentation",
+	"infrastructure.network", "shared"
 ]
 
 ## FF-02: grupos de archivos que representan modalidades. Ningún archivo de un grupo
@@ -39,15 +41,48 @@ const VARIANT_GROUPS := {
 	"apuntado": ["res://rules/modes/apuntado"],
 }
 
+## FF-06: carpeta de los plug-ins de reglas. Nada fuera de ella puede depender de un
+## archivo de dentro (microkernel, ADR-03).
+const PLUGIN_ROOT := "res://rules/modes/"
+
+## FF-07 (ADR-05, cumplimiento 2 y 3): eventos de IGameEvents. Solo `orchestration`
+## los emite. Excepción documentada: Round.move_performed es el evento interno que
+## alimenta MatchHistory dentro de la misma transacción (ADR-05, decisión 3).
+const IGAME_EVENTS := [
+	"round_started", "turn_changed", "move_performed", "round_closed", "player_eliminated", "match_finished",
+]
+const EVENT_EMITTER_MODULE := "orchestration"
+const EVENT_EMIT_ALLOWED_FILES := ["res://turn/round.gd"]
+## Comandos de IMatchCommands y del Lobby: un suscriptor de eventos no puede llamarlos
+## (un evento no dispara un comando).
+const COMMAND_METHODS := [
+	"create_match", "resume_match", "draw_from_deck", "draw_from_discard", "discard",
+	"declare_closing", "start_next_round", "handle",
+]
+## Módulos que se suscriben a IGameEvents.
+const EVENT_SUBSCRIBER_MODULES := ["notification"]
+
+
+## `<evento>.emit(` para cualquier evento de IGAME_EVENTS.
+static func event_emit_pattern() -> String:
+	return "\\b(%s)\\.emit\\(" % "|".join(IGAME_EVENTS)
+
+
+## `.<comando>(` para cualquier método de COMMAND_METHODS.
+static func command_call_pattern() -> String:
+	return "\\.(%s)\\(" % "|".join(COMMAND_METHODS)
+
 ## FF-03: exigir que el grafo de dependencias entre módulos sea acíclico.
 const ENFORCE_ACYCLIC_MODULES := true
 
-## FF-04: identificadores y patrones que el núcleo NO puede usar (D-05):
-## interfaz gráfica, transporte (HTTP/WebSocket/RPC) y acceso a la base de datos.
+## FF-04: identificadores y patrones que el núcleo NO puede usar (D-05, ADR-05 cumplimiento 1):
+## interfaz gráfica, transporte (HTTP/WebSocket/RPC), acceso a la base de datos y
+## asincronía (el núcleo es síncrono y determinista).
 const FORBIDDEN_IN_CORE_IDENTIFIERS := [
 	"Control", "CanvasItem", "Node2D", "Node3D",
 	"HTTPRequest", "HTTPClient", "WebSocketPeer", "WebSocketMultiplayerPeer",
-	"ENetMultiplayerPeer", "MultiplayerPeer", "MultiplayerAPI","Sqlite3FileHandle"
+	"ENetMultiplayerPeer", "MultiplayerPeer", "MultiplayerAPI", "multiplayer", "Sqlite3FileHandle",
+	"await", "Thread", "WorkerThreadPool",
 ]
 const FORBIDDEN_IN_CORE_PATTERNS := ["@rpc"]
 

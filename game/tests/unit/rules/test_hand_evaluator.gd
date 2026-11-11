@@ -74,6 +74,14 @@ func test_is_valid_meld_as_alto_y_bajo_pero_sin_vuelta() -> void:
 	assert_false(_eval.is_valid_meld(_hand([[Card.Rank.KING, S], [Card.Rank.ACE, S], [Card.Rank.TWO, S]])), "K-A-2 no")
 
 
+func test_is_valid_meld_grupo_de_5_si_pero_de_6_no() -> void:
+	var five := _hand([[Card.Rank.SEVEN, H], [Card.Rank.SEVEN, S], [Card.Rank.SEVEN, D], [Card.Rank.SEVEN, C], [Card.Rank.SEVEN, H]])
+	assert_true(_eval.is_valid_meld(five), "baraja doble: 5 sietes")
+	var six := five.duplicate()
+	six.append(_c(Card.Rank.SEVEN, S))
+	assert_false(_eval.is_valid_meld(six))
+
+
 func test_is_valid_meld_rechaza_dos_cartas_y_comodines() -> void:
 	assert_false(_eval.is_valid_meld(_hand([[Card.Rank.NINE, H], [Card.Rank.NINE, S]])))
 	assert_false(_eval.is_valid_meld(_hand([[Card.Rank.NINE, H], [Card.Rank.NINE, S], [Card.Rank.JOKER, Card.Suit.NONE]])))

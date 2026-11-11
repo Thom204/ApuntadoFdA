@@ -1,5 +1,6 @@
 extends GutTest
 ## FF-02 Independencia entre modalidades (regla 5.1)
+## FF-06 El núcleo del microkernel no depende de ningún plug-in (ADR-03)
 ## FF-03 Sin dependencias cíclicas entre módulos
 
 const Config := preload("res://tests/architecture/support/arch_config.gd")
@@ -16,6 +17,12 @@ func test_ff02_las_modalidades_no_dependen_entre_si() -> void:
 	var violations := Scanner.variant_cross_dependencies(_graph, Config.VARIANT_GROUPS)
 	assert_true(violations.is_empty(),
 		"FF-02 violada (%d):\n  %s" % [violations.size(), "\n  ".join(violations)])
+
+
+func test_ff06_el_nucleo_no_depende_de_ningun_plugin_de_reglas() -> void:
+	var violations := Scanner.plugin_dependencies(_graph, Config.PLUGIN_ROOT)
+	assert_true(violations.is_empty(),
+		"FF-06 violada (%d):\n  %s" % [violations.size(), "\n  ".join(violations)])
 
 
 func test_ff03_no_hay_ciclos_entre_modulos() -> void:

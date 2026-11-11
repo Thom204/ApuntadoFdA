@@ -1,7 +1,8 @@
 class_name MeldSpec
 extends RefCounted
 ## Una casilla del patrón de cierre: qué tipo de combinación y de cuántas cartas.
-## Clásica = [ANY 4, ANY 3, ANY 3]; Apuntado = [ANY 3, ANY 3, ANY 3].
+## Clásica = [ANY 4, ANY 3, ANY 3]; Apuntado = [ANY 3, ANY 3, ANY 3] (tocar) o
+## [ANY 4, ANY 3, ANY 3] (ganar completo).
 
 enum Type { SET, RUN, ANY }
 

@@ -44,10 +44,10 @@ func available_modes() -> Array[Dictionary]:
 
 func create_match(config: MatchConfig) -> CommandResult:
 	if not config.is_valid():
-		return CommandResult.failure(&"INVALID_CONFIG")
+		return CommandResult.failure(ErrorCatalog.INVALID_CONFIG)
 	var rule := _registry.resolve(config.mode, config.settings)
 	if rule == null:
-		return CommandResult.failure(&"UNKNOWN_MODE")
+		return CommandResult.failure(ErrorCatalog.UNKNOWN_MODE)
 	var rng := RandomNumberGenerator.new()
 	if config.rng_seed != 0:
 		rng.seed = config.rng_seed
@@ -56,25 +56,25 @@ func create_match(config: MatchConfig) -> CommandResult:
 	var created := Match.new(StringName("m-%08x" % rng.randi()), config, rule, rng)
 	created.start_next_round(_deck_factory.call(config, rng))
 	if not _repository.save_snapshot(created.to_snapshot()):
-		return CommandResult.failure(&"PERSISTENCE_FAILED")
+		return CommandResult.failure(ErrorCatalog.PERSISTENCE_FAILED)
 	_match = created
 	_rule = rule
 	_announce_round()
 	return CommandResult.success()
 
 
-## Recupera una partida guardada (D-15). No emite eventos: la UI consulta public_view().
+## Recupera una partida guardada (D-15). No emite eventos: cada cliente pide view_for().
 func resume_match(match_id: StringName) -> CommandResult:
 	var snapshot := _repository.load(match_id)
 	if snapshot.is_empty():
-		return CommandResult.failure(&"NO_MATCH")
+		return CommandResult.failure(ErrorCatalog.NO_MATCH)
 	var config := Match.config_from_snapshot(snapshot)
 	var rule := _registry.resolve(config.mode, config.settings)
 	if rule == null:
-		return CommandResult.failure(&"UNKNOWN_MODE")
+		return CommandResult.failure(ErrorCatalog.UNKNOWN_MODE)
 	var resumed := Match.from_snapshot(snapshot, rule)
 	if resumed == null:
-		return CommandResult.failure(&"NO_MATCH")
+		return CommandResult.failure(ErrorCatalog.NO_MATCH)
 	_match = resumed
 	_rule = rule
 	return CommandResult.success()
@@ -103,12 +103,12 @@ func start_next_round() -> CommandResult:
 	if blocked != null:
 		return blocked
 	if not _match.can_start_next_round():
-		return CommandResult.failure(&"ROUND_IN_PROGRESS")
+		return CommandResult.failure(ErrorCatalog.ROUND_IN_PROGRESS)
 	var before := _match.to_snapshot()
 	_match.start_next_round(_deck_factory.call(_match.config(), _match.rng()))
 	if not _repository.save_snapshot(_match.to_snapshot()):
 		_restore(before)
-		return CommandResult.failure(&"PERSISTENCE_FAILED")
+		return CommandResult.failure(ErrorCatalog.PERSISTENCE_FAILED)
 	_announce_round()
 	return CommandResult.success()
 
@@ -119,30 +119,60 @@ func hand_of(player_id: StringName) -> Array[Card]:
 	return [] if _match == null else _match.hand_of(player_id)
 
 
+## ¿Estas cartas de su mano combinan? (RF-02). Solo lectura: no guarda ni emite.
+func check_meld(player_id: StringName, card_ids: Array[int]) -> MeldCheck:
+	return MeldCheck.not_in_hand() if _match == null else _match.check_meld(player_id, card_ids)
+
+
+## Estado de la partida (IN_PROGRESS, FINISHED...); vacío si no hay partida.
+func status_name() -> String:
+	return "" if _match == null else Match.Status.keys()[_match.status]
+
+
+## Todos los jugadores sentados en la partida, también los eliminados (siguen mirando).
+func player_ids() -> Array[StringName]:
+	var out: Array[StringName] = []
+	if _match != null:
+		for p in _match.players():
+			out.append(p.id)
+	return out
+
+
 ## Id de la partida en curso; vacío si no hay ninguna.
 func match_id() -> StringName:
 	return &"" if _match == null else _match.id
 
 
-## Estado público de la mesa: nunca incluye las cartas de ninguna mano (RNF 3).
-func public_view() -> Dictionary:
-	if _match == null:
+## Versión del estado de la partida: sube con cada cambio guardado. Un comando que
+## llega con otra versión es viejo (STALE_STATE, ADR-04).
+func state_version() -> int:
+	return 0 if _match == null else _match.state_version()
+
+
+## Lo que ve `player_id` (C4, RNF 3): la mesa pública, su propia mano y si es su turno.
+## Nunca incluye cartas de otra mano. Vacío si no juega esta partida. Solo tipos JSON.
+func view_for(player_id: StringName) -> Dictionary:
+	if _match == null or not _match.has_player(player_id):
 		return {}
-	var active_round := _match.current_round()
+	var table := _match.table_state()
 	return {
-		"match_id": _match.id,
-		"mode": _match.mode(),
+		"match_id": String(_match.id),
+		"mode": String(_match.mode()),
 		"mode_name": _registry.display_name(_match.mode()),
 		"status": Match.Status.keys()[_match.status],
+		"version": _match.state_version(),
 		"round_number": _match.round_number(),
-		"round_closed": active_round.is_closed(),
-		"current_player": active_round.current_player_id(),
-		"phase": active_round.current_phase(),
-		"top_discard": active_round.top_discard(),
-		"deck_size": active_round.deck_size(),
-		"discard_size": active_round.discard_size(),
-		"players": _players_view(active_round),
-		"winner": _match.winner_id(),
+		"round_closed": table["closed"],
+		"current_player": String(table["current_player"]),
+		"phase": String(table["phase"]),
+		"top_discard": WireFormat.card(table["top_discard"]),
+		"deck_size": table["deck_size"],
+		"discard_size": table["discard_size"],
+		"players": _players_view(table),
+		"winner": String(_match.winner_id()),
+		"you": String(player_id),
+		"is_your_turn": player_id == table["current_player"],
+		"hand": WireFormat.cards(_match.hand_of(player_id)),
 	}
 
 
@@ -162,10 +192,10 @@ func _execute(command: Callable) -> CommandResult:
 	var before := _match.to_snapshot()
 	var result: MatchActionResult = command.call(_match)
 	if not result.ok:
-		return CommandResult.failure(StringName(Round.Error.keys()[result.error]), result.validation)
+		return CommandResult.failure(Round.error_code(result.error), result.validation)
 	if not _persist(result):
 		_restore(before)
-		return CommandResult.failure(&"PERSISTENCE_FAILED")
+		return CommandResult.failure(ErrorCatalog.PERSISTENCE_FAILED)
 	_announce(result)
 	return CommandResult.success(result.validation, result.card)
 
@@ -184,9 +214,9 @@ func _restore(snapshot: Dictionary) -> void:
 
 func _blocked() -> CommandResult:
 	if _match == null:
-		return CommandResult.failure(&"NO_MATCH")
+		return CommandResult.failure(ErrorCatalog.NO_MATCH)
 	if _match.status == Match.Status.FINISHED:
-		return CommandResult.failure(&"MATCH_FINISHED")
+		return CommandResult.failure(ErrorCatalog.MATCH_FINISHED)
 	return null
 
 
@@ -207,21 +237,22 @@ func _announce(result: MatchActionResult) -> void:
 
 func _announce_round() -> void:
 	round_started.emit(_match.round_number())
-	turn_changed.emit(_match.current_round().current_player_id())
+	turn_changed.emit(_match.table_state()["current_player"])
 
 
-func _players_view(active_round: Round) -> Array[Dictionary]:
+func _players_view(table: Dictionary) -> Array[Dictionary]:
 	var board := _match.scoreboard()
+	var hand_sizes: Dictionary = table["hand_sizes"]
 	var out: Array[Dictionary] = []
 	for p in _match.players():
 		out.append({
-			"id": p.id,
+			"id": String(p.id),
 			"nickname": p.nickname,
 			"seat": p.seat,
 			"active": p.is_active(),
 			"total": board.total_of(p.id),
-			"hand_size": active_round.hand_size_of(p.id),
-			"is_current": p.id == active_round.current_player_id(),
+			"hand_size": hand_sizes.get(p.id, 0),
+			"is_current": p.id == table["current_player"],
 		})
 	return out
 

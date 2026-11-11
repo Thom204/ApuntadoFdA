@@ -4,12 +4,12 @@ extends RefCounted
 ## de la sección [defaults] del plugin.cfg y la partida puede sobrescribirlos.
 ## Son exactamente las columnas que persiste match_session (ADR-03, elemento 6).
 
-## Puntaje acumulado con el que un jugador queda eliminado (>=).
+## Puntos negativos acumulados con los que un jugador sale: total <= -umbral.
 var elimination_threshold: int = 101
-## El sobrante de un cierre debe valer MENOS que esto (Apuntado: < 5).
+## Valor máximo que puede sumar el sobrante de un cierre (Apuntado: 5, se permite <= 5).
 var max_leftover_points: int = 5
-## Variación de puntaje de quien cierra la ronda (RD13).
-var closer_score_delta: int = -10
+## Puntos que suma quien cierra la ronda (RD13).
+var closer_score_delta: int = 10
 var jokers_enabled: bool = false
 var card_values: CardValueTable = CardValueTable.standard()
 

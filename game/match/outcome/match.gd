@@ -29,6 +29,8 @@ var _settlements: Array[RoundSettlement] = []
 var _history := MatchHistory.new()
 var _winner_id := &""
 var _last_starter := &""
+## Sube con cada cambio de estado: permite rechazar comandos viejos (STALE_STATE, ADR-04).
+var _state_version := 0
 
 
 func _init(p_id: StringName, p_config: MatchConfig, p_rule: GameRule, p_rng: RandomNumberGenerator) -> void:
@@ -59,6 +61,7 @@ func start_next_round(deck: Deck) -> bool:
 	_attach_round(Round.new(_round_number, _rule, order, _rng))
 	_current_round.start(deck)
 	_status = Status.IN_PROGRESS
+	_state_version += 1
 	return true
 
 
@@ -123,6 +126,19 @@ func hand_of(player_id: StringName) -> Array[Card]:
 	return [] if _current_round == null else _current_round.cards_of(player_id)
 
 
+## ¿Estas cartas de la mano de `player_id` combinan? Consulta de solo lectura: vale en
+## cualquier momento de la ronda, no registra movimiento ni cambia el turno.
+func check_meld(player_id: StringName, card_ids: Array[int]) -> MeldCheck:
+	var hand := hand_of(player_id)
+	var cards: Array[Card] = []
+	for card_id in card_ids:
+		var card := _card_in(hand, card_id)
+		if card == null or card in cards:
+			return MeldCheck.not_in_hand()
+		cards.append(card)
+	return _rule.check_meld(cards)
+
+
 func scoreboard() -> Scoreboard:
 	return Scoreboard.from_settlements(_settlements)
 
@@ -133,6 +149,19 @@ func settlements() -> Array[RoundSettlement]:
 
 func winner_id() -> StringName:
 	return _winner_id
+
+
+func state_version() -> int:
+	return _state_version
+
+
+func has_player(player_id: StringName) -> bool:
+	return _players.any(func(p: Player) -> bool: return p.id == player_id)
+
+
+## Estado público de la ronda en curso (Round.public_state); vacío si no hay ronda.
+func table_state() -> Dictionary:
+	return {} if _current_round == null else _current_round.public_state()
 
 
 func history() -> MatchHistory:
@@ -158,6 +187,7 @@ func to_snapshot() -> Dictionary:
 		"history": _history.all().map(func(m: MoveRecord) -> Dictionary: return m.to_data()),
 		"winner_id": String(_winner_id),
 		"last_starter": String(_last_starter),
+		"state_version": _state_version,
 	}
 
 
@@ -197,6 +227,7 @@ static func from_snapshot(snapshot: Dictionary, rule: GameRule) -> Match:
 		m._history.record(MoveRecord.from_data(move))
 	m._winner_id = StringName(snapshot["winner_id"])
 	m._last_starter = StringName(snapshot["last_starter"])
+	m._state_version = int(snapshot.get("state_version", 0))
 	return m
 
 
@@ -208,6 +239,7 @@ func _play(action: Callable) -> MatchActionResult:
 	var result: RoundActionResult = action.call(_current_round)
 	if not result.ok:
 		return MatchActionResult.new(result)
+	_state_version += 1
 	var current := _current_round.current_player_id()
 	return MatchActionResult.new(result, _history.last(), current if current != previous_player else &"")
 
@@ -291,3 +323,10 @@ static func _settlement_from_data(data: Dictionary) -> RoundSettlement:
 	for player_id in data["deltas"]:
 		deltas[StringName(player_id)] = int(data["deltas"][player_id])
 	return RoundSettlement.new(int(data["round_number"]), StringName(data["closer_id"]), deltas)
+
+
+func _card_in(cards: Array[Card], card_id: int) -> Card:
+	for c in cards:
+		if c.instance_id == card_id:
+			return c
+	return null

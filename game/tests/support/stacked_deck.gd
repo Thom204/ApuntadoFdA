@@ -1,18 +1,18 @@
 extends RefCounted
 ## Construye un mazo "arreglado" para pruebas: cada jugador recibe exactamente las
-## cartas indicadas, luego se abre el pozo y después se roba en el orden de `draws`.
+## cartas indicadas y después salen, en orden, las cartas de `draws`. La primera de
+## `draws` es la carta extra (la 11.ª) de quien empieza la ronda.
 
 const Cards := preload("res://tests/support/cards.gd")
 
 
 ## hands: una cadena por jugador en el orden de reparto (10 cartas cada una).
-## discard_top: carta que abre el pozo. draws: cartas que saldrán del mazo, en orden.
-static func build(hands: Array, discard_top: String, draws: String = "") -> Deck:
+## draws: carta extra de quien empieza y luego las que se robarán del mazo.
+static func build(hands: Array, draws: String) -> Deck:
 	var stack: Array[Card] = []
 	var pending := Cards.parse(draws)
 	pending.reverse()
 	stack.append_array(pending)
-	stack.append(Cards.one(discard_top))
 	for i in range(hands.size() - 1, -1, -1):
 		var hand := Cards.parse(hands[i])
 		hand.reverse()

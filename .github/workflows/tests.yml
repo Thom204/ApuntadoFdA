@@ -32,8 +32,11 @@ jobs:
           godot --version
 
       # Sin este paso Godot no conoce los class_name del proyecto en un clon limpio (.godot/ no se versiona).
+      # tests/results/ está en .gitignore y GUT no crea la carpeta del reporte JUnit.
       - name: Importar el proyecto
-        run: godot --headless --import
+        run: |
+          godot --headless --import
+          mkdir -p tests/results
 
       - name: Pruebas unitarias y de contrato de reglas (D-22, ADR-03)
         run: >
@@ -53,4 +56,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: resultados-gut
-          path: game/tests/results/*.xml
+          path: |
+            game/tests/results/*.xml
+            game/tests/results/metricas.md

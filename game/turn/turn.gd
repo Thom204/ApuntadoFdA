@@ -21,6 +21,12 @@ func _init(p_player_id: StringName, p_number: int) -> void:
 	_number = p_number
 
 
+## Primer turno de la ronda: quien empieza ya tiene la carta extra y solo descarta
+## (o cierra).
+static func opening(p_player_id: StringName, p_number: int) -> Turn:
+	return resumed(p_player_id, p_number, &"DISCARD")
+
+
 ## Turno recuperado en la fase indicada por su nombre (DRAW, DISCARD o END).
 static func resumed(p_player_id: StringName, p_number: int, phase_name: StringName) -> Turn:
 	var turn := Turn.new(p_player_id, p_number)

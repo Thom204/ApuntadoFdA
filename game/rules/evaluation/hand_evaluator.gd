@@ -5,13 +5,15 @@ extends RefCounted
 ## de valores (sección 4.2.1 del E1).
 ##
 ## Supuestos de reglas (RD11):
-## - Terna/cuarta por valor: mismo rango, palos repetidos permitidos (baraja doble).
+## - Grupo por valor: de 3 a 5 cartas del mismo rango, palos repetidos permitidos
+##   (baraja doble).
 ## - Escalera: mismo palo y rangos consecutivos; el As va bajo (A-2-3) o alto
 ##   (Q-K-A), sin dar la vuelta (K-A-2).
 ## - Los comodines no forman combinaciones en el MVP (jokers_enabled = false).
 
 const MIN_MELD := 3
-const MAX_SET := 4
+## Grupos del mismo valor de 3 a 5 cartas (con baraja doble puede haber hasta 8).
+const MAX_SET := 5
 const ACE_HIGH := 14
 
 
@@ -27,6 +29,11 @@ func is_valid_meld(cards: Array[Card]) -> bool:
 	if cards.size() < MIN_MELD or _has_joker(cards):
 		return false
 	return _is_set(cards) or _is_run(cards)
+
+
+## Tipo de la combinación (MeldSpec.Type.SET o RUN), o -1 si no es válida.
+func meld_type(cards: Array[Card]) -> int:
+	return _type_of(cards) if is_valid_meld(cards) else -1
 
 
 ## Combinaciones que cumplen `pattern` (una por casilla) dejando el sobrante de menor

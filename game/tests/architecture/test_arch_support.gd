@@ -95,6 +95,30 @@ func test_variantes_distintas_no_pueden_depender_entre_si() -> void:
 	assert_eq(Scanner.variant_cross_dependencies(ok, groups).size(), 0)
 
 
+func test_plugin_dependencies_reporta_al_nucleo_que_depende_de_un_plugin() -> void:
+	var g := _graph({}, {
+		"res://match/m.gd": PackedStringArray(["res://rules/modes/apuntado/apuntado_rule.gd"]),
+		"res://rules/rule_registry.gd": PackedStringArray(["res://rules/game_rule.gd"]),
+		"res://rules/modes/apuntado/apuntado_rule.gd": PackedStringArray(["res://rules/game_rule.gd"]),
+	})
+	var found := Scanner.plugin_dependencies(g, "res://rules/modes/")
+	assert_eq(found.size(), 1, "solo match -> plug-in: %s" % [found])
+	assert_string_contains(found[0], "res://match/m.gd")
+
+
+func test_plugin_dependencies_permite_que_un_plugin_use_su_propia_carpeta() -> void:
+	var g := _graph({}, {
+		"res://rules/modes/classic/classic_rule.gd": PackedStringArray(["res://rules/modes/classic/plugin.cfg"]),
+	})
+	assert_true(Scanner.plugin_dependencies(g, "res://rules/modes/").is_empty())
+
+
+func test_plugin_dependencies_no_cuenta_la_carpeta_de_descubrimiento() -> void:
+	# RuleRegistry conoce DÓNDE buscar plug-ins, no un plug-in concreto.
+	var g := _graph({}, {"res://rules/rule_registry.gd": PackedStringArray(["res://rules/modes/"])})
+	assert_true(Scanner.plugin_dependencies(g, "res://rules/modes/").is_empty())
+
+
 func test_forbidden_usages_encuentra_apis_prohibidas_con_linea() -> void:
 	var path := "user://arch_tmp_forbidden.gd"
 	var f := FileAccess.open(path, FileAccess.WRITE)
@@ -103,6 +127,85 @@ func test_forbidden_usages_encuentra_apis_prohibidas_con_linea() -> void:
 	var found := Scanner.forbidden_usages([path], ["WebSocketPeer", "Control"], ["@rpc"])
 	assert_eq(found.size(), 2, "WebSocketPeer (línea 2) y @rpc (línea 4); el comentario no cuenta: %s" % [found])
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+
+func test_patrones_de_ff07_detectan_emision_de_eventos_y_llamadas_a_comandos() -> void:
+	const Config := preload("res://tests/architecture/support/arch_config.gd")
+	var path := "user://arch_tmp_events.gd"
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_string('func f(o):\n\tturn_changed.emit(&"a")\n\to.discard(&"a", 3)\n\t# match_finished.emit() en un comentario\n\tprint("o.discard(")\n')
+	f.close()
+	var emits := Scanner.forbidden_usages([path], [], [Config.event_emit_pattern()])
+	var commands := Scanner.forbidden_usages([path], [], [Config.command_call_pattern()])
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	assert_eq(emits.size(), 1, "solo la línea 2: %s" % [emits])
+	assert_eq(commands.size(), 1, "solo la línea 3: %s" % [commands])
+
+
+# ----------------------------------------------------------------- métricas de modularidad (cap. 3)
+const _MODULES := {"res://a/": "a", "res://b/": "b", "res://c/": "c"}
+
+
+## a/x y a/y (abstracto); b/z usa a/x y a/y; c/w usa a/x y b/z. Valores calculados a mano.
+func _fixture_deps() -> Dictionary:
+	return {
+		"res://a/x.gd": PackedStringArray(["res://a/y.gd", "res://addons/gut/gut.gd"]),
+		"res://a/y.gd": PackedStringArray(),
+		"res://b/z.gd": PackedStringArray(["res://a/x.gd", "res://a/y.gd"]),
+		"res://c/w.gd": PackedStringArray(["res://a/x.gd", "res://b/z.gd"]),
+	}
+
+
+func test_module_metrics_calcula_ca_ce_inestabilidad_abstraccion_y_distancia() -> void:
+	var m := Scanner.module_metrics(_fixture_deps(), _MODULES, ["res://a/y.gd"])
+	assert_eq([m["a"]["ca"], m["a"]["ce"], m["a"]["files"]], [2, 0, 2], "a: lo usan b/z y c/w")
+	assert_almost_eq(m["a"]["i"], 0.0, 0.001)
+	assert_almost_eq(m["a"]["a"], 0.5, 0.001)
+	assert_almost_eq(m["a"]["d"], 0.5, 0.001)
+	assert_eq([m["b"]["ca"], m["b"]["ce"]], [1, 2])
+	assert_almost_eq(m["b"]["i"], 0.667, 0.001)
+	assert_almost_eq(m["b"]["d"], 0.333, 0.001)
+	assert_eq([m["c"]["ca"], m["c"]["ce"]], [0, 2])
+	assert_almost_eq(m["c"]["i"], 1.0, 0.001)
+	assert_almost_eq(m["c"]["d"], 0.0, 0.001, "c es concreto e inestable: está sobre la secuencia principal")
+
+
+func test_module_metrics_de_un_modulo_aislado_tiene_inestabilidad_cero() -> void:
+	var m := Scanner.module_metrics({"res://a/x.gd": PackedStringArray()}, _MODULES, [])
+	assert_eq(m["a"]["i"], 0.0)
+	assert_almost_eq(m["a"]["d"], 1.0, 0.001, "concreto y estable: zona de dolor")
+
+
+func test_is_abstract_source_reconoce_abstract_fuera_de_comentarios() -> void:
+	assert_true(Scanner.is_abstract_source("@abstract class_name GameRule extends RefCounted\n"))
+	assert_true(Scanner.is_abstract_source("extends RefCounted\n@abstract func load(id) -> Dictionary\n"))
+	assert_false(Scanner.is_abstract_source("extends RefCounted\n# @abstract en un comentario\nvar s = \"@abstract\"\n"))
+
+
+func test_metrics_report_tabula_cada_modulo_y_las_cadenas_de_demeter() -> void:
+	var m := Scanner.module_metrics(_fixture_deps(), _MODULES, ["res://a/y.gd"])
+	var chains := {"b": [{"line": 4, "chain": "x().y(", "text": "x().y()", "file": "res://b/z.gd"}]}
+	var report := Scanner.metrics_report(m, chains)
+	assert_string_contains(report, "| a | 2 | 2 | 0 | 0.00 | 0.50 | 0.50 | 0 |")
+	assert_string_contains(report, "| b | 1 | 1 | 2 | 0.67 | 0.00 | 0.33 | 1 |")
+	assert_string_contains(report, "res://b/z.gd:4")
+
+
+# ----------------------------------------------------------------- Ley de Deméter
+func test_demeter_detecta_llamadas_encadenadas_sobre_el_resultado_de_otra_llamada() -> void:
+	var src := "func f():\n" \
+		+ "\tvar a := _match.current_round().current_player_id()\n" \
+		+ "\tvar b := hand.cards().size()\n" \
+		+ "\tvar c := Deck.new().shuffle()\n" \
+		+ "\tvar d := foo.bar()\n" \
+		+ "\t# x.y().z()\n" \
+		+ "\tvar e := str(x).to_upper()\n" \
+		+ "\tvar g := _round().current_player_id()\n"
+	var found := Scanner.demeter_chains_in_source(src)
+	assert_eq(found.size(), 2, "líneas 2 y 8; size(), new() y str() no cuentan: %s" % [found])
+	assert_eq(found[0]["line"], 2)
+	assert_string_contains(found[0]["chain"], "current_round().current_player_id(")
+	assert_eq(found[1]["line"], 8, "un método privado también cuenta")
 
 
 # ----------------------------------------------------------------- complejidad ciclomática

@@ -43,8 +43,8 @@ func test_resolve_acepta_parametros_propios_de_la_partida() -> void:
 	var settings := _registry.default_settings(&"apuntado")
 	settings.elimination_threshold = 51
 	var rule := _registry.resolve(&"apuntado", settings)
-	assert_false(rule.is_eliminated(50))
-	assert_true(rule.is_eliminated(51))
+	assert_false(rule.is_eliminated(-50))
+	assert_true(rule.is_eliminated(-51))
 
 
 func test_carga_un_plugin_nuevo_sin_tocar_el_nucleo() -> void:

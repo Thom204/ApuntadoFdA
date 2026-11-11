@@ -62,7 +62,7 @@ func test_scoreboard_vacio_da_cero() -> void:
 
 
 # ----------------------------------------------------------------- liquidación (RD07, RD13)
-func test_settle_resta_10_al_que_cierra_y_penaliza_a_los_demas() -> void:
+func test_settle_suma_10_al_que_cierra_y_resta_sus_cartas_a_los_demas() -> void:
 	var outcome := RoundScoring.settle(1, &"a", _hands({
 		&"a": "2S 3S 4S 8H 8D 8C JH QH KH 4D",
 		&"b": "9H JD KC 9S JH KD 9C JS KH 2D",
@@ -70,27 +70,36 @@ func test_settle_resta_10_al_que_cierra_y_penaliza_a_los_demas() -> void:
 	}), _registry.resolve(&"apuntado"), [])
 	assert_eq(outcome.settlement.round_number, 1)
 	assert_eq(outcome.settlement.closer_id, &"a")
-	assert_eq(outcome.settlement.delta_of(&"a"), -10)
-	assert_eq(outcome.settlement.delta_of(&"b"), 2, "9-9-9, J-J-J y K-K-K se combinan; solo cuenta el 2♦")
-	assert_eq(outcome.settlement.delta_of(&"c"), 2 + 4 + 6 + 8 + 10 + 10 + 10 + 3 + 5 + 7)
+	assert_eq(outcome.settlement.delta_of(&"a"), 10)
+	assert_eq(outcome.settlement.delta_of(&"b"), -2, "9-9-9, J-J-J y K-K-K se combinan; solo cuenta el 2♦")
+	assert_eq(outcome.settlement.delta_of(&"c"), -(2 + 4 + 6 + 8 + 10 + 10 + 10 + 3 + 5 + 7))
 	assert_true(outcome.eliminated.is_empty())
 	assert_false(outcome.finished)
 
 
-# ----------------------------------------------------------------- Apuntado: umbral 101 (RD14)
-func test_apuntado_elimina_exactamente_al_llegar_a_101_y_termina() -> void:
+func test_settle_da_25_a_quien_se_va_a_pintas() -> void:
+	var outcome := RoundScoring.settle(1, &"a", _hands({
+		&"a": "2H 2H 5H 5H 8H 8H JH JH AH AH",
+		&"b": "9H JD KC 9S JH KD 9C JS KH 2D",
+	}), _registry.resolve(&"apuntado"), [])
+	assert_eq(outcome.settlement.delta_of(&"a"), 25)
+	assert_eq(outcome.settlement.delta_of(&"b"), -2)
+
+
+# ----------------------------------------------------------------- Apuntado: -101 y +51 (RD14)
+func test_apuntado_elimina_exactamente_al_llegar_a_menos_101_y_termina() -> void:
 	var outcome := RoundScoring.settle(2, &"a", _hands({&"a": "", &"b": PENALTY_36}),
-		_registry.resolve(&"apuntado"), _previous({&"a": -10, &"b": 65}))
-	assert_eq(outcome.scoreboard.total_of(&"b"), 101)
+		_registry.resolve(&"apuntado"), _previous({&"a": 10, &"b": -65}))
+	assert_eq(outcome.scoreboard.total_of(&"b"), -101)
 	assert_eq(outcome.eliminated, [&"b"] as Array[StringName])
 	assert_true(outcome.finished)
 	assert_eq(outcome.winner_id, &"a")
 
 
-func test_apuntado_con_100_puntos_sigue_en_juego() -> void:
+func test_apuntado_con_menos_100_sigue_en_juego() -> void:
 	var outcome := RoundScoring.settle(2, &"a", _hands({&"a": "", &"b": PENALTY_35}),
-		_registry.resolve(&"apuntado"), _previous({&"a": -10, &"b": 65}))
-	assert_eq(outcome.scoreboard.total_of(&"b"), 100)
+		_registry.resolve(&"apuntado"), _previous({&"a": 10, &"b": -65}))
+	assert_eq(outcome.scoreboard.total_of(&"b"), -100)
 	assert_true(outcome.eliminated.is_empty())
 	assert_false(outcome.finished)
 	assert_eq(outcome.winner_id, &"")
@@ -98,9 +107,26 @@ func test_apuntado_con_100_puntos_sigue_en_juego() -> void:
 
 func test_apuntado_con_tres_jugadores_sigue_tras_una_eliminacion() -> void:
 	var outcome := RoundScoring.settle(2, &"a", _hands({&"a": "", &"b": PENALTY_36, &"c": PENALTY_36}),
-		_registry.resolve(&"apuntado"), _previous({&"a": -10, &"b": 65, &"c": 0}))
+		_registry.resolve(&"apuntado"), _previous({&"a": 10, &"b": -65, &"c": 0}))
 	assert_eq(outcome.eliminated, [&"b"] as Array[StringName])
 	assert_false(outcome.finished, "quedan A y C")
+
+
+func test_apuntado_gana_quien_cierra_y_llega_a_51() -> void:
+	var outcome := RoundScoring.settle(5, &"a", _hands({&"a": "", &"b": PENALTY_36}),
+		_registry.resolve(&"apuntado"), _previous({&"a": 41, &"b": -10}))
+	assert_eq(outcome.scoreboard.total_of(&"a"), 51)
+	assert_eq(outcome.scoreboard.total_of(&"b"), -46)
+	assert_true(outcome.eliminated.is_empty())
+	assert_true(outcome.finished)
+	assert_eq(outcome.winner_id, &"a")
+
+
+func test_apuntado_con_50_puntos_sigue_en_juego() -> void:
+	var outcome := RoundScoring.settle(5, &"a", _hands({&"a": "", &"b": PENALTY_36}),
+		_registry.resolve(&"apuntado"), _previous({&"a": 40, &"b": -10}))
+	assert_eq(outcome.scoreboard.total_of(&"a"), 50)
+	assert_false(outcome.finished)
 
 
 # ----------------------------------------------------------------- Clásica (RD05)

@@ -19,6 +19,18 @@ enum Error {
 	INVALID_CLOSING,
 }
 
+## Código del catálogo para cada error. Tabla explícita: renombrar un valor del enum
+## no cambia el protocolo.
+const _ERROR_CODES := {
+	Error.ROUND_CLOSED: ErrorCatalog.ROUND_CLOSED,
+	Error.NOT_PLAYER_TURN: ErrorCatalog.NOT_PLAYER_TURN,
+	Error.ACTION_NOT_ALLOWED: ErrorCatalog.ACTION_NOT_ALLOWED,
+	Error.CARD_NOT_IN_HAND: ErrorCatalog.CARD_NOT_IN_HAND,
+	Error.DISCARD_EMPTY: ErrorCatalog.DISCARD_EMPTY,
+	Error.DECK_EMPTY: ErrorCatalog.DECK_EMPTY,
+	Error.INVALID_CLOSING: ErrorCatalog.INVALID_CLOSING,
+}
+
 var number: int:
 	get:
 		return _number
@@ -44,7 +56,8 @@ func _init(p_number: int, p_rule: GameRule, p_turn_order: Array[StringName], p_r
 	_rng = p_rng
 
 
-## Reparte desde un mazo ya barajado, abre el pozo y asigna el primer turno.
+## Reparte desde un mazo ya barajado. Quien empieza recibe una carta extra y abre la
+## ronda descartando sin robar: su descarte inicia el pozo, que arranca vacío.
 func start(deck: Deck) -> void:
 	_deck = deck
 	var amount := _rule.cards_to_deal(_context())
@@ -52,8 +65,10 @@ func start(deck: Deck) -> void:
 		var hand := Hand.new(player_id)
 		hand.add_all(_deck.deal(amount))
 		_hands[player_id] = hand
-	_discard_pile.push(_deck.draw())
-	_begin_turn(0)
+	_hands[_turn_order[0]].add(_deck.draw())
+	_turn_index = 0
+	_turn_count = 1
+	_turn = Turn.opening(_turn_order[0], _turn_count)
 
 
 # ======================================================================= comandos
@@ -67,7 +82,7 @@ func draw_from_deck(player_id: StringName) -> RoundActionResult:
 		return RoundActionResult.new(Error.DECK_EMPTY)
 	var card := _deck.draw()
 	_hands[player_id].add(card)
-	_record(Turn.Action.DRAW_FROM_DECK, -1)
+	_record(Turn.Action.DRAW_FROM_DECK, null)
 	return RoundActionResult.new(Error.OK, card)
 
 
@@ -79,7 +94,7 @@ func draw_from_discard(player_id: StringName) -> RoundActionResult:
 		return RoundActionResult.new(Error.DISCARD_EMPTY)
 	var card := _discard_pile.take_top()
 	_hands[player_id].add(card)
-	_record(Turn.Action.DRAW_FROM_DISCARD, card.instance_id)
+	_record(Turn.Action.DRAW_FROM_DISCARD, card)
 	return RoundActionResult.new(Error.OK, card)
 
 
@@ -91,7 +106,7 @@ func discard(player_id: StringName, card_id: int) -> RoundActionResult:
 	if card == null:
 		return RoundActionResult.new(Error.CARD_NOT_IN_HAND)
 	_discard_pile.push(card)
-	_record(Turn.Action.DISCARD, card_id)
+	_record(Turn.Action.DISCARD, card)
 	_begin_turn((_turn_index + 1) % _turn_order.size())
 	return RoundActionResult.new(Error.OK, card)
 
@@ -107,9 +122,10 @@ func declare_closing(player_id: StringName, card_id: int) -> RoundActionResult:
 	if not result.is_valid:
 		var code := Error.CARD_NOT_IN_HAND if result.reason == ValidationResult.Reason.CARD_NOT_IN_HAND else Error.INVALID_CLOSING
 		return RoundActionResult.new(code, null, result)
-	_discard_pile.push(hand.take(card_id))
+	var closing_card := hand.take(card_id)
+	_discard_pile.push(closing_card)
 	_closer_id = player_id
-	_record(Turn.Action.DECLARE_CLOSING, card_id)
+	_record(Turn.Action.DECLARE_CLOSING, closing_card)
 	return RoundActionResult.new(Error.OK, null, result)
 
 
@@ -154,6 +170,28 @@ static func from_snapshot(data: Dictionary, rule: GameRule, rng: RandomNumberGen
 
 
 # ======================================================================= consultas
+## Código de ErrorCatalog de un Round.Error (vacío para OK).
+static func error_code(error: int) -> StringName:
+	return _ERROR_CODES.get(error, &"")
+
+
+## Lo que todos pueden ver de la mesa: nunca las cartas de una mano (RNF 3).
+func public_state() -> Dictionary:
+	var hand_sizes := {}
+	for player_id in _turn_order:
+		hand_sizes[player_id] = _hands[player_id].size()
+	return {
+		"number": _number,
+		"current_player": _turn.player_id,
+		"phase": _turn.phase_name(),
+		"top_discard": _discard_pile.peek_top(),
+		"deck_size": _deck.size(),
+		"discard_size": _discard_pile.size(),
+		"closed": is_closed(),
+		"hand_sizes": hand_sizes,
+	}
+
+
 func current_player_id() -> StringName:
 	return _turn.player_id
 
@@ -213,10 +251,11 @@ func _begin_turn(index: int) -> void:
 	_turn = Turn.new(_turn_order[index], _turn_count)
 
 
-func _record(action: int, card_id: int) -> void:
+## `card`: la carta que el movimiento deja a la vista (null si es secreta).
+func _record(action: int, card: Card) -> void:
 	_turn.apply(action)
 	_move_sequence += 1
-	move_performed.emit(MoveRecord.new(_move_sequence, _number, _turn.player_id, action, card_id))
+	move_performed.emit(MoveRecord.new(_move_sequence, _number, _turn.player_id, action, card))
 
 
 func _context() -> RoundContext:

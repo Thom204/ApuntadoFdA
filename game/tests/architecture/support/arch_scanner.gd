@@ -199,6 +199,21 @@ static func variant_cross_dependencies(graph: Dictionary, groups: Dictionary) ->
 				out.append("%s depende de %s  (%s -> %s)" % [f, d, from_group, to_group])
 	return out
 
+## FF-06. Archivos de fuera de `plugin_prefix` que dependen de un archivo de dentro:
+## el núcleo del microkernel no puede conocer ningún plug-in (ADR-03). Una ruta de
+## carpeta (sin extensión) no cuenta: es dónde buscar plug-ins, no un plug-in.
+static func plugin_dependencies(graph: Dictionary, plugin_prefix: String) -> Array[String]:
+	var out: Array[String] = []
+	var file_deps: Dictionary = graph["file_deps"]
+	for f: String in file_deps.keys():
+		if f.begins_with(plugin_prefix):
+			continue
+		for d: String in file_deps[f]:
+			if d.begins_with(plugin_prefix) and d.get_extension() != "":
+				out.append("%s depende del plug-in %s" % [f, d])
+	return out
+
+
 static func _group_of(path: String, groups: Dictionary) -> String:
 	for group_name: String in groups.keys():
 		for prefix: String in groups[group_name]:
@@ -250,6 +265,123 @@ static func forbidden_usages(paths: Array, identifiers: Array, patterns: Array) 
 				if _re(pattern).search(line) != null:
 					out.append("%s:%d usa `%s`" % [path, idx + 1, pattern])
 	return out
+
+# ======================================================================= métricas de modularidad
+## ¿El script declara algo abstracto (`@abstract class_name` o `@abstract func`)?
+static func is_abstract_source(src: String) -> bool:
+	return sanitize(src, false).contains("@abstract")
+
+
+## Métricas de Martin por módulo (Richards y Ford, cap. 3), contando archivos como clases:
+##   ca = archivos de OTROS módulos que dependen de alguno del módulo (acoplamiento aferente)
+##   ce = archivos de OTROS módulos de los que depende alguno del módulo (eferente)
+##   i  = ce / (ca + ce)              inestabilidad (0 si no hay acoplamiento)
+##   a  = abstractos / archivos .gd   abstracción
+##   d  = |a + i - 1|                 distancia a la secuencia principal
+## Las dependencias a archivos sin módulo (addons) no cuentan.
+static func module_metrics(file_deps: Dictionary, modules: Dictionary, abstract_files: Array) -> Dictionary:
+	var afferent := {}
+	var efferent := {}
+	var files := {}
+	var abstracts := {}
+	for f: String in file_deps.keys():
+		var from_mod := module_of(f, modules)
+		if from_mod == "" or f.get_extension() != "gd":
+			continue
+		_add_to_set(files, from_mod, f)
+		if f in abstract_files:
+			_add_to_set(abstracts, from_mod, f)
+		for d: String in file_deps[f]:
+			var to_mod := module_of(d, modules)
+			if to_mod != "" and to_mod != from_mod:
+				_add_to_set(efferent, from_mod, d)
+				_add_to_set(afferent, to_mod, f)
+	var out := {}
+	for module_name: String in files.keys():
+		out[module_name] = _metrics_row(
+			_set_size(afferent, module_name), _set_size(efferent, module_name),
+			_set_size(abstracts, module_name), _set_size(files, module_name))
+	return out
+
+
+static func _metrics_row(ca: int, ce: int, abstract_count: int, file_count: int) -> Dictionary:
+	var instability := 0.0 if ca + ce == 0 else float(ce) / float(ca + ce)
+	var abstractness := float(abstract_count) / float(file_count)
+	return {
+		"ca": ca, "ce": ce, "files": file_count, "abstract": abstract_count,
+		"i": instability, "a": abstractness, "d": absf(abstractness + instability - 1.0),
+	}
+
+
+static func _add_to_set(sets: Dictionary, key: String, value: String) -> void:
+	if not sets.has(key):
+		sets[key] = {}
+	sets[key][value] = true
+
+
+static func _set_size(sets: Dictionary, key: String) -> int:
+	return sets[key].size() if sets.has(key) else 0
+
+
+# ======================================================================= Ley de Deméter
+## Métodos de tipos del motor (Array, Dictionary, String, Signal...) que se aceptan
+## sobre el resultado de una llamada: encadenarlos no expone la estructura del dominio.
+const BUILTIN_METHODS := [
+	"size", "is_empty", "duplicate", "keys", "values", "has", "get", "append", "append_array",
+	"erase", "find", "count", "slice", "sort", "back", "front", "map", "filter", "reduce",
+	"any", "all", "pop_back", "pop_front", "join", "split", "strip_edges", "to_upper",
+	"to_lower", "begins_with", "ends_with", "contains", "substr", "length", "repeat",
+	"get_extension", "get_file", "get_base_dir", "path_join", "trim_prefix", "trim_suffix",
+	"replace", "get_string", "emit", "is_valid", "call", "bind", "to_int", "to_float", "assign",
+	"hash", "abs", "floor", "round", "max", "min",
+]
+
+
+## Cadenas `x.a().b(` donde `b` es un método del dominio invocado sobre lo que devolvió
+## `a`: el llamador conoce la estructura interna de lo que recibe (Ley de Deméter).
+## No cuentan `X.new().b()` (construcción), las conversiones `Tipo(x).b()` ni los
+## métodos de tipos del motor. Limitación: no ve `a(f(x)).b()` (paréntesis anidados).
+static func demeter_chains_in_source(src: String) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var chain_re := _re("\\b([A-Za-z_][A-Za-z0-9_]*)\\([^()]*\\)\\.([A-Za-z_][A-Za-z0-9_]*)\\(")
+	var lines := sanitize(src, true).split("\n")
+	var code_lines := sanitize(src, false).split("\n")
+	for idx in code_lines.size():
+		for m in chain_re.search_all(code_lines[idx]):
+			var first := m.get_string(1)
+			var second := m.get_string(2)
+			var is_type_conversion := first[0] >= "A" and first[0] <= "Z"
+			if first == "new" or is_type_conversion or second in BUILTIN_METHODS:
+				continue
+			out.append({"line": idx + 1, "chain": m.get_string(), "text": lines[idx].strip_edges()})
+	return out
+
+
+# ======================================================================= reporte
+## Reporte Markdown de métricas (sección 4.2 del E3). `chains`: { módulo: [cadena] }, cada
+## cadena con file, line y text.
+static func metrics_report(metrics: Dictionary, chains: Dictionary) -> String:
+	var modules: Array = metrics.keys()
+	modules.sort()
+	var out := "# Métricas de modularidad\n\n"
+	out += "Ca/Ce cuentan archivos (clases); I = Ce/(Ca+Ce); A = abstractos/archivos; D = |A + I - 1|.\n\n"
+	out += "| Módulo | Archivos | Ca | Ce | I | A | D | Cadenas Deméter |\n"
+	out += "|---|---|---|---|---|---|---|---|\n"
+	for module_name: String in modules:
+		var row: Dictionary = metrics[module_name]
+		out += "| %s | %d | %d | %d | %.2f | %.2f | %.2f | %d |\n" % [
+			module_name, row["files"], row["ca"], row["ce"], row["i"], row["a"], row["d"],
+			chains.get(module_name, []).size()]
+	out += "\n## Cadenas que van contra la Ley de Deméter\n\n"
+	var any := false
+	for module_name: String in modules:
+		for chain: Dictionary in chains.get(module_name, []):
+			out += "- `%s:%d`  `%s`\n" % [chain["file"], chain["line"], chain["text"]]
+			any = true
+	if not any:
+		out += "Ninguna.\n"
+	return out
+
 
 # ======================================================================= complejidad ciclomática
 ## CC de cada función de `src`: 1 + if/elif/for/while + and/or (&&, ||) + ramas de match.

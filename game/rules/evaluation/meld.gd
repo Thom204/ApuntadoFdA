@@ -1,6 +1,6 @@
 class_name Meld
 extends RefCounted
-## Combinación válida (value object): terna (3 cartas) o cuarta (4), por valor o escalera.
+## Combinación válida (value object): grupo del mismo valor o escalera, de 3 o más cartas.
 
 var type: int:
 	get:

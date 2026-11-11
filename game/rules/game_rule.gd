@@ -48,24 +48,73 @@ func validate_closing(cards: Array[Card], discard: Card, ctx: RoundContext) -> V
 	if not _contains(cards, discard):
 		return ValidationResult.reject(ValidationResult.Reason.CARD_NOT_IN_HAND)
 	var rest := _without(cards, [discard])
-	var melds := _evaluator.best_melds(rest, _closing_pattern(ctx), _settings.card_values)
-	if melds.is_empty():
+	if special_closing_score(rest) > 0:
+		return ValidationResult.accept([], [], 0)
+	var best := _best_closing(rest, ctx)
+	if best.is_empty():
 		return ValidationResult.reject(ValidationResult.Reason.INCOMPLETE_MELDS)
-	var leftover := _leftover_of(rest, melds)
-	var points := _evaluator.points_of(leftover, _settings.card_values)
-	if not _accepts_leftover(leftover, points):
-		return ValidationResult.reject(ValidationResult.Reason.LEFTOVER_TOO_HIGH, leftover, points)
-	return ValidationResult.accept(melds, leftover, points)
+	if not _accepts_leftover(best["leftover"], best["points"]):
+		return ValidationResult.reject(ValidationResult.Reason.LEFTOVER_TOO_HIGH, best["leftover"], best["points"])
+	return ValidationResult.accept(best["melds"], best["leftover"], best["points"])
 
 
-## Penalización de un perdedor: valor de las cartas que no puede combinar (RD07).
+## Patrones de cierre que acepta la modalidad. Por defecto, solo _closing_pattern();
+## una modalidad con varias formas de cerrar (Apuntado: tocar o ganar completo) lo
+## redefine. Gancho opcional.
+func _closing_patterns(ctx: RoundContext) -> Array:
+	return [_closing_pattern(ctx)]
+
+
+## Entre todos los patrones que se pueden cumplir, el que deja el sobrante de menor
+## valor: {melds, leftover, points}. Vacío si no se cumple ninguno.
+func _best_closing(rest: Array[Card], ctx: RoundContext) -> Dictionary:
+	var best := {}
+	for pattern: Array[MeldSpec] in _closing_patterns(ctx):
+		var melds := _evaluator.best_melds(rest, pattern, _settings.card_values)
+		if melds.is_empty():
+			continue
+		var leftover := _leftover_of(rest, melds)
+		var points := _evaluator.points_of(leftover, _settings.card_values)
+		if best.is_empty() or points < best["points"]:
+			best = {"melds": melds, "leftover": leftover, "points": points}
+	return best
+
+
+## Consulta de solo lectura (RF-02): ¿`cards` forman un grupo o una escalera válidos?
+## Sirve para organizar la mano; no cambia nada.
+func check_meld(cards: Array[Card]) -> MeldCheck:
+	var points := _evaluator.points_of(cards, _settings.card_values)
+	match _evaluator.meld_type(cards):
+		MeldSpec.Type.SET:
+			return MeldCheck.new(MeldCheck.Result.SET, cards.size(), points)
+		MeldSpec.Type.RUN:
+			return MeldCheck.new(MeldCheck.Result.RUN, cards.size(), points)
+	return MeldCheck.new(MeldCheck.Result.INVALID, cards.size(), points)
+
+
+## Penalización de un perdedor: valor (positivo) de las cartas que no puede combinar
+## (RD07). RoundScoring se la resta del total.
 func penalty_for(cards: Array[Card]) -> int:
 	return _evaluator.min_leftover_points(cards, _settings.card_values)
 
 
-## Variación de puntaje de quien cierra (RD13). Con puntaje alto = malo, es negativa.
+## Puntos que suma quien cierra (RD13). El puntaje tiene signo: positivo es bueno.
 func closer_score_delta() -> int:
 	return _settings.closer_score_delta
+
+
+## Cierre especial que no exige combinaciones (p. ej. "irse a pintas" en Apuntado):
+## devuelve sus puntos, o 0 si `cards` (la mano sin el descarte) no lo forma. Gancho
+## opcional: por defecto ninguna modalidad lo tiene.
+func special_closing_score(_cards: Array[Card]) -> int:
+	return 0
+
+
+## Puntos de quien cerró con `cards` (su mano tras descartar): los del cierre especial
+## si lo formó; si no, closer_score_delta().
+func closer_score_for(cards: Array[Card]) -> int:
+	var special := special_closing_score(cards)
+	return special if special > 0 else closer_score_delta()
 
 
 # ======================================================================= utilidades
