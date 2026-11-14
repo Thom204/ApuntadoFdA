@@ -23,6 +23,7 @@ static func move(m: MoveRecord) -> Dictionary:
 		"player_id": String(m.player_id),
 		"action": m.action_name(),
 		"card": card(m.card),
+		"automatic": m.automatic,
 	}
 
 

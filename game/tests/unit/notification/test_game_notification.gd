@@ -97,6 +97,15 @@ func test_un_descarte_publica_la_carta_y_un_robo_del_mazo_no() -> void:
 	assert_eq(moves[0]["data"]["card"]["label"], "9♣", "el descarte queda a la vista")
 	assert_eq(moves[1]["data"]["action"], "DRAW_FROM_DECK")
 	assert_null(moves[1]["data"]["card"], "la carta robada del mazo es secreta")
+	assert_false(moves[0]["data"]["automatic"])
+
+
+func test_un_turno_automatico_se_anuncia_como_tal() -> void:
+	_start([CLOSER, Stacked.junk(1)], "9C")
+	_orch.play_automatic_turn(&"a")
+	await wait_process_frames(1)
+	var moves: Array = _channel.to(&"b").filter(func(m: Dictionary) -> bool: return m["event"] == "move_performed")
+	assert_true(moves[0]["data"]["automatic"], "el cliente puede mostrar que jugó el servidor")
 
 
 func test_todos_los_mensajes_son_json() -> void:

@@ -35,7 +35,7 @@ func test_resolve_aplica_los_valores_por_defecto_del_plugin() -> void:
 	_registry.load_plugins(RuleRegistry.DEFAULT_PLUGIN_DIR)
 	var settings := _registry.default_settings(&"apuntado")
 	assert_eq(settings.elimination_threshold, 101)
-	assert_eq(settings.max_leftover_points, 5)
+	assert_eq(settings.max_leftover_points, 4, "sobrante < 5 (E3)")
 
 
 func test_resolve_acepta_parametros_propios_de_la_partida() -> void:

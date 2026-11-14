@@ -9,6 +9,10 @@ extends RefCounted
 enum Status { WAITING_FOR_PLAYERS, IN_PROGRESS, FINISHED }
 
 const SNAPSHOT_VERSION := 1
+## Turnos automáticos seguidos (D-12) con los que un jugador queda eliminado al
+## liquidarse la ronda. Es del dominio y no configuración: decide quién sigue en la
+## partida y se deriva del historial guardado (turn_move.is_automatic).
+const MAX_AUTOMATIC_TURNS := 3
 
 var id: StringName:
 	get:
@@ -66,16 +70,17 @@ func start_next_round(deck: Deck) -> bool:
 
 
 # ======================================================================= comandos
-func draw_from_deck(player_id: StringName) -> MatchActionResult:
-	return _play(func(r: Round) -> RoundActionResult: return r.draw_from_deck(player_id))
+## `automatic`: jugada del servidor por turno vencido (D-12); ver Round.
+func draw_from_deck(player_id: StringName, automatic: bool = false) -> MatchActionResult:
+	return _play(func(r: Round) -> RoundActionResult: return r.draw_from_deck(player_id, automatic))
 
 
-func draw_from_discard(player_id: StringName) -> MatchActionResult:
-	return _play(func(r: Round) -> RoundActionResult: return r.draw_from_discard(player_id))
+func draw_from_discard(player_id: StringName, automatic: bool = false) -> MatchActionResult:
+	return _play(func(r: Round) -> RoundActionResult: return r.draw_from_discard(player_id, automatic))
 
 
-func discard(player_id: StringName, card_id: int) -> MatchActionResult:
-	return _play(func(r: Round) -> RoundActionResult: return r.discard(player_id, card_id))
+func discard(player_id: StringName, card_id: int, automatic: bool = false) -> MatchActionResult:
+	return _play(func(r: Round) -> RoundActionResult: return r.discard(player_id, card_id, automatic))
 
 
 ## Un cierre rechazado no cambia nada (RD16). Uno válido cierra la ronda, la liquida,
@@ -168,6 +173,22 @@ func history() -> MatchHistory:
 	return _history
 
 
+## Turnos automáticos seguidos del jugador, contados desde su última jugada a mano.
+## Cada turno termina en un descarte, así que se cuentan los descartes automáticos.
+func automatic_streak(player_id: StringName) -> int:
+	var streak := 0
+	var moves := _history.all()
+	for i in range(moves.size() - 1, -1, -1):
+		var move := moves[i]
+		if move.player_id != player_id:
+			continue
+		if not move.automatic:
+			break
+		if move.action == Turn.Action.DISCARD:
+			streak += 1
+	return streak
+
+
 # ======================================================================= snapshot (ADR-04, D-15)
 ## Estado completo de la partida en datos planos y JSON-compatibles. Es lo único que
 ## cruza el seam de persistencia: el adaptador lo mapea a tablas o lo guarda tal cual.
@@ -248,7 +269,11 @@ func _conclude_round() -> SettlementOutcome:
 	var hands := {}
 	for player_id in active_player_ids():
 		hands[player_id] = _current_round.cards_of(player_id)
-	var outcome := RoundScoring.settle(_round_number, _current_round.closer_id(), hands, _rule, _settlements)
+	var inactive: Array[StringName] = []
+	for player_id in active_player_ids():
+		if automatic_streak(player_id) >= MAX_AUTOMATIC_TURNS:
+			inactive.append(player_id)
+	var outcome := RoundScoring.settle(_round_number, _current_round.closer_id(), hands, _rule, _settlements, inactive)
 	_settlements.append(outcome.settlement)
 	for p in _players:
 		if p.id in outcome.eliminated:

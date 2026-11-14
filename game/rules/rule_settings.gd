@@ -6,8 +6,9 @@ extends RefCounted
 
 ## Puntos negativos acumulados con los que un jugador sale: total <= -umbral.
 var elimination_threshold: int = 101
-## Valor máximo que puede sumar el sobrante de un cierre (Apuntado: 5, se permite <= 5).
-var max_leftover_points: int = 5
+## Valor máximo (inclusivo) que puede sumar el sobrante de un cierre. Apuntado: 4, es decir,
+## sobrante < 5 puntos (E3: sobrar exactamente 5 es inválido).
+var max_leftover_points: int = 4
 ## Puntos que suma quien cierra la ronda (RD13).
 var closer_score_delta: int = 10
 var jokers_enabled: bool = false

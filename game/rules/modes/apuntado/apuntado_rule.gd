@@ -1,6 +1,6 @@
 extends GameRule
 ## Modalidad Apuntado (RF06, RD06, RD14). Dos formas normales de cerrar:
-## - Tocar: 3 ternas + 1 carta suelta que vale como máximo max_leftover_points (5).
+## - Tocar: 3 ternas + 1 carta suelta que vale menos de 5 (max_leftover_points = 4).
 ## - Ganar completo: 1 cuarta + 2 ternas, sin sobrante. El puntaje con signo se acumula entre
 ## rondas: quien cierra suma +10 y cada perdedor resta sus cartas sueltas. Sale quien
 ## llega a -elimination_threshold (-101). Gana quien llega a +WIN_TARGET (+51) o el

@@ -12,16 +12,31 @@ extends RefCounted
 ## (reintentos de red, ADR-04). Un jugador está en una sola sala a la vez, así que los
 ## comandos de juego no llevan room_id.
 ##
+## Inactividad (D-11, D-12): el servidor llama tick(now_ms) cada segundo y avisa las
+## caídas de conexión con set_connected. Si el turno no avanza en turn_timeout_ms
+## (disconnected_timeout_ms si el jugador está desconectado), se juega un turno
+## automático por él. Si nadie de la sala está conectado, la partida espera.
+##
 ## Señales para quien arma el servidor (composition root), no para el dominio:
 ##   room_created(room_id, orchestrator): conectar la notificación de la partida.
 ##   room_updated(room_id): la sala cambió (alguien entró o salió, o empezó la partida).
 ##     Si la sala quedó vacía ya no existe: room_view(room_id) devuelve {}.
+##   request_handled(player_id, room_id, request, response): cada solicitud atendida,
+##     aceptada o rechazada, para la auditoría (AuditTrail). `room_id` es la sala del
+##     jugador después de atenderla (vacío si no está en ninguna).
 
 signal room_created(room_id: StringName, orchestrator: MatchOrchestrator)
 signal room_updated(room_id: StringName)
+signal request_handled(player_id: StringName, room_id: StringName, request: Dictionary, response: Dictionary)
 
 ## Cuántas respuestas recuerda para reconocer reintentos.
 const MAX_REMEMBERED_ACTIONS := 256
+## Tiempos de turno por defecto; el servidor los puede cambiar (D-19).
+const DEFAULT_TURN_TIMEOUT_MS := 45000
+const DEFAULT_DISCONNECTED_TIMEOUT_MS := 10000
+
+var turn_timeout_ms := DEFAULT_TURN_TIMEOUT_MS
+var disconnected_timeout_ms := DEFAULT_DISCONNECTED_TIMEOUT_MS
 
 var _registry: RuleRegistry
 var _repository: IMatchRepository
@@ -33,6 +48,7 @@ var _room_count := 0
 var _handlers: Dictionary = {}
 var _remembered: Dictionary = {}  # "player_id|action_id" -> respuesta
 var _remembered_order: Array[String] = []
+var _clock := TurnClock.new()
 
 
 func _init(registry: RuleRegistry, repository: IMatchRepository, deck_factory: Callable = Callable()) -> void:
@@ -60,6 +76,12 @@ func _init(registry: RuleRegistry, repository: IMatchRepository, deck_factory: C
 
 
 func handle(player_id: StringName, request: Dictionary) -> Dictionary:
+	var response := _dispatch(player_id, request)
+	request_handled.emit(player_id, _room_of.get(player_id, &""), request, response)
+	return response
+
+
+func _dispatch(player_id: StringName, request: Dictionary) -> Dictionary:
 	var type := str(request.get("type", ""))
 	var action_id := str(request.get("action_id", ""))
 	if type == "":
@@ -76,6 +98,38 @@ func handle(player_id: StringName, request: Dictionary) -> Dictionary:
 	if handler["mutates"] and response["ok"]:
 		_remember(key, response)
 	return response
+
+
+# ======================================================================= inactividad
+## Juega un turno automático en cada sala cuyo turno venció. Devuelve por quién jugó.
+func tick(now_ms: int) -> Array[StringName]:
+	var played: Array[StringName] = []
+	for room: Room in _rooms.values():
+		var player_id := _due_player(room, now_ms)
+		if player_id == &"":
+			continue
+		room.orchestrator.play_automatic_turn(player_id)
+		_clock.restart(room.id, room.orchestrator.state_version(), now_ms)
+		played.append(player_id)
+	return played
+
+
+## La red avisa cuando la conexión de un jugador se cae (false) o vuelve (true).
+func set_connected(player_id: StringName, connected: bool) -> void:
+	var room := _room_for(player_id)
+	if room == null:
+		return
+	room.set_connected(player_id, connected)
+	room_updated.emit(room.id)
+
+
+func _due_player(room: Room, now_ms: int) -> StringName:
+	var player_id := room.orchestrator.current_turn() if room.is_playing() else &""
+	if player_id == &"" or not room.anyone_connected():
+		_clock.forget(room.id)
+		return &""
+	var timeout := turn_timeout_ms if room.is_connected_player(player_id) else disconnected_timeout_ms
+	return player_id if _clock.is_due(room.id, room.orchestrator.state_version(), now_ms, timeout) else &""
 
 
 # ======================================================================= salas

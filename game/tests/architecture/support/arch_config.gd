@@ -81,14 +81,18 @@ const ENFORCE_ACYCLIC_MODULES := true
 const FORBIDDEN_IN_CORE_IDENTIFIERS := [
 	"Control", "CanvasItem", "Node2D", "Node3D",
 	"HTTPRequest", "HTTPClient", "WebSocketPeer", "WebSocketMultiplayerPeer",
-	"ENetMultiplayerPeer", "MultiplayerPeer", "MultiplayerAPI", "multiplayer", "Sqlite3FileHandle",
+	"ENetMultiplayerPeer", "MultiplayerPeer", "MultiplayerAPI", "multiplayer",
+	"Sqlite3Wrapper", "Sqlite3Handle", "Sqlite3StmtHandle",
 	"await", "Thread", "WorkerThreadPool",
 ]
 const FORBIDDEN_IN_CORE_PATTERNS := ["@rpc"]
 
+## ADR-04, cumplimiento 2: las clases del binding de SQLite (sqlite3.gd) solo se usan
+## dentro de infrastructure/persistence, y ahí solo en el gateway.
 const FORBIDDEN_OUTSIDE_PERSISTANCE := [
-	"Sqlite3FileHandle"
+	"Sqlite3Wrapper", "Sqlite3Handle", "Sqlite3StmtHandle",
 ]
+const SQLITE_BINDING_ALLOWED_FILES := ["res://infrastructure/persistence/sqlite_gateway.gd"]
 
 ## FF-05: límite de complejidad ciclomática por función (D-23) y carpetas donde se exige.
 ## Empezar por el motor de reglas y ampliar la lista a medida que el código lo permita.

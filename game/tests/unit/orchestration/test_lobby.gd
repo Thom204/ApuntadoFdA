@@ -73,7 +73,7 @@ func test_quien_crea_la_sala_es_el_anfitrion() -> void:
 	assert_eq(room["host_id"], "a")
 	assert_eq(room["status"], "WAITING")
 	assert_eq(room["mode"], "apuntado")
-	assert_eq(room["players"], [{"id": "a", "nickname": "Ana"}])
+	assert_eq(room["players"], [{"id": "a", "nickname": "Ana", "connected": true}])
 
 
 func test_crear_sala_con_modalidad_desconocida_o_sin_apodo_falla() -> void:

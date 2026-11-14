@@ -9,14 +9,27 @@ Todo lo que cruza esta frontera es **nativo de JSON**: `String`, `int`/`float`, 
 ```gdscript
 # infrastructure/network/network_session.gd (lo implementa la red; aquí sí se permite @rpc)
 var _registry := RuleRegistry.new(HandEvaluator.new())
+var _repository: SqlMatchRepository
 var _lobby: Lobby
-var _notifications: LobbyNotification   # conservar la referencia mientras viva el servidor
+var _notifications: LobbyNotification   # conservar estas referencias mientras viva el servidor
+var _audit: AuditTrail
 
 func _ready() -> void:
 	_registry.load_plugins(RuleRegistry.DEFAULT_PLUGIN_DIR)
 	assert(_registry.has_required_modes())   # fail fast (ADR-03)
-	_lobby = Lobby.new(_registry, InMemoryMatchRepository.new())
+	# Rutas por configuración externa (D-19), fuera de res://.
+	_repository = SqlMatchRepository.open(OS.get_environment("APUNTADO_DB"))
+	assert(_repository != null, SqlMatchRepository.open_error)   # fail fast (ADR-04, C-8)
+	_lobby = Lobby.new(_registry, _repository)
+	_lobby.turn_timeout_ms = 45000            # opcional: por defecto 45 s y 10 s (D-12)
 	_notifications = LobbyNotification.new(_lobby, NetworkChannel.new(self))
+	_audit = AuditTrail.new(_lobby, JsonlAuditSink.open(OS.get_environment("APUNTADO_AUDIT_LOG")))
+	var timer := Timer.new()                  # el núcleo no tiene reloj: lo mueve el servidor
+	timer.wait_time = 1.0
+	timer.timeout.connect(func() -> void: _lobby.tick(Time.get_ticks_msec()))
+	add_child(timer)
+	timer.start()
+	multiplayer.peer_disconnected.connect(func(peer: int) -> void: _lobby.set_connected(_player_of(peer), false))
 
 @rpc("any_peer", "call_remote", "reliable")
 func request(data: Dictionary) -> void:
@@ -24,6 +37,10 @@ func request(data: Dictionary) -> void:
 	var player_id := _player_of(peer)             # autenticación: responsabilidad de la red
 	response.rpc_id(peer, _lobby.handle(player_id, data))
 ```
+
+- **Al reconectarse**, la red llama `_lobby.set_connected(player_id, true)` y el cliente pide `get_view` (D-11).
+- **`tick(now_ms)`** recibe cualquier reloj que avance en milisegundos (`Time.get_ticks_msec()` sirve). Devuelve los jugadores por los que jugó el servidor.
+- **La base y el log de auditoría** se pasan por variables de entorno en el ejemplo; la forma concreta (argumentos, archivo de configuración) la decide la red. Al exportar el servidor hay que incluir `*.sql` en los filtros de exportación, porque las migraciones se leen de `res://infrastructure/persistence/migrations/`.
 
 ```gdscript
 class NetworkChannel extends IPlayerChannel:
@@ -70,6 +87,7 @@ class NetworkChannel extends IPlayerChannel:
 - **Errores de cualquier solicitud:** `INVALID_REQUEST` (sin `type`, sin `action_id`, campos faltantes) y `UNKNOWN_REQUEST`.
 - **Salas:** quien crea la sala es el anfitrión. Un jugador está en una sola sala a la vez, por eso los comandos no llevan `room_id`. La sala admite de 2 a 5 jugadores y empieza cuando el anfitrión envía `start_match`. Si el anfitrión sale antes de empezar, lo reemplaza el siguiente en llegar. Una sala vacía desaparece.
 - **Reconexión:** el cliente envía `get_view` y recibe su mesa completa.
+- **Turnos automáticos (D-12):** si un turno no avanza en 45 s (10 s si el jugador está desconectado), el servidor juega por él: roba del mazo y descarta lo que robó. Llega como un `move_performed` normal con `"automatic": true`. Con 3 turnos automáticos seguidos, el jugador queda eliminado al liquidarse la ronda (`player_eliminated`). Si nadie de la sala está conectado, la partida espera.
 
 ## 3. Notificaciones (núcleo → cada jugador)
 
@@ -108,11 +126,11 @@ Cada mensaje trae la vista de quien lo recibe: el cliente puede redibujar con `v
 ## 5. Formatos
 
 - **Carta:** `{ "id": 31, "rank": 7, "suit": 1, "label": "7♥" }`. `id` es lo que se envía en `card_id`.
-- **Movimiento:** `{ "sequence", "round_number", "player_id", "action", "card" }`. `action` es `DRAW_FROM_DECK`, `DRAW_FROM_DISCARD`, `DISCARD` o `DECLARE_CLOSING`. `card` es `null` al robar del mazo, porque esa carta es secreta.
+- **Movimiento:** `{ "sequence", "round_number", "player_id", "action", "card", "automatic" }`. `action` es `DRAW_FROM_DECK`, `DRAW_FROM_DISCARD`, `DISCARD` o `DECLARE_CLOSING`. `card` es `null` al robar del mazo, porque esa carta es secreta. `automatic` es `true` si la jugó el servidor por turno vencido.
 - **Liquidación:** `{ "round_number", "closer_id", "deltas": { "a": 10, "b": -65 } }`.
 - **Validación de cierre:** `{ "valid", "reason", "message", "leftover_points", "leftover": [cartas], "melds": [[cartas]] }`.
 - **Organizar la mano (`check`):** `{ "result": "SET" | "RUN" | "INVALID" | "CARD_NOT_IN_HAND", "valid", "points", "message" }`.
-- **Sala (`room`):** `{ "room_id", "host_id", "mode", "mode_name", "status": "WAITING" | "IN_PROGRESS" | "FINISHED", "max_players": 5, "players": [ { "id", "nickname" } ] }`.
+- **Sala (`room`):** `{ "room_id", "host_id", "mode", "mode_name", "status": "WAITING" | "IN_PROGRESS" | "FINISHED", "max_players": 5, "players": [ { "id", "nickname", "connected" } ] }`. `connected` es `false` mientras la red tenga al jugador como desconectado.
 
 ## 6. Códigos de error
 
@@ -120,6 +138,17 @@ Los códigos están en `res://shared/error_catalog.gd`, junto con el mensaje de 
 
 ## 7. Fuera de alcance por ahora
 
-- **Salir o desconectarse con la partida en curso:** falta decidir la política (esperar, saltar el turno o eliminar).
+- **Salir de la sala con la partida en curso:** `leave_room` lo rechaza; quien se va queda desconectado y lo cubren los turnos automáticos.
+- **Empezar la ronda siguiente sin nadie que la pida:** `start_next_round` lo envía un jugador; el servidor no lo hace solo.
 - **Recuperar las salas tras reiniciar el servidor:** las partidas se pueden recuperar con `MatchOrchestrator.resume_match`, pero el `Lobby` aún no reconstruye sus salas.
-- **Persistencia SQLite:** ADR-04. El protocolo no cambia cuando llegue.
+
+## 8. Auditoría
+
+`AuditTrail` escribe una línea JSON por cada solicitud (aceptada o rechazada) y por cada evento de juego en el archivo de `JsonlAuditSink`. Nunca guarda manos ni vistas (D-10). Sirve de evidencia para las pruebas con usuarios: con `ts_ms` se mide el tiempo por turno, y las solicitudes con `ok: false` muestran los errores de regla.
+
+```json
+{"kind":"request","ts_ms":1794617973695,"player_id":"a","room_id":"r-1","type":"declare_closing","action_id":"c1-0042","ok":false,"error":"INVALID_CLOSING","fields":{"expected_version":7,"card_id":31},"detail":{"validation":{"valid":false,"reason":"LEFTOVER_TOO_HIGH","leftover_points":5}}}
+{"kind":"event","ts_ms":1794617973701,"room_id":"r-1","match_id":"m-1a2b3c4d","version":8,"event":"move_performed","data":{"sequence":12,"round_number":2,"player_id":"b","action":"DISCARD","card":{"id":7,"rank":9,"suit":2,"label":"9♣"},"automatic":true}}
+```
+
+Las jugadas también quedan en la tabla `turn_move` de SQLite (D-14), que solo acepta inserciones.

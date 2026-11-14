@@ -8,8 +8,10 @@ extends RefCounted
 
 ## `hands`: { player_id: Array[Card] } de los jugadores que jugaron la ronda, en
 ## orden de asiento. `previous`: liquidaciones de las rondas anteriores.
+## `inactive`: jugadores que salen por inactividad (D-12) aunque su puntaje no llegue
+## al umbral; su liquidación de la ronda se registra igual.
 static func settle(round_number: int, closer_id: StringName, hands: Dictionary, rule: GameRule,
-		previous: Array[RoundSettlement]) -> SettlementOutcome:
+		previous: Array[RoundSettlement], inactive: Array[StringName] = []) -> SettlementOutcome:
 	var settlement := RoundSettlement.new(round_number, closer_id, _deltas(closer_id, hands, rule))
 	var all: Array[RoundSettlement] = previous.duplicate()
 	all.append(settlement)
@@ -17,7 +19,7 @@ static func settle(round_number: int, closer_id: StringName, hands: Dictionary, 
 	var eliminated: Array[StringName] = []
 	var remaining: Array[StringName] = []
 	for player_id: StringName in hands:
-		if rule.is_eliminated(board.total_of(player_id)):
+		if player_id in inactive or rule.is_eliminated(board.total_of(player_id)):
 			eliminated.append(player_id)
 		else:
 			remaining.append(player_id)

@@ -98,6 +98,28 @@ func declare_closing(player_id: StringName, card_id: int) -> CommandResult:
 	return _execute(func(m: Match) -> MatchActionResult: return m.declare_closing(player_id, card_id))
 
 
+## Turno automático (D-12): el servidor juega por `player_id` cuando su turno vence.
+## Roba del mazo (o del pozo si el mazo se agotó) y descarta la carta que robó; si
+## ya estaba en fase de descarte, descarta la última carta de su mano. Son dos comandos
+## normales: cada uno se guarda antes de anunciarse. Si el descarte fallara, el
+## jugador queda en fase de descarte y el siguiente turno automático lo completa.
+func play_automatic_turn(player_id: StringName) -> CommandResult:
+	var blocked := _blocked()
+	if blocked != null:
+		return blocked
+	var table := _match.table_state()
+	if table.get("current_player", &"") != player_id:
+		return CommandResult.failure(ErrorCatalog.NOT_PLAYER_TURN)
+	if table["phase"] == &"DRAW":
+		var draw := _execute(func(m: Match) -> MatchActionResult: return m.draw_from_deck(player_id, true))
+		if draw.error == ErrorCatalog.DECK_EMPTY:
+			draw = _execute(func(m: Match) -> MatchActionResult: return m.draw_from_discard(player_id, true))
+		if not draw.ok:
+			return draw
+	var card_id: int = _match.hand_of(player_id).back().instance_id
+	return _execute(func(m: Match) -> MatchActionResult: return m.discard(player_id, card_id, true))
+
+
 func start_next_round() -> CommandResult:
 	var blocked := _blocked()
 	if blocked != null:
@@ -125,6 +147,17 @@ func check_meld(player_id: StringName, card_ids: Array[int]) -> MeldCheck:
 
 
 ## Estado de la partida (IN_PROGRESS, FINISHED...); vacío si no hay partida.
+## Jugador que debe jugar ahora; vacío si no hay partida, terminó o la ronda está
+## cerrada esperando la siguiente (no hay turno que vencer).
+func current_turn() -> StringName:
+	if _match == null or _match.status == Match.Status.FINISHED:
+		return &""
+	var table := _match.table_state()
+	if table.is_empty() or table["closed"]:
+		return &""
+	return table["current_player"]
+
+
 func status_name() -> String:
 	return "" if _match == null else Match.Status.keys()[_match.status]
 

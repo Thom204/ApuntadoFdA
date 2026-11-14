@@ -64,10 +64,11 @@ func test_apuntado_tocar_con_sobrante_de_4() -> void:
 	assert_eq(result.leftover_points, 4)
 
 
-func test_apuntado_tocar_con_sobrante_de_exactamente_5() -> void:
+## Checklist de pruebas del E3 (2.3): sobrar exactamente 5 puntos es un cierre inválido.
+func test_apuntado_rechaza_sobrante_de_exactamente_5() -> void:
 	var hand := Cards.parse("2S 3S 4S 8H 8D 8C JH QH KH 5D 9C")
 	var result := _apuntado.validate_closing(hand, _last(hand), _ctx())
-	assert_true(result.is_valid, "máximo 5 puntos")
+	assert_eq(result.reason, ValidationResult.Reason.LEFTOVER_TOO_HIGH, "el sobrante debe ser < 5")
 	assert_eq(result.leftover_points, 5)
 
 

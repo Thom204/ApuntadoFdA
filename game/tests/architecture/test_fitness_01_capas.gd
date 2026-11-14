@@ -38,3 +38,15 @@ func test_ff04_presentacion_nucleo_no_usan_apis_de_ui_red_ni_persistencia() -> v
 	var violations: Array[String] = violations1 + violations2
 	assert_true(violations.is_empty(),
 		"FF-04 violada (%d):\n  %s" % [violations.size(), "\n  ".join(violations)])
+
+
+## ADR-04 (elemento 3): dentro de la persistencia, solo el gateway conoce el binding.
+func test_ff04_solo_el_gateway_usa_el_binding_de_sqlite() -> void:
+	var persistence_files: Array = []
+	for f: String in _graph["files"]:
+		var in_persistence := Scanner.module_of(f, Config.MODULES) == "infrastructure.persistence"
+		if f.get_extension() == "gd" and in_persistence and not f in Config.SQLITE_BINDING_ALLOWED_FILES:
+			persistence_files.append(f)
+	var violations := Scanner.forbidden_usages(persistence_files, Config.FORBIDDEN_OUTSIDE_PERSISTANCE, [])
+	assert_true(violations.is_empty(),
+		"FF-04 violada (%d):\n  %s" % [violations.size(), "\n  ".join(violations)])

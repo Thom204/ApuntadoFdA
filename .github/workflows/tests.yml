@@ -44,6 +44,15 @@ jobs:
           -gdir=res://tests/unit/,res://tests/contract/ -ginclude_subdirs
           -gjunit_xml_file=res://tests/results/junit_unit.xml -gexit
 
+      # SQLite real con un archivo temporal (ADR-04, cumplimiento 3 a 8). Usa el binding
+      # de game/sqlite3.gd (binarios linux.x86_64 incluidos en el repositorio).
+      - name: Pruebas de integración de persistencia (ADR-04)
+        if: always()
+        run: >
+          godot --headless -s res://addons/gut/gut_cmdln.gd
+          -gdir=res://tests/integration/ -ginclude_subdirs
+          -gjunit_xml_file=res://tests/results/junit_integration.xml -gexit
+
       - name: Fitness functions de arquitectura (D-23)
         if: always()
         run: >

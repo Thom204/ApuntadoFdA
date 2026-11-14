@@ -72,7 +72,9 @@ func start(deck: Deck) -> void:
 
 
 # ======================================================================= comandos
-func draw_from_deck(player_id: StringName) -> RoundActionResult:
+## `automatic`: la jugada la hace el servidor porque el turno venció (D-12). Solo
+## marca el MoveRecord; las reglas de la jugada son las mismas.
+func draw_from_deck(player_id: StringName, automatic: bool = false) -> RoundActionResult:
 	var error := _check(player_id, Turn.Action.DRAW_FROM_DECK)
 	if error != Error.OK:
 		return RoundActionResult.new(error)
@@ -82,11 +84,11 @@ func draw_from_deck(player_id: StringName) -> RoundActionResult:
 		return RoundActionResult.new(Error.DECK_EMPTY)
 	var card := _deck.draw()
 	_hands[player_id].add(card)
-	_record(Turn.Action.DRAW_FROM_DECK, null)
+	_record(Turn.Action.DRAW_FROM_DECK, null, automatic)
 	return RoundActionResult.new(Error.OK, card)
 
 
-func draw_from_discard(player_id: StringName) -> RoundActionResult:
+func draw_from_discard(player_id: StringName, automatic: bool = false) -> RoundActionResult:
 	var error := _check(player_id, Turn.Action.DRAW_FROM_DISCARD)
 	if error != Error.OK:
 		return RoundActionResult.new(error)
@@ -94,11 +96,11 @@ func draw_from_discard(player_id: StringName) -> RoundActionResult:
 		return RoundActionResult.new(Error.DISCARD_EMPTY)
 	var card := _discard_pile.take_top()
 	_hands[player_id].add(card)
-	_record(Turn.Action.DRAW_FROM_DISCARD, card)
+	_record(Turn.Action.DRAW_FROM_DISCARD, card, automatic)
 	return RoundActionResult.new(Error.OK, card)
 
 
-func discard(player_id: StringName, card_id: int) -> RoundActionResult:
+func discard(player_id: StringName, card_id: int, automatic: bool = false) -> RoundActionResult:
 	var error := _check(player_id, Turn.Action.DISCARD)
 	if error != Error.OK:
 		return RoundActionResult.new(error)
@@ -106,7 +108,7 @@ func discard(player_id: StringName, card_id: int) -> RoundActionResult:
 	if card == null:
 		return RoundActionResult.new(Error.CARD_NOT_IN_HAND)
 	_discard_pile.push(card)
-	_record(Turn.Action.DISCARD, card)
+	_record(Turn.Action.DISCARD, card, automatic)
 	_begin_turn((_turn_index + 1) % _turn_order.size())
 	return RoundActionResult.new(Error.OK, card)
 
@@ -252,10 +254,10 @@ func _begin_turn(index: int) -> void:
 
 
 ## `card`: la carta que el movimiento deja a la vista (null si es secreta).
-func _record(action: int, card: Card) -> void:
+func _record(action: int, card: Card, automatic: bool = false) -> void:
 	_turn.apply(action)
 	_move_sequence += 1
-	move_performed.emit(MoveRecord.new(_move_sequence, _number, _turn.player_id, action, card))
+	move_performed.emit(MoveRecord.new(_move_sequence, _number, _turn.player_id, action, card, -1, automatic))
 
 
 func _context() -> RoundContext:

@@ -10,7 +10,7 @@ var settlement: RoundSettlement:
 var scoreboard: Scoreboard:
 	get:
 		return _scoreboard
-## Jugadores que alcanzaron el umbral en esta ronda.
+## Jugadores que salen en esta ronda: por llegar al umbral o por inactividad (D-12).
 var eliminated: Array[StringName]:
 	get:
 		return _eliminated.duplicate()

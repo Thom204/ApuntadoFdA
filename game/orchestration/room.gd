@@ -24,6 +24,7 @@ var _orchestrator: MatchOrchestrator
 ## [{ "id": StringName, "nickname": String }] en orden de llegada (= asiento).
 var _players: Array[Dictionary] = []
 var _started := false
+var _offline: Dictionary = {}  # player_id -> true mientras está desconectado (D-11)
 
 
 func _init(p_id: StringName, p_mode: StringName, p_mode_name: String, p_orchestrator: MatchOrchestrator) -> void:
@@ -39,6 +40,23 @@ func add(player_id: StringName, nickname: String) -> void:
 
 func remove(player_id: StringName) -> void:
 	_players = _players.filter(func(p: Dictionary) -> bool: return p["id"] != player_id)
+	_offline.erase(player_id)
+
+
+## La red avisa cuando la conexión de un jugador se cae o vuelve (D-11).
+func set_connected(player_id: StringName, connected: bool) -> void:
+	if connected:
+		_offline.erase(player_id)
+	else:
+		_offline[player_id] = true
+
+
+func is_connected_player(player_id: StringName) -> bool:
+	return not _offline.has(player_id)
+
+
+func anyone_connected() -> bool:
+	return _players.any(func(p: Dictionary) -> bool: return is_connected_player(p["id"]))
 
 
 func has(player_id: StringName) -> bool:
@@ -90,5 +108,5 @@ func view() -> Dictionary:
 		"status": status(),
 		"max_players": MatchConfig.MAX_PLAYERS,
 		"players": _players.map(func(p: Dictionary) -> Dictionary:
-			return {"id": String(p["id"]), "nickname": p["nickname"]}),
+			return {"id": String(p["id"]), "nickname": p["nickname"], "connected": is_connected_player(p["id"])}),
 	}
