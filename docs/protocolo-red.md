@@ -152,3 +152,22 @@ Los códigos están en `res://shared/error_catalog.gd`, junto con el mensaje de 
 ```
 
 Las jugadas también quedan en la tabla `turn_move` de SQLite (D-14), que solo acepta inserciones.
+
+## 9. Lado del cliente
+
+La interfaz no conoce el Lobby ni la red. Habla con el servidor solo a través de `ClientSession` (`presentation/session/`), que arma las solicitudes (`action_id` nuevo, `expected_version` de la última vista), guarda la última sala y la última vista, y descarta las vistas más viejas que la que ya tiene. Las fitness functions prohíben que `presentation` dependa de `infrastructure.network`.
+
+`ClientSession` recibe un `IClientTransport`, el puerto del cliente:
+
+- `send(request)` envía una solicitud.
+- La señal `response_received(response)` entrega la respuesta.
+- La señal `message_received(message)` entrega lo que el servidor empuja (`{ event, data, view }`).
+
+Hay dos adaptadores:
+
+| Adaptador | Dónde | Uso |
+|---|---|---|
+| `LocalTransport` + `LocalServer` | `infrastructure/network/local/` | El Lobby real en el mismo proceso: mesa local (hot seat) y desarrollo de la interfaz sin red. |
+| Transporte de red | `infrastructure/network/` (pendiente) | Del lado del cliente, `send` llama la RPC `request` y las RPC `response` y `event` emiten las señales. En navegador se usa `WebSocketMultiplayerPeer` (el export Web no tiene ENet). |
+
+Los puntos de armado viven en `app/` y nadie depende de ellos. `app/local_playground.tscn` es la escena principal por ahora: elige la modalidad y la cantidad de jugadores, y abre una pestaña por jugador con su `TableView`. Guarda las partidas en `user://apuntado_local.db` y la auditoría en `user://auditoria_local.jsonl`.

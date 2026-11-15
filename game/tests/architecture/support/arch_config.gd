@@ -7,6 +7,8 @@ extends RefCounted
 ## Prefijo de ruta -> nombre de módulo. Se usa el prefijo MÁS LARGO que coincida,
 ## así que "res://infrastructure/network/" gana sobre un eventual "res://infrastructure/".
 const MODULES := {
+	# Puntos de armado (composition roots): conectan todo y nadie depende de ellos.
+	"res://app/": "app",
 	"res://presentation/": "presentation",
 	"res://infrastructure/network/": "infrastructure.network",
 	"res://infrastructure/persistence/": "infrastructure.persistence",
@@ -103,7 +105,9 @@ const CC_SCOPE := ["res://rules/", "res://turn/", "res://match/", "res://scoring
 static func forbidden_dependencies() -> Dictionary:
 	var rules := {
 		# Regla 5.1: la presentación no accede de forma directa a la persistencia.
-		"presentation": ["infrastructure.persistence"],
+		# La interfaz solo conoce el puerto IClientTransport, nunca un adaptador concreto
+		# (local o de red): así cambiar de transporte no toca la interfaz.
+		"presentation": ["infrastructure.persistence", "infrastructure.network"],
 	}
 	# D-05: el núcleo no depende de interfaz, transporte ni persistencia concreta.
 	for core_module in CORE_MODULES:
@@ -114,4 +118,8 @@ static func forbidden_dependencies() -> Dictionary:
 		if module_name != "shared":
 			others.append(module_name)
 	rules["shared"] = others
+	# Nadie depende de un punto de armado: el armado depende de todos, no al revés.
+	for module_name in MODULES.values():
+		if module_name != "app" and not "app" in rules.get(module_name, []):
+			rules[module_name] = rules.get(module_name, []) + ["app"]
 	return rules
