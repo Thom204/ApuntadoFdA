@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://ceof7opkmix6q"]
 
-[ext_resource type="Script" path="res://app/local_playground.gd" id="1_playground"]
+[ext_resource type="Script" uid="uid://owiinvq6bwqt" path="res://app/local_playground.gd" id="1_playground"]
 
 [node name="LocalPlayground" type="Control"]
 layout_mode = 3

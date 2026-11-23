@@ -6,6 +6,53 @@ Todo lo que cruza esta frontera es **nativo de JSON**: `String`, `int`/`float`, 
 
 ## 1. Lo que arma el servidor
 
+La implementación server-side está en `res://infrastructure/network/network_session.gd`,
+instanciada por `res://app/server.tscn`. Arranca el listener WebSocket, inicializa el
+registro de reglas, SQLite, el lobby, las notificaciones y la auditoría. El único punto
+que recibe comandos es `Lobby.handle`; este adaptador no contiene reglas del juego.
+
+El servidor acepta estas variables de entorno (si se omiten usa los valores indicados):
+
+| Variable | Valor por defecto | Uso |
+|---|---|---|
+| `APUNTADO_PORT` | `7777` | Puerto TCP del WebSocket server |
+| `APUNTADO_BIND_ADDRESS` | `*` | Dirección de escucha; en producción puede quedar detrás de un proxy TLS |
+| `APUNTADO_DB` | `user://apuntado_server.db` | Archivo SQLite local del proceso servidor |
+| `APUNTADO_AUDIT_LOG` | `user://apuntado_server.jsonl` | Archivo JSONL de auditoría |
+
+Arranque local desde la raíz del repositorio: `godot --headless --path game res://app/server.tscn`.
+En producción se exporta esa misma escena con la plantilla de servidor dedicado. Si TLS
+termina en un proxy, el proxy debe aceptar WSS desde el navegador y reenviar WebSocket
+sin TLS a la dirección privada del proceso.
+
+### Sesión y reconexión
+
+Antes de enviar solicitudes, el cliente invoca `hello(resume_token)` por RPC. En una
+sesión nueva envía una cadena vacía; el servidor responde con `welcome`:
+
+```json
+{ "player_id": "p-…", "resume_token": "…", "resumed": false }
+```
+
+El token es una credencial aleatoria de portador. `ClientNetworkEndpoint` lo conserva
+en `user://apuntado_session.cfg` y lo vuelve a presentar en `hello` tras una desconexión
+o al abrir de nuevo la aplicación; no almacena la sala, la mano ni el marcador. La sala
+y la vista que mantiene `ClientSession` son una caché temporal de presentación, nunca
+estado autoritativo. En Web, la persistencia de `user://` depende de IndexedDB y de que
+el navegador permita ese almacenamiento; si no es persistente, una recarga puede perder
+el token y crear una identidad nueva.
+El servidor mantiene el mapeo token/jugador únicamente en memoria. Un reinicio invalida
+los tokens y las salas en curso, porque el Lobby aún no restaura salas desde SQLite.
+Un token solo puede tener una conexión activa; al reanudarlo se cierra la conexión
+anterior. `player_id` nunca se acepta desde `request(data)`.
+
+El cliente implementa esos RPC en `ClientNetworkEndpoint`, cuyo nodo raíz se llama
+`NetworkSession` en `res://app/network_client.tscn`; así coincide con la ruta
+`/root/NetworkSession` del servidor. `hello` y `request` son llamadas del cliente al
+servidor, y `welcome`, `response` y `event` son llamadas de autoridad del servidor al
+cliente. `ClientNetworkTransport` adapta esas señales al puerto `IClientTransport` que
+consume `ClientSession`.
+
 ```gdscript
 # infrastructure/network/network_session.gd (lo implementa la red; aquí sí se permite @rpc)
 var _registry := RuleRegistry.new(HandEvaluator.new())
@@ -168,6 +215,6 @@ Hay dos adaptadores:
 | Adaptador | Dónde | Uso |
 |---|---|---|
 | `LocalTransport` + `LocalServer` | `infrastructure/network/local/` | El Lobby real en el mismo proceso: mesa local (hot seat) y desarrollo de la interfaz sin red. |
-| Transporte de red | `infrastructure/network/` (pendiente) | Del lado del cliente, `send` llama la RPC `request` y las RPC `response` y `event` emiten las señales. En navegador se usa `WebSocketMultiplayerPeer` (el export Web no tiene ENet). |
+| Transporte de red | `infrastructure/network/` | `NetworkSession` y `NetworkChannel` implementan el servidor; `ClientNetworkEndpoint` y `ClientNetworkTransport` implementan el cliente. Este último conecta `ClientSession` con las RPC del endpoint. En navegador se usa `WebSocketMultiplayerPeer` (el export Web no tiene ENet). |
 
 Los puntos de armado viven en `app/` y nadie depende de ellos. `app/local_playground.tscn` es la escena principal por ahora: elige la modalidad y la cantidad de jugadores, y abre una pestaña por jugador con su `TableView`. Guarda las partidas en `user://apuntado_local.db` y la auditoría en `user://auditoria_local.jsonl`.

@@ -511,9 +511,11 @@ func _layout() -> void:
 # ======================================================================= acciones
 func _toggle_selected(card_id: int) -> void:
 	if card_id in _selected:
-		_selected.erase(card_id)
+		return
 	else:
+		_selected.clear()
 		_selected.append(card_id)
+
 	_render()
 
 

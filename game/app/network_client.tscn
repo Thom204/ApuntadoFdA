@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://infrastructure/network/client_network_endpoint.gd" id="1_client"]
+
+[node name="NetworkSession" type="Node"]
+script = ExtResource("1_client")

@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://ds06wkbnlkn05"]
 
-[ext_resource type="Script" path="res://presentation/table/card_view.gd" id="1_card"]
+[ext_resource type="Script" uid="uid://blejabh3tae0y" path="res://presentation/table/card_view.gd" id="1_card"]
 
 [node name="CardView" type="Control"]
 custom_minimum_size = Vector2(75, 105)

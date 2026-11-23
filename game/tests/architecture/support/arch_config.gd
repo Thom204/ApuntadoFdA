@@ -33,7 +33,7 @@ const CORE_MODULES := [
 ## Módulos que no pueden tocar el binding de SQLite: todos salvo la persistencia (ADR-04).
 const NDB_MODULES := [
 	"match", "turn", "scoring", "rules", "deck", "orchestration", "notification", "presentation",
-	"infrastructure.network", "shared"
+	"shared"
 ]
 
 ## FF-02: grupos de archivos que representan modalidades. Ningún archivo de un grupo
