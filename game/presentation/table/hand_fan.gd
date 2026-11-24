@@ -18,6 +18,7 @@ var degrees_per_card := 2.4
 var max_total_degrees := 22.0
 ## Cuánto bajan las cartas de los extremos (px por carta desde el centro, al cuadrado).
 var arc_drop := 1.4
+var _dragged_card: Control
 
 
 func _init() -> void:
@@ -46,8 +47,61 @@ func relayout() -> void:
 		card.custom_minimum_size = card_size
 		card.size = card_size
 		card.pivot_offset = Vector2(card_size.x / 2, card_size.y)
+		if card == _dragged_card:
+			continue
 		card.rotation = deg_to_rad(t * degrees)
 		card.position = Vector2(size.x / 2 + t * step - card_size.x / 2, top + t * t * arc_drop)
+		card.z_index=i
+
+## Saca visualmente la carta del abanico mientras se arrastra.
+func begin_drag(card: Control, global_position: Vector2) -> void:
+	if not is_ancestor_of(card):
+		return
+	_dragged_card = card
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card.z_index = 0
+	card.rotation = 0.0
+	update_drag(card, global_position)
+
+
+func update_drag(card: Control, global_position: Vector2) -> void:
+	if not is_instance_valid(_dragged_card) or card != _dragged_card:
+		return
+	_dragged_card.position = get_global_transform().affine_inverse() * global_position - card_size / 2
+	var local_x := (get_global_transform().affine_inverse() * global_position).x
+	_dragged_card.z_index = 0
+	var idx = 0
+	for child in get_children():
+		var other := child as Control
+		if other == null or other == card:
+			continue
+		if local_x >= other.position.x:
+			_dragged_card.z_index += 1
+			other.z_index = idx 
+		else:
+			other.z_index = idx + 1
+		idx +=1
+		
+## Inserta la carta en la posición horizontal bajo el puntero y vuelve a formar el abanico.
+func finish_drag(global_position: Vector2) -> void:
+	if not is_instance_valid(_dragged_card):
+		_dragged_card = null
+		return
+	var card := _dragged_card
+	var local_x := (get_global_transform().affine_inverse() * global_position).x
+	var target_index := 0
+	for child in get_children():
+		var other := child as Control
+		if other == null or other == card:
+			continue
+		if local_x >= other.position.x + other.size.x / 2:
+			target_index += 1
+	remove_child(card)
+	add_child(card)
+	move_child(card, mini(target_index, get_child_count() - 1))
+	card.z_index = 0
+	_dragged_card = null
+	relayout()
 
 
 ## Ancho que ocupa el abanico con `n` cartas sin apretarlas.

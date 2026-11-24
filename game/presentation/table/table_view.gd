@@ -49,6 +49,9 @@ const ACTION_TEXT := {
 
 var _session: ClientSession
 var _selected: Array[int] = []
+## Orden visual de la mano, local al cliente y separado de los ids de carta.
+var _hand_order: Array[int] = []
+var _hand_order_round := -1
 var _sort_by_suit := true
 var _last_settlement: Dictionary = {}
 ## En false, las cartas cambian de lugar sin volar (movimiento reducido).
@@ -193,11 +196,28 @@ func _render_piles(view: Dictionary) -> void:
 
 
 func _render_hand(view: Dictionary) -> void:
+	var round_number := int(view["round_number"])
+	if round_number != _hand_order_round:
+		_hand_order.clear()
+		_hand_order_round = round_number
 	for child in _hand.get_children():
 		_hand.remove_child(child)
 		child.queue_free()
+	var sorted_cards: Array = CardFace.sorted(view["hand"], _sort_by_suit)
+	var cards_by_id := {}
 	var ids: Array[int] = []
-	for card: Dictionary in CardFace.sorted(view["hand"], _sort_by_suit):
+	for card: Dictionary in sorted_cards:
+		var id := int(card["id"])
+		cards_by_id[id] = card
+		ids.append(id)
+	_hand_order.assign(_hand_order.filter(func(id: int) -> bool: return ids.has(id)))
+	for id in ids:
+		if not _hand_order.has(id):
+			_hand_order.append(id)
+	var ordered_cards: Array[Dictionary] = []
+	for id in _hand_order:
+		ordered_cards.append(cards_by_id[id])
+	for card: Dictionary in ordered_cards:
 		var card_view: CardView = CardViewScene.instantiate()
 		_hand.add_child(card_view)
 		card_view.show_card(card)
@@ -205,7 +225,9 @@ func _render_hand(view: Dictionary) -> void:
 		card_view.selected = card_view.card_id in _selected
 		card_view.modulate.a = 0.0 if card_view.card_id in _landing_ids else 1.0
 		card_view.pressed.connect(_toggle_selected)
-		ids.append(card_view.card_id)
+		card_view.drag_started.connect(_hand.begin_drag)
+		card_view.drag_moved.connect(_hand.update_drag)
+		card_view.drag_finished.connect(_on_hand_drag_finished)
 	_selected.assign(_selected.filter(func(id: int) -> bool: return id in ids))
 
 
@@ -538,7 +560,20 @@ func _check_selected() -> void:
 
 func _toggle_sort() -> void:
 	_sort_by_suit = not _sort_by_suit
+	if _session != null and _session.has_match():
+		_hand_order.clear()
+		for card: Dictionary in CardFace.sorted(_session.view["hand"], _sort_by_suit):
+			_hand_order.append(int(card["id"]))
 	_render()
+
+
+func _on_hand_drag_finished(_card: CardView, global_position: Vector2) -> void:
+	_hand.finish_drag(global_position)
+	_hand_order.clear()
+	for child in _hand.get_children():
+		var hand_card := child as CardView
+		if hand_card != null:
+			_hand_order.append(hand_card.card_id)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:

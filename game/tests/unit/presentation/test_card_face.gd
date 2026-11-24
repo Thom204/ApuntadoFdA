@@ -83,4 +83,9 @@ func test_card_view_emite_pressed_solo_si_es_interactiva() -> void:
 	assert_signal_not_emitted(card, "pressed")
 	card.interactive = true
 	card._gui_input(click)
+	assert_signal_not_emitted(card, "pressed", "el clic se confirma al soltar")
+	var release := InputEventMouseButton.new()
+	release.button_index = MOUSE_BUTTON_LEFT
+	release.pressed = false
+	card._gui_input(release)
 	assert_signal_emitted_with_parameters(card, "pressed", [11])

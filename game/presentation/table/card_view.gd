@@ -14,6 +14,9 @@ extends Control
 ## para cambiar a texturas basta con reescribir _draw.
 
 signal pressed(card_id: int)
+signal drag_started(card: CardView, global_position: Vector2)
+signal drag_moved(card: CardView, global_position: Vector2)
+signal drag_finished(card: CardView, global_position: Vector2)
 
 ## 5:7, como 63,5 × 88,9 mm.
 const CARD_SIZE := Vector2(75, 105)
@@ -33,6 +36,10 @@ const SHADOW := Color(0, 0, 0, 0.35)
 const SELECTED_LIFT := 14.0
 const HOVER_LIFT := 5.0
 const LIFT_SECONDS := 0.12
+## Mantener presionado este tiempo inicia el arrastre.
+const DRAG_HOLD_SECONDS := 0.9
+## Movimiento permitido mientras se distingue un hold de un clic.
+const DRAG_MOTION_TOLERANCE := 10.0
 ## Máximo de cantos que se dibujan detrás para simular un mazo con grosor.
 const MAX_STACK := 4
 
@@ -63,12 +70,18 @@ var _lift := 0.0:
 		_lift = value
 		queue_redraw()
 var _tween: Tween
+var _pressing := false
+var _press_origin := Vector2.ZERO
+var _press_elapsed := 0.0
+var _dragging := false
+var _press_cancelled := false
 
 
 func _init() -> void:
 	custom_minimum_size = CARD_SIZE
 	mouse_entered.connect(_on_hover.bind(true))
 	mouse_exited.connect(_on_hover.bind(false))
+	set_process(false)
 
 
 func show_card(card: Dictionary) -> void:
@@ -109,8 +122,49 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	var click := event as InputEventMouseButton
 	if click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
-		pressed.emit(card_id)
+		_pressing = true
+		_press_origin = get_global_mouse_position()
+		_press_elapsed = 0.0
+		_dragging = false
+		_press_cancelled = false
+		set_process(true)
 		accept_event()
+	elif click != null and not click.pressed and click.button_index == MOUSE_BUTTON_LEFT and _pressing:
+		_finish_press(get_global_mouse_position())
+		accept_event()
+
+
+func _process(delta: float) -> void:
+	if not _pressing:
+		set_process(false)
+		return
+	var pointer := get_global_mouse_position()
+	if not _dragging:
+		if pointer.distance_to(_press_origin) > DRAG_MOTION_TOLERANCE:
+			_press_cancelled = true
+		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			_finish_press(pointer)
+			return
+		if not _press_cancelled:
+			_press_elapsed += delta
+			if _press_elapsed >= DRAG_HOLD_SECONDS:
+				_dragging = true
+				drag_started.emit(self, pointer)
+	else:
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			drag_moved.emit(self, pointer)
+		else:
+			_finish_press(pointer)
+
+
+func _finish_press(pointer: Vector2) -> void:
+	_pressing = false
+	if _dragging:
+		_dragging = false
+		drag_finished.emit(self, pointer)
+	elif not _press_cancelled:
+		pressed.emit(card_id)
+	set_process(false)
 
 
 # ======================================================================= movimiento
