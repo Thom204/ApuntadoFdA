@@ -1,0 +1,348 @@
+@startuml implementation-class-orchestration
+' ============================================================================
+'  1.3c Diagrama UML de Clases de Implementación · Orquestación, puertos y adaptadores
+'  Fiel a main @ 48ca9c7 (res://orchestration, notification, infrastructure,
+'  presentation/session, app). Puertos = clases @abstract (ports & adapters).
+'  Visibilidad: + público · - privado (prefijo _) · {static} · {abstract}
+' ============================================================================
+
+title <size:18><b>1.3c Diagrama de Clases de Implementación · Orquestación, puertos y adaptadores</b></size>\n<size:12>Mediator/Facade (MatchOrchestrator) · puertos @abstract · adaptadores WebSocket, SQLite y JSONL · Observer diferido</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 11
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #333333
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 50
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  StereotypeFontSize 10
+  StereotypeFontColor #555555
+}
+skinparam class<<port>> {
+  BackgroundColor #EAF2FB
+  BorderColor #2F6DB5
+  BorderThickness 2
+}
+skinparam class<<adapter>> {
+  BackgroundColor #FFF8E1
+  BorderColor #B7791F
+}
+skinparam class<<Mediator>> {
+  BorderColor #5B3F99
+  BorderThickness 2
+}
+skinparam class<<composition root>> {
+  BackgroundColor #F5F5F5
+  BorderColor #7A7A7A
+}
+skinparam package {
+  BorderColor #7A7A7A
+  FontSize 12
+  FontStyle bold
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+
+' ============================================================================
+package "orchestration · res://orchestration/" as PkgOrch #F4F0FB {
+
+  class Lobby {
+    + {static} MAX_REMEMBERED_ACTIONS: int = 256
+    + {static} DEFAULT_TURN_TIMEOUT_MS: int = 45000
+    + turn_timeout_ms: int
+    - _registry: RuleRegistry
+    - _repository: IMatchRepository
+    - _rooms: Dictionary
+    - _room_of: Dictionary
+    - _handlers: Dictionary
+    - _remembered: Dictionary
+    - _clock: TurnClock
+    --
+    + <<signal>> room_created(room_id: StringName, orchestrator: MatchOrchestrator)
+    + <<signal>> room_updated(room_id: StringName)
+    + <<signal>> request_handled(player_id: StringName, room_id: StringName, request: Dictionary, response: Dictionary)
+    + handle(player_id: StringName, request: Dictionary): Dictionary
+    + tick(now_ms: int): Array[StringName]
+    + set_connected(player_id: StringName, connected: bool): void
+    + members(room_id: StringName): Array[StringName]
+    + room_view(room_id: StringName): Dictionary
+    - _dispatch(player_id: StringName, request: Dictionary): Dictionary
+    - _play(player_id: StringName, request: Dictionary, command: Callable): Dictionary
+  }
+
+  class Room {
+    + id: StringName {readOnly}
+    + code: String {readOnly}
+    + host_id: StringName {readOnly}
+    + mode: StringName {readOnly}
+    + orchestrator: MatchOrchestrator {readOnly}
+    --
+    + add(player_id: StringName, nickname: String): void
+    + start(): CommandResult
+    + is_waiting(): bool
+    + view(): Dictionary
+  }
+
+  class MatchOrchestrator <<Mediator>> {
+    - _registry: RuleRegistry
+    - _repository: IMatchRepository
+    - _deck_factory: Callable
+    - _match: Match
+    - _rule: GameRule
+    --
+    + <<signal>> round_started(round_number: int)
+    + <<signal>> turn_changed(player_id: StringName)
+    + <<signal>> move_performed(move: MoveRecord)
+    + <<signal>> round_closed(settlement: RoundSettlement, validation: ValidationResult)
+    + <<signal>> player_eliminated(player_id: StringName)
+    + <<signal>> match_finished(winner_id: StringName)
+    .. IMatchCommands ..
+    + create_match(config: MatchConfig): CommandResult
+    + resume_match(match_id: StringName): CommandResult
+    + draw_from_deck(player_id: StringName): CommandResult
+    + draw_from_discard(player_id: StringName): CommandResult
+    + discard(player_id: StringName, card_id: int): CommandResult
+    + declare_closing(player_id: StringName, card_id: int): CommandResult
+    + play_automatic_turn(player_id: StringName): CommandResult
+    + start_next_round(): CommandResult
+    .. consultas ..
+    + view_for(player_id: StringName): Dictionary
+    + check_meld(player_id: StringName, card_ids: Array[int]): MeldCheck
+    + state_version(): int
+    .. internos ..
+    - _execute(command: Callable): CommandResult
+    - _persist(result: MatchActionResult): bool
+    - _restore(snapshot: Dictionary): void
+    - _announce(result: MatchActionResult): void
+  }
+
+  class CommandResult <<value object>> {
+    + ok: bool {readOnly}
+    + error: StringName {readOnly}
+    + message: String {readOnly}
+    + validation: ValidationResult {readOnly}
+    + card: Card {readOnly}
+    --
+    + {static} success(p_validation: ValidationResult = null, p_card: Card = null): CommandResult
+    + {static} failure(p_error: StringName, p_validation: ValidationResult = null): CommandResult
+  }
+
+  abstract class IMatchRepository <<port>> {
+    + {abstract} save_snapshot(snapshot: Dictionary): bool
+    + {abstract} save_settlement(snapshot: Dictionary, settlement: RoundSettlement): bool
+    + {abstract} load(match_id: StringName): Dictionary
+  }
+
+  class TurnClock {
+    + is_due(room_id: StringName, version: int, now_ms: int, timeout_ms: int): bool
+    + restart(room_id: StringName, version: int, now_ms: int): void
+  }
+
+  class WireFormat {
+    + {static} card(c: Card): Variant
+    + {static} move(m: MoveRecord): Dictionary
+    + {static} settlement(s: RoundSettlement): Dictionary
+    + {static} validation(v: ValidationResult): Variant
+  }
+}
+
+' ============================================================================
+package "notification · res://notification/" as PkgNotif #EEF8F0 {
+  abstract class IPlayerChannel <<port>> {
+    + {abstract} send(player_id: StringName, message: Dictionary): void
+  }
+  abstract class IAuditSink <<port>> {
+    + {abstract} write(entry: Dictionary): void
+  }
+  class LobbyNotification {
+    - _lobby: Lobby
+    - _channel: IPlayerChannel
+    - _games: Dictionary
+  }
+  class GameNotification {
+    - _orchestrator: MatchOrchestrator
+    - _channel: IPlayerChannel
+    --
+    - _broadcast(event: String, data: Dictionary): void
+  }
+  class AuditTrail {
+    - _sink: IAuditSink
+    - _clock: Callable
+  }
+}
+
+' ============================================================================
+package "infrastructure.persistence" as PkgPers #FFF8E1 {
+  class SqlMatchRepository <<adapter>> {
+    + {static} SCHEMA_VERSION: int = 1
+    + {static} open_error: String
+    - _db: SqliteGateway
+    --
+    + {static} open(path: String): SqlMatchRepository
+    + save_snapshot(snapshot: Dictionary): bool
+    + save_settlement(snapshot: Dictionary, _settlement: RoundSettlement): bool
+    + load(match_id: StringName): Dictionary
+    + close(): void
+    - _write(s: Dictionary): bool
+    - _check_version(s: Dictionary): bool
+  }
+  class InMemoryMatchRepository <<adapter>>
+  class SqliteGateway <<adapter>> {
+    + {static} open(path: String): SqliteGateway
+    + execute(sql: String, params: Array = []): bool
+    + query(sql: String, params: Array = []): Array[Dictionary]
+    + transaction(work: Callable): bool
+    + close(): void
+  }
+  class JsonlAuditSink <<adapter>> {
+    + {static} open(path: String): JsonlAuditSink
+    + write(entry: Dictionary): void
+    + close(): void
+  }
+}
+
+package "infrastructure.network" as PkgNet #FFF8E1 {
+  class NetworkSession <<adapter>> {
+    + {static} DEFAULT_PORT: int = 7777
+    - _peer: WebSocketMultiplayerPeer
+    - _lobby: Lobby
+    - _repository: SqlMatchRepository
+    --
+    + <<rpc any_peer>> hello(resume_token: String = ""): void
+    + <<rpc any_peer>> request(data: Dictionary): void
+    + <<rpc authority>> welcome / response / event(data: Dictionary): void
+    + send_to_player(player_id: StringName, message: Dictionary): void
+  }
+  class NetworkChannel <<adapter>> {
+    + send(player_id: StringName, message: Dictionary): void
+  }
+  class ClientNetworkEndpoint <<adapter>> {
+    - _peer: WebSocketMultiplayerPeer
+    --
+    + connect_to_server(url: String, resume_token: String = ""): Error
+    + send_request(request_data: Dictionary): void
+  }
+  class ClientNetworkTransport <<adapter>> {
+    + connect_to_server(url: String, resume_token: String = ""): Error
+    + send(request: Dictionary): void
+  }
+  class LocalServer <<adapter>> {
+    + lobby: Lobby
+    --
+    + connect_player(player_id: StringName): LocalTransport
+    + tick(now_ms: int): void
+  }
+  class LocalTransport <<adapter>> {
+    + send(request: Dictionary): void
+    + deliver(message: Dictionary): void
+  }
+}
+
+' ============================================================================
+package "presentation · res://presentation/" as PkgPres #EAF2FB {
+  abstract class IClientTransport <<port>> {
+    + <<signal>> response_received(response: Dictionary)
+    + <<signal>> message_received(message: Dictionary)
+    + {abstract} send(request: Dictionary): void
+  }
+  class ClientSession {
+    - _transport: IClientTransport
+    --
+    + <<signal>> view_changed(view: Dictionary)
+    + <<signal>> request_failed(response: Dictionary)
+    + create_room(nickname: String, mode: StringName): void
+    + join_room(room_code: String, nickname: String): void
+    + draw_from_deck(): void
+    + draw_from_discard(): void
+    + discard(card_id: int): void
+    + declare_closing(card_id: int): void
+    + check_meld(card_ids: Array[int]): void
+  }
+  class TableView {
+    - _session: ClientSession
+    --
+    - _close_with_selected(): void
+  }
+}
+
+package "app (composition roots)" as PkgApp #F5F5F5 {
+  class "online_client.gd" as OnlineClient <<composition root>>
+  class "local_playground.gd" as LocalPlayground <<composition root>>
+}
+
+class Match <<aggregate root>>
+class RuleRegistry
+note right of Match
+  Detalle en 1.3b (Match)
+  y 1.3a (RuleRegistry, GameRule).
+end note
+
+' ============================================================================
+'  Relaciones
+' ============================================================================
+Lobby *--> "*" Room : _rooms
+Lobby o--> "1" IMatchRepository
+Lobby o--> "1" RuleRegistry
+Lobby *--> "1" TurnClock
+Room *--> "1" MatchOrchestrator
+MatchOrchestrator o--> "0..1" Match : _match
+MatchOrchestrator o--> "1" IMatchRepository : _repository
+MatchOrchestrator ..> CommandResult : <<create>>
+MatchOrchestrator ..> WireFormat : <<use>>
+
+IMatchRepository <|-- SqlMatchRepository
+IMatchRepository <|-- InMemoryMatchRepository
+SqlMatchRepository *--> "1" SqliteGateway
+IPlayerChannel <|-- NetworkChannel
+IAuditSink <|-- JsonlAuditSink
+IClientTransport <|-- ClientNetworkTransport
+IClientTransport <|-- LocalTransport
+
+LobbyNotification ..> Lobby : escucha room_created\n(CONNECT_DEFERRED)
+LobbyNotification *--> "*" GameNotification
+GameNotification ..> MatchOrchestrator : escucha IGameEvents\n(CONNECT_DEFERRED)
+GameNotification o--> IPlayerChannel
+AuditTrail ..> Lobby : escucha request_handled
+AuditTrail o--> IAuditSink
+
+NetworkSession *--> "1" Lobby : _lobby
+NetworkSession *--> NetworkChannel
+NetworkChannel ..> NetworkSession : send_to_player()
+NetworkSession ..> SqlMatchRepository : abre (armado)
+NetworkSession ..> JsonlAuditSink : abre (armado)
+ClientNetworkTransport o--> "1" ClientNetworkEndpoint
+LocalServer o--> "1" Lobby
+LocalServer ..> LocalTransport : <<create>>
+
+ClientSession o--> "1" IClientTransport : _transport
+TableView o--> "1" ClientSession : _session
+
+OnlineClient ..> ClientNetworkTransport : <<create>>
+OnlineClient ..> ClientSession : <<create>>
+OnlineClient ..> TableView : <<create>>
+LocalPlayground ..> LocalServer : <<create>>
+LocalPlayground ..> SqlMatchRepository : <<create>>
+
+note bottom of NetworkSession
+  <b>Desviación registrada</b> (sección 4.3): el armado del
+  servidor (abrir SQLite y el log JSONL) vive aquí y no
+  en app/. FF-04 sigue garantizando que solo
+  SqliteGateway toca el binding de SQLite.
+end note
+
+note top of MatchOrchestrator
+  Orden fijo de cada comando (ADR-05):
+  <b>ejecutar en Match → persistir snapshot → emitir</b>.
+  Si la escritura falla: _restore(before), sin eventos.
+end note
+
+@enduml

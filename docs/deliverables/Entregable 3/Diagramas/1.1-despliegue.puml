@@ -1,0 +1,141 @@
+@startuml deployment-diagram
+' ============================================================================
+'  1.1 Diagrama UML de Despliegue
+'  Sistema Digital de Juego de Cartas (Clásica 4-3-3 & Apuntado a 101)
+'  Topología real del MVP en main @ 48ca9c7: servidor Godot headless autoritativo
+'  (ADR-05) + clientes de escritorio y navegador por WebSocket + SQLite embebido (ADR-04)
+' ============================================================================
+
+title <size:18><b>1.1 Diagrama UML de Despliegue</b></size>\n<size:12>ApuntadoFdA MVP · Godot 4.5.1 · cliente–servidor autoritativo por WebSocket · SQLite embebido</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 12
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 11
+skinparam ArrowFontColor #333333
+skinparam nodesep 40
+skinparam ranksep 55
+skinparam node {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  StereotypeFontSize 10
+  StereotypeFontColor #555555
+}
+skinparam artifact {
+  BackgroundColor #FFF8E1
+  BorderColor #B7791F
+}
+skinparam component {
+  BackgroundColor #EAF2FB
+  BorderColor #2F6DB5
+}
+skinparam database {
+  BackgroundColor #E8F5E9
+  BorderColor #1B7F3B
+}
+skinparam file {
+  BackgroundColor #E8F5E9
+  BorderColor #1B7F3B
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+
+' ============================================================================
+'  NIVEL 1 · DISPOSITIVOS DEL JUGADOR (2 a 5 por partida)
+' ============================================================================
+node "Dispositivo del jugador · Navegador\n(PC o móvil en la misma red)" as BrowserDev <<device>> {
+  node "Navegador web\n(Chrome / Edge / Firefox)" as Browser <<executionEnvironment>> {
+    node "Godot 4.5.1 Web runtime\n(WebAssembly + WebGL 2)" as WebRT <<executionEnvironment>> {
+      artifact "index.html · index.js\nindex.wasm · index.pck" as WebBundle <<bundle JS/HTML>>
+      component "Cliente\n(res://app/online_client.tscn)" as WebClient
+    }
+    file "localStorage\napuntado_resume_token" as WebToken
+  }
+}
+
+node "Dispositivo del jugador · Escritorio\n(PC Windows 10/11 x86_64)" as DesktopDev <<device>> {
+  node "Windows 10/11" as WinOS <<executionEnvironment>> {
+    artifact "ApuntadoFdA.exe · ApuntadoFdA.pck\nlibgdext.windows…x86_64.dll" as WinBundle <<executable>>
+    component "Cliente en red\n(online_client.tscn)\n--perfil=N" as DeskClient
+    component "Modo local (hot seat)\n(local_playground.tscn)\nLocalServer + Lobby" as LocalMode
+    file "user://apuntado_session.cfg\n(token por perfil)" as DeskToken
+    database "SQLite 3 · embebido\nuser://apuntado_local.db" as LocalDb
+  }
+}
+
+' ============================================================================
+'  NIVEL 2 · SERVIDORES
+' ============================================================================
+node "Servidor de archivos estáticos\n(PC anfitrión o hosting HTTP)" as StaticHost <<device>> {
+  node "python -m http.server 8060" as HttpSrv <<executionEnvironment>> {
+    artifact "exports/_client/\n(build Web)" as WebDist <<bundle JS/HTML>>
+  }
+}
+
+node "Servidor de juego · PC anfitrión de la LAN\n(Linux x86_64 o Windows)" as GameHost <<device>> {
+  node "Godot 4.5.1 headless\n(dedicated_server, sin UI)" as GodotSrv <<executionEnvironment>> {
+    artifact "server.x86_64 + server.pck\nlibgdext.linux…x86_64.so\n(Windows: ApuntadoFdA.console.exe\n--headless res://app/server.tscn)" as SrvBundle <<executable>>
+    component "NetworkSession\n(WebSocketMultiplayerPeer, RPC)" as NetSess
+    component "Lobby · Room · MatchOrchestrator\n(núcleo del juego, autoritativo)" as Core
+    component "Plug-ins de reglas\nrules/modes/classic\nrules/modes/apuntado\n(plugin.cfg, cargados al arrancar)" as Plugins
+    component "SqlMatchRepository → SqliteGateway\n(binding sqlite3.gd, GDExtension)" as Repo
+    component "AuditTrail → JsonlAuditSink" as Audit
+  }
+  database "SQLite 3.52 · embebido en proceso\nuser://apuntado_server.db\n9 tablas STRICT + v_cumulative_score" as ServerDb
+  file "user://apuntado_server.jsonl\n(log de auditoría)" as AuditLog
+}
+
+' ============================================================================
+'  RELACIONES · protocolos y puertos
+' ============================================================================
+WebBundle ..> WebClient : <<manifest>>
+WinBundle ..> DeskClient : <<manifest>>
+WinBundle ..> LocalMode : <<manifest>>
+SrvBundle ..> NetSess : <<manifest>>
+
+Browser -down-> HttpSrv : HTTP GET :8060\n(descarga el bundle)
+
+WebClient <-down-> NetSess : **WebSocket ws://<IP>:7777**\nRPC confiable de Godot\nhello / request → welcome / response / event\n(Dictionary JSON-compatible)
+DeskClient <-down-> NetSess : **WebSocket ws://<IP>:7777**\n(mismo protocolo)
+
+WebClient .. WebToken : lee / guarda\ntoken de sesión
+DeskClient .. DeskToken : lee / guarda\ntoken de sesión
+LocalMode -- LocalDb : llamada en proceso\n(C API, GDExtension)
+
+NetSess -down-> Core : Lobby.handle(player_id, request)\nIPC en memoria (mismo proceso)
+Core -down-> Plugins : RuleRegistry.resolve(mode)\nGameRule (Strategy)
+Core -down-> Repo : IMatchRepository\nsave_settlement / load
+Core -down-> Audit : señales diferidas\n(request_handled, eventos)
+Repo -down-> ServerDb : SQL transaccional\n(llamada en proceso, C API)
+Audit -down-> AuditLog : append JSONL\n(FileAccess)
+
+note bottom of DesktopDev
+  <b>Simulación multi-instancia</b> en un
+  mismo dispositivo: el Lobby real corre
+  dentro del cliente y cada pestaña usa un
+  LocalTransport (IClientTransport).
+  Sin red: mensajes diferidos en memoria.
+end note
+
+note bottom of GameHost
+  <b>Sin servidor de base de datos aparte</b> (ADR-04): SQLite es una
+  librería dentro del proceso del servidor. El cliente Web no lleva
+  SQLite ni lógica autoritativa.
+  <b>Configuración</b> (variables de entorno): APUNTADO_PORT (7777),
+  APUNTADO_DB, APUNTADO_AUDIT_LOG. Turno de 45 s (10 s si está
+  desconectado); 3 turnos automáticos seguidos → eliminado.
+end note
+
+note bottom of StaticHost
+  Solo sirve archivos: el navegador
+  descarga el bundle y luego habla
+  directo con el servidor de juego.
+  (HTTPS exige wss://)
+end note
+
+@enduml

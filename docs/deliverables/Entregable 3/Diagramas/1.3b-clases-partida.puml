@@ -1,0 +1,381 @@
+@startuml implementation-class-match
+' ============================================================================
+'  1.3b Diagrama UML de Clases de Implementación · Partida, turnos y liquidación
+'  Fiel a main @ 48ca9c7 (res://match, res://turn, res://deck, res://scoring).
+'  Visibilidad: + público · - privado (prefijo _) · {static} · {abstract}
+'  Las propiedades {readOnly} son getters de GDScript sobre un campo privado.
+' ============================================================================
+
+title <size:18><b>1.3b Diagrama de Clases de Implementación · Partida, turnos y liquidación</b></size>\n<size:12>Agregado Match · State (fases del turno) · RoundScoring sin estado · snapshot JSON para persistir</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 11
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #333333
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 45
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  StereotypeFontSize 10
+  StereotypeFontColor #555555
+}
+skinparam class<<aggregate root>> {
+  BorderColor #5B3F99
+  BorderThickness 2
+}
+skinparam class<<State>> {
+  BorderColor #B7791F
+  BorderThickness 2
+}
+skinparam class<<Strategy>> {
+  BackgroundColor #EEF8F0
+  BorderColor #1B7F3B
+  BorderThickness 2
+}
+skinparam class<<value object>> {
+  BackgroundColor #FAFAFA
+}
+skinparam package {
+  BorderColor #7A7A7A
+  FontSize 12
+  FontStyle bold
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+
+' ============================================================================
+package "match · res://match/" as PkgMatch #F4F0FB {
+
+  class Match <<aggregate root>> {
+    + {static} SNAPSHOT_VERSION: int = 1
+    + {static} MAX_AUTOMATIC_TURNS: int = 3
+    + id: StringName {readOnly}
+    + status: int {readOnly}
+    - _config: MatchConfig
+    - _rule: GameRule
+    - _rng: RandomNumberGenerator
+    - _players: Array[Player]
+    - _round_number: int
+    - _current_round: Round
+    - _settlements: Array[RoundSettlement]
+    - _history: MatchHistory
+    - _winner_id: StringName
+    - _last_starter: StringName
+    - _state_version: int
+    --
+    + _init(p_id: StringName, p_config: MatchConfig, p_rule: GameRule, p_rng: RandomNumberGenerator)
+    .. comandos (único punto de entrada) ..
+    + can_start_next_round(): bool
+    + start_next_round(deck: Deck): bool
+    + draw_from_deck(player_id: StringName, automatic: bool = false): MatchActionResult
+    + draw_from_discard(player_id: StringName, automatic: bool = false): MatchActionResult
+    + discard(player_id: StringName, card_id: int, automatic: bool = false): MatchActionResult
+    + declare_closing(player_id: StringName, card_id: int): MatchActionResult
+    .. consultas ..
+    + check_meld(player_id: StringName, card_ids: Array[int]): MeldCheck
+    + hand_of(player_id: StringName): Array[Card]
+    + active_player_ids(): Array[StringName]
+    + scoreboard(): Scoreboard
+    + settlements(): Array[RoundSettlement]
+    + winner_id(): StringName
+    + state_version(): int
+    + table_state(): Dictionary
+    + automatic_streak(player_id: StringName): int
+    .. snapshot ..
+    + to_snapshot(): Dictionary
+    + {static} from_snapshot(snapshot: Dictionary, rule: GameRule): Match
+    + {static} config_from_snapshot(snapshot: Dictionary): MatchConfig
+    .. internos ..
+    - _play(action: Callable): MatchActionResult
+    - _conclude_round(): SettlementOutcome
+    - _turn_order_for_next_round(): Array[StringName]
+  }
+
+  enum "Match.Status" as MatchStatus {
+    WAITING_FOR_PLAYERS
+    IN_PROGRESS
+    FINISHED
+  }
+
+  class MatchConfig {
+    + {static} MIN_PLAYERS: int = 2
+    + {static} MAX_PLAYERS: int = 5
+    + {static} SINGLE_DECK_MAX_PLAYERS: int = 4
+    + mode: StringName
+    + players: Array[Dictionary]
+    + settings: RuleSettings
+    + deck_count: int = 2
+    + rng_seed: int = 0
+    --
+    + {static} decks_for(player_count: int): int
+    + is_valid(): bool
+  }
+
+  class Player {
+    + id: StringName {readOnly}
+    + nickname: String {readOnly}
+    + seat: int {readOnly}
+    + status: int {readOnly}
+    --
+    + eliminate(): void
+    + is_active(): bool
+  }
+
+  class MatchHistory {
+    - _moves: Array[MoveRecord]
+    --
+    + record(move: MoveRecord): void
+    + all(): Array[MoveRecord]
+    + moves_of_round(round_number: int): Array[MoveRecord]
+    + last(): MoveRecord
+  }
+
+  class MatchActionResult <<value object>> {
+    + ok: bool {readOnly}
+    + error: int {readOnly}
+    + card: Card {readOnly}
+    + validation: ValidationResult {readOnly}
+    + move: MoveRecord {readOnly}
+    + next_player_id: StringName {readOnly}
+    + outcome: SettlementOutcome {readOnly}
+    --
+    + {static} rejected(p_error: int): MatchActionResult
+  }
+}
+
+' ============================================================================
+package "turn · res://turn/" as PkgTurn #FFF8E1 {
+
+  class Round {
+    + number: int {readOnly}
+    - _rule: GameRule
+    - _turn_order: Array[StringName]
+    - _deck: Deck
+    - _discard_pile: DiscardPile
+    - _hands: Dictionary
+    - _turn: Turn
+    - _closer_id: StringName
+    --
+    + <<signal>> move_performed(move: MoveRecord)
+    + start(deck: Deck): void
+    + draw_from_deck(player_id: StringName, automatic: bool = false): RoundActionResult
+    + draw_from_discard(player_id: StringName, automatic: bool = false): RoundActionResult
+    + discard(player_id: StringName, card_id: int, automatic: bool = false): RoundActionResult
+    + declare_closing(player_id: StringName, card_id: int): RoundActionResult
+    + cards_of(player_id: StringName): Array[Card]
+    + current_player_id(): StringName
+    + closer_id(): StringName
+    + to_snapshot(): Dictionary
+    + {static} from_snapshot(data: Dictionary, rule: GameRule, rng: RandomNumberGenerator): Round
+    + {static} error_code(error: int): StringName
+    - _check(player_id: StringName, action: int): int
+    - _context(): RoundContext
+  }
+
+  enum "Round.Error" as RoundError {
+    OK
+    ROUND_CLOSED
+    NOT_PLAYER_TURN
+    ACTION_NOT_ALLOWED
+    CARD_NOT_IN_HAND
+    DISCARD_EMPTY
+    DECK_EMPTY
+    INVALID_CLOSING
+  }
+
+  class Turn {
+    + player_id: StringName {readOnly}
+    + number: int {readOnly}
+    - _phase: TurnPhase
+    --
+    + {static} opening(p_player_id: StringName, p_number: int): Turn
+    + {static} resumed(p_player_id: StringName, p_number: int, phase_name: StringName): Turn
+    + can(action: int): bool
+    + apply(action: int): void
+    + is_over(): bool
+    + phase_name(): StringName
+  }
+
+  enum "Turn.Action" as TurnAction {
+    DRAW_FROM_DECK
+    DRAW_FROM_DISCARD
+    DISCARD
+    DECLARE_CLOSING
+  }
+
+  abstract class TurnPhase <<State>> {
+    + {abstract} allows(action: int): bool
+    + {abstract} next(action: int): TurnPhase
+    + name(): StringName
+  }
+  class DrawPhase <<State>>
+  class DiscardPhase <<State>>
+  class EndPhase <<State>>
+
+  class MoveRecord <<value object>> {
+    + sequence: int {readOnly}
+    + round_number: int {readOnly}
+    + player_id: StringName {readOnly}
+    + action: int {readOnly}
+    + card: Card {readOnly}
+    + timestamp_ms: int {readOnly}
+    + automatic: bool {readOnly}
+    --
+    + to_data(): Dictionary
+    + {static} from_data(data: Dictionary): MoveRecord
+  }
+
+  class RoundActionResult <<value object>> {
+    + ok: bool {readOnly}
+    + error: int {readOnly}
+    + card: Card {readOnly}
+    + validation: ValidationResult {readOnly}
+  }
+}
+
+' ============================================================================
+package "deck · res://deck/" as PkgDeck #F5F5F5 {
+  class Deck {
+    + {static} JOKERS_PER_DECK: int = 2
+    - _cards: Array[Card]
+    --
+    + {static} build(deck_count: int, with_jokers: bool): Deck
+    + shuffle(rng: RandomNumberGenerator): void
+    + draw(): Card
+    + deal(amount: int): Array[Card]
+    + refill_from(pile: DiscardPile, rng: RandomNumberGenerator): void
+  }
+  class DiscardPile {
+    - _cards: Array[Card]
+    --
+    + push(card: Card): void
+    + peek_top(): Card
+    + take_top(): Card
+    + take_all_but_top(): Array[Card]
+  }
+  class Hand {
+    + owner_id: StringName {readOnly}
+    - _cards: Array[Card]
+    --
+    + add(card: Card): void
+    + find(card_id: int): Card
+    + take(card_id: int): Card
+    + cards(): Array[Card]
+  }
+  class Card <<value object>> {
+    + instance_id: int {readOnly}
+    + rank: int {readOnly}
+    + suit: int {readOnly}
+  }
+}
+
+' ============================================================================
+package "scoring · res://scoring/" as PkgScoring #EAF2FB {
+  class RoundScoring {
+    + {static} settle(round_number: int, closer_id: StringName, hands: Dictionary,
+    {method}       rule: GameRule, previous: Array[RoundSettlement],
+    {method}       inactive: Array[StringName] = []): SettlementOutcome
+    - {static} _deltas(closer_id: StringName, hands: Dictionary, rule: GameRule): Dictionary
+  }
+  class RoundSettlement <<value object>> {
+    + round_number: int {readOnly}
+    + closer_id: StringName {readOnly}
+    + deltas: Dictionary {readOnly}
+    --
+    + delta_of(player_id: StringName): int
+  }
+  class Scoreboard <<value object>> {
+    - _totals: Dictionary
+    --
+    + {static} from_settlements(settlements: Array): Scoreboard
+    + total_of(player_id: StringName): int
+    + totals(): Dictionary
+  }
+  class SettlementOutcome <<value object>> {
+    + settlement: RoundSettlement {readOnly}
+    + scoreboard: Scoreboard {readOnly}
+    + eliminated: Array[StringName] {readOnly}
+    + finished: bool {readOnly}
+    + winner_id: StringName {readOnly}
+  }
+  note bottom of RoundScoring
+    <b>Única política de liquidación</b>: quien cierra
+    suma closer_score_for() (+10 / +25); cada perdedor
+    resta penalty_for(). Elimina con is_eliminated(total)
+    y decide fin y ganador con la regla. Sin estado.
+  end note
+}
+
+abstract class GameRule <<Strategy>> {
+  + validate_closing(cards: Array[Card], discard: Card, ctx: RoundContext): ValidationResult
+  + penalty_for(cards: Array[Card]): int
+  + closer_score_for(cards: Array[Card]): int
+  + is_eliminated(total_score: int): bool
+  + is_match_over(ctx: MatchContext): bool
+  + select_winner(ctx: MatchContext): StringName
+}
+note right of GameRule
+  Contrato completo y plug-ins
+  en el diagrama 1.3a.
+end note
+
+' ============================================================================
+'  Relaciones
+' ============================================================================
+Match -- MatchStatus
+Match *--> "1" MatchConfig : _config
+Match *--> "2..5" Player : _players
+Match *--> "1" MatchHistory : _history
+Match *--> "0..1" Round : _current_round
+Match *--> "*" RoundSettlement : _settlements
+Match o--> "1" GameRule : _rule
+Match ..> RoundScoring : <<call>> settle()
+Match ..> MatchActionResult : <<create>>
+MatchActionResult o--> "0..1" SettlementOutcome : outcome
+MatchHistory o--> "*" MoveRecord
+MatchHistory ..> Round : se suscribe a\nmove_performed (Observer)
+
+Round -- RoundError
+Round o--> "1" GameRule : _rule
+Round *--> "1" Deck
+Round *--> "1" DiscardPile
+Round *--> "2..5" Hand : _hands
+Round *--> "1" Turn : _turn
+Round ..> MoveRecord : <<create>>
+Round ..> RoundActionResult : <<create>>
+Turn -- TurnAction
+Turn *--> "1" TurnPhase : _phase
+TurnPhase <|-- DrawPhase
+TurnPhase <|-- DiscardPhase
+TurnPhase <|-- EndPhase
+DrawPhase ..> DiscardPhase : next()
+DiscardPhase ..> EndPhase : next()
+
+Deck o--> "*" Card
+DiscardPile o--> "*" Card
+Hand o--> "*" Card
+
+RoundScoring ..> GameRule : <<use>>
+RoundScoring ..> RoundSettlement : <<create>>
+RoundScoring ..> Scoreboard : <<create>>
+RoundScoring ..> SettlementOutcome : <<create>>
+SettlementOutcome o--> "1" RoundSettlement
+SettlementOutcome o--> "1" Scoreboard
+
+note top of Match
+  <b>Raíz de agregado</b>: el orquestador solo le habla a Match.
+  declare_closing(): Round valida con la regla → si es válido,
+  _conclude_round() llama a RoundScoring.settle(), elimina a quien
+  llegue a −101 y marca FINISHED. El acumulado no se guarda: se
+  deriva de _settlements (Scoreboard = v_cumulative_score).
+end note
+
+@enduml

@@ -1,0 +1,216 @@
+@startuml closing-sequence
+' ============================================================================
+'  1.2 Diagrama UML de Secuencia · Intento de cierre de ronda y liquidación
+'  Fiel a main @ 48ca9c7. Correspondencia con los nombres de la guía:
+'    GameOrchestrator -> MatchOrchestrator · HandEvaluator (plug-in de regla) ->
+'    GameRule (ClassicRule / ApuntadoRule) + HandEvaluator · ScoringService ->
+'    RoundScoring · Repository/DB -> SqlMatchRepository + SQLite
+' ============================================================================
+
+title <size:18><b>1.2 Diagrama UML de Secuencia · Cierre de ronda y liquidación</b></size>\n<size:12>declare_closing(player_id, card_id) · Clásica 4-3-3 vs Apuntado a 101 · servidor autoritativo</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 12
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 11
+skinparam ArrowFontColor #333333
+skinparam maxMessageSize 230
+skinparam sequenceMessageAlign left
+skinparam responseMessageBelowArrow true
+skinparam BoxPadding 8
+skinparam sequence {
+  LifeLineBorderColor #888888
+  ParticipantBorderColor #3C3C3C
+  ParticipantBackgroundColor #FFFFFF
+  GroupBorderColor #5B3F99
+  GroupHeaderFontColor #5B3F99
+  GroupBackgroundColor #FFFFFF
+  ReferenceBorderColor #2F6DB5
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+
+autonumber "<b>0."
+
+actor "Jugador" as J
+box "Cliente (navegador / escritorio)" #EAF2FB
+  participant "TableView /\nClientSession" as UI
+end box
+box "Servidor de juego · Godot headless" #F4F0FB
+  participant "NetworkSession\n+ Lobby" as LB
+  participant "MatchOrchestrator\n<size:10>(GameOrchestrator)</size>" as OR
+  participant "Match\n<size:10><<aggregate root>></size>" as MA
+  participant "Round" as RO
+  participant "GameRule\n<size:10><<plug-in>> Classic/Apuntado</size>" as GR
+  participant "HandEvaluator" as HE
+  participant "RoundScoring\n<size:10>(ScoringService)</size>" as SC
+  participant "SqlMatchRepository" as RP
+  database "SQLite" as DB
+end box
+
+== Intento de cierre ==
+J -> UI : selecciona la carta de descarte\ny pulsa **Cerrar** (tecla C)
+activate UI
+UI -> LB : RPC request {type: "declare_closing", card_id,\nexpected_version, action_id} · WebSocket :7777
+activate LB
+note right of LB
+  Identidad desde el mapa de sesión (nunca del mensaje).
+  action_id repetido → respuesta en caché (idempotencia).
+  expected_version ≠ versión actual → STALE_STATE + vista.
+end note
+LB -> OR : declare_closing(player_id, card_id)
+activate OR
+OR -> MA : to_snapshot()
+MA --> OR : before: Dictionary
+OR -> MA : declare_closing(player_id, card_id)
+activate MA
+MA -> RO : declare_closing(player_id, card_id)
+activate RO
+RO -> RO : _check(player_id, DECLARE_CLOSING)\n(turno y fase DISCARD: Turn/State)
+RO -> GR : validate_closing(hand.cards(), hand.find(card_id), ctx)
+activate GR
+note right of GR
+  <b>Template Method</b> (contrato v1):
+  mano = cards_to_deal + 1 = 11 cartas;
+  rest = mano − descarte (10 cartas).
+end note
+
+alt Modalidad Clásica · ClassicRule
+  GR -> HE : best_melds(rest, [ANY 4, ANY 3, ANY 3], values)
+  activate HE
+  HE -> HE : _search_pattern() · backtracking sobre\n_candidates() (grupos y escaleras)
+  HE --> GR : melds: Array[Meld] = 1 cuarta + 2 ternas
+  deactivate HE
+  GR -> HE : points_of(leftover = [ ], values)
+  HE --> GR : 0
+  GR -> GR : _accepts_leftover([ ], 0)\n→ leftover.is_empty() = **true**
+else Modalidad Apuntado · ApuntadoRule
+  GR -> GR : special_closing_score(rest)\n(irse a pintas: 10 cartas de una pinta → +25)
+  loop por cada patrón de _closing_patterns(): tocar [3,3,3] · ganar completo [4,3,3]
+    GR -> HE : best_melds(rest, pattern, values)
+    activate HE
+    HE -> HE : _search_pattern() con poda\n(se detiene si el sobrante vale 0)
+    HE --> GR : melds: Array[Meld]
+    deactivate HE
+    GR -> HE : points_of(leftover, values)
+    HE --> GR : points
+  end
+  GR -> GR : _best_closing(): patrón con menor sobrante\n(3 ternas + 1 carta suelta)
+  GR -> GR : _accepts_leftover(leftover, points)\n→ points <= max_leftover_points (4) · **sobrante < 5**
+end
+
+alt Cierre inválido (INCOMPLETE_MELDS / LEFTOVER_TOO_HIGH / WRONG_HAND_SIZE)
+  GR --> RO : ValidationResult.reject(reason, leftover, points)
+  RO --> MA : RoundActionResult(INVALID_CLOSING, validation)
+  MA --> OR : MatchActionResult (ok = false)
+  OR --> LB : CommandResult.failure(INVALID_CLOSING, validation)
+  LB --> UI : response {ok: false, error, message, validation, view}
+  UI --> J : aviso con el motivo, p. ej. "Las cartas sobrantes\nsuman 5 puntos: son demasiados para cerrar."
+  note over RO, DB #FDECEA
+    Un cierre rechazado no cambia mano, turno ni ronda (RD16):
+    no se guarda nada y no se emite ningún evento.
+  end note
+else Cierre válido
+  GR --> RO : ValidationResult.accept(melds, leftover, points)
+  deactivate GR
+  RO -> RO : hand.take(card_id) → pozo.push()\n_closer_id = player_id · _record(DECLARE_CLOSING)
+  RO --> MA : RoundActionResult(OK, validation)
+  deactivate RO
+
+  == Liquidación de la ronda ==
+  MA -> MA : _conclude_round(): hands de los activos,\ninactive = racha automática >= 3
+  MA -> SC : settle(round_number, closer_id, hands, rule,\nsettlements, inactive)
+  activate SC
+  SC -> GR : closer_score_for(hand del que cierra)
+  activate GR
+  GR --> SC : +10 (o +25 si se fue a pintas)
+  deactivate GR
+  loop por cada perdedor
+    SC -> GR : penalty_for(hand)
+    activate GR
+    GR -> HE : min_leftover_points(hand, values)
+    HE --> GR : valor de las cartas sin combinar
+    GR --> SC : penalización
+    deactivate GR
+  end
+  SC -> SC : RoundSettlement(deltas: cierra +10, perdedor −penalización)\nScoreboard.from_settlements(anteriores + esta)
+
+  alt Modalidad Clásica
+    SC -> GR : is_eliminated(total) · is_match_over(ctx) · select_winner(ctx)
+    activate GR
+    GR --> SC : false · rounds_played >= 1 → **true** · last_closer_id
+    deactivate GR
+    note right of SC #E8F5E9
+      <b>Ronda ganada</b>: la partida Clásica
+      termina con el primer cierre válido y
+      gana quien cerró.
+    end note
+  else Modalidad Apuntado
+    loop por cada jugador de la ronda
+      SC -> GR : is_eliminated(total acumulado)
+      activate GR
+      GR --> SC : total <= −101 (acumuló 101 de penalización)
+      deactivate GR
+    end
+    SC -> GR : is_match_over(MatchContext(activos, totales, rondas, closer))
+    activate GR
+    GR --> SC : activos <= 1  ó  líder >= +51
+    deactivate GR
+    opt partida terminada
+      SC -> GR : select_winner(ctx)
+      activate GR
+      GR --> SC : activo con mayor total
+      deactivate GR
+    end
+  end
+  SC --> MA : SettlementOutcome(settlement, scoreboard,\neliminated, finished, winner_id)
+  deactivate SC
+  MA -> MA : Player.eliminate() a los eliminados ·\nsi finished: status = FINISHED, _winner_id
+  MA --> OR : MatchActionResult(ok, validation, move, outcome)
+  deactivate MA
+
+  == Persistencia atómica y anuncio (ADR-05: persistir antes de emitir) ==
+  OR -> RP : save_settlement(match.to_snapshot(), outcome.settlement)
+  activate RP
+  RP -> DB : BEGIN · SELECT version (concurrencia optimista)
+  RP -> DB : UPSERT match_session, match_participant, round,\nhand_state, card_placement · INSERT round_score, turn_move
+  alt escritura correcta
+    RP -> DB : COMMIT
+    RP --> OR : true
+  else falla la escritura o versión vieja
+    RP -> DB : ROLLBACK
+    RP --> OR : false
+    OR -> OR : _restore(before) → Match.from_snapshot()
+    OR --> LB : CommandResult.failure(PERSISTENCE_FAILED)
+    LB --> UI : response {ok: false, error: PERSISTENCE_FAILED}
+    note over OR, DB #FDECEA
+      El comando termina aquí: la partida vuelve al último estado
+      guardado y no se emite ningún evento (persistir antes de emitir).
+    end note
+  end
+  deactivate RP
+  OR -> OR : emit move_performed, round_closed,\nplayer_eliminated*, match_finished?
+  OR --> LB : CommandResult.success(validation)
+  deactivate OR
+  LB --> UI : response {ok: true, validation, view}
+  deactivate LB
+  UI --> J : resumen de la ronda: combinaciones,\npuntos de cada jugador y totales
+  ... fin del frame (CONNECT_DEFERRED) ...
+  LB -> UI : RPC event "round_closed" {settlement, closing, view}\na cada jugador (GameNotification → NetworkChannel)
+  opt hubo eliminados / fin de partida (Apuntado)
+    LB -> UI : event "player_eliminated" · event "match_finished" {winner_id}
+  end
+  UI --> J : overlay de fin de ronda o de partida
+  deactivate UI
+  note over LB, OR
+    AuditTrail escribe la solicitud y cada evento
+    en apuntado_server.jsonl (evidencia, sección 3.2).
+  end note
+end
+
+@enduml

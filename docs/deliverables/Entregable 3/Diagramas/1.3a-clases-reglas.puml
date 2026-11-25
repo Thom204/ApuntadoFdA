@@ -1,0 +1,331 @@
+@startuml implementation-class-rules
+' ============================================================================
+'  1.3a Diagrama UML de Clases de Implementación · Microkernel de reglas
+'  Fiel a main @ 48ca9c7 (res://rules/**). Tipos exactos de GDScript 4.5.
+'  Visibilidad: + público · - privado (prefijo _) · # protegido (prefijo _ pensado
+'  para que lo use o redefina un plug-in) · {abstract} = @abstract · {static}
+' ============================================================================
+
+title <size:18><b>1.3a Diagrama de Clases de Implementación · Microkernel de reglas</b></size>\n<size:12>Strategy + Template Method + plug-ins descubiertos en tiempo de ejecución (ADR-02, ADR-03) · res://rules/</size>
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 11
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #333333
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 45
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #3C3C3C
+  StereotypeFontSize 10
+  StereotypeFontColor #555555
+}
+skinparam class<<Strategy>> {
+  BorderColor #1B7F3B
+  BorderThickness 2
+}
+skinparam class<<plug-in>> {
+  BackgroundColor #EEF8F0
+  BorderColor #1B7F3B
+}
+skinparam class<<value object>> {
+  BackgroundColor #FAFAFA
+}
+skinparam package {
+  BorderColor #7A7A7A
+  FontSize 12
+  FontStyle bold
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #B8A200
+  FontSize 10
+}
+
+' ============================================================================
+package "rules.selection · res://rules/selection/" as PkgSel #EAF2FB {
+  class RuleRegistry {
+    + {static} DEFAULT_PLUGIN_DIR: String = "res://rules/modes"
+    + {static} REQUIRED_MODES: Array[StringName] = [&"classic", &"apuntado"]
+    - _evaluator: HandEvaluator
+    - _catalog: Dictionary
+    - _rejections: Array[String]
+    --
+    + _init(evaluator: HandEvaluator)
+    + load_plugins(dir_path: String): void
+    + available_modes(): Array[StringName]
+    + has_required_modes(): bool
+    + display_name(mode: StringName): String
+    + default_settings(mode: StringName): RuleSettings
+    + resolve(mode: StringName, settings: RuleSettings = null): GameRule
+    + rejections(): Array[String]
+    - _load_one(folder: String): void
+    - _problem_with(cfg: ConfigFile): String
+    - _extends_game_rule(script: Script): bool
+    - _section(cfg: ConfigFile, section: String): Dictionary
+  }
+}
+
+' ============================================================================
+package "rules (kernel) · res://rules/" as PkgKernel #F4F0FB {
+
+  abstract class GameRule <<Strategy>> {
+    + {static} CONTRACT_VERSION: int = 1
+    # _mode_id: StringName
+    # _settings: RuleSettings
+    # _evaluator: HandEvaluator
+    --
+    + configure(mode_id: StringName, settings: RuleSettings, evaluator: HandEvaluator): void
+    + mode_id(): StringName
+    + contract_version(): int
+    .. operaciones abstractas (cada plug-in) ..
+    + {abstract} cards_to_deal(ctx: RoundContext): int
+    + {abstract} is_eliminated(total_score: int): bool
+    + {abstract} is_match_over(ctx: MatchContext): bool
+    + {abstract} select_winner(ctx: MatchContext): StringName
+    # {abstract} _closing_pattern(ctx: RoundContext): Array[MeldSpec]
+    # {abstract} _accepts_leftover(leftover: Array[Card], points: int): bool
+    .. Template Method ..
+    + validate_closing(cards: Array[Card], discard: Card, ctx: RoundContext): ValidationResult
+    # _closing_patterns(ctx: RoundContext): Array
+    # _best_closing(rest: Array[Card], ctx: RoundContext): Dictionary
+    .. consultas y puntaje ..
+    + check_meld(cards: Array[Card]): MeldCheck
+    + penalty_for(cards: Array[Card]): int
+    + closer_score_delta(): int
+    + special_closing_score(cards: Array[Card]): int
+    + closer_score_for(cards: Array[Card]): int
+    # _leftover_of(cards: Array[Card], melds: Array[Meld]): Array[Card]
+    # _contains(cards: Array[Card], card: Card): bool
+    # _without(cards: Array[Card], removed: Array): Array[Card]
+  }
+
+  class RuleSettings <<value object>> {
+    + elimination_threshold: int = 101
+    + max_leftover_points: int = 4
+    + closer_score_delta: int = 10
+    + jokers_enabled: bool = false
+    + card_values: CardValueTable
+    --
+    + {static} from_dictionary(values: Dictionary): RuleSettings
+    + to_dictionary(): Dictionary
+  }
+
+  class RoundContext <<value object>> {
+    + round_number: int {readOnly}
+    + active_players: Array[StringName] {readOnly}
+    --
+    + _init(p_round_number: int, p_active_players: Array[StringName])
+  }
+
+  class MatchContext <<value object>> {
+    + active_players: Array[StringName] {readOnly}
+    + totals: Dictionary {readOnly}
+    + rounds_played: int {readOnly}
+    + last_closer_id: StringName {readOnly}
+    --
+    + total_of(player_id: StringName): int
+  }
+
+  class ValidationResult <<value object>> {
+    + is_valid: bool {readOnly}
+    + reason: int {readOnly}
+    + melds: Array[Meld] {readOnly}
+    + leftover: Array[Card] {readOnly}
+    + leftover_points: int {readOnly}
+    + message: String {readOnly}
+    --
+    + {static} accept(p_melds: Array[Meld], p_leftover: Array[Card], points: int): ValidationResult
+    + {static} reject(p_reason: int, p_leftover: Array[Card] = [], points: int = 0): ValidationResult
+  }
+
+  enum "ValidationResult.Reason" as Reason {
+    NONE
+    WRONG_HAND_SIZE
+    CARD_NOT_IN_HAND
+    INCOMPLETE_MELDS
+    LEFTOVER_TOO_HIGH
+  }
+
+  class MeldCheck <<value object>> {
+    + result: int {readOnly}
+    + is_valid: bool {readOnly}
+    + points: int {readOnly}
+    + message: String {readOnly}
+    --
+    + {static} not_in_hand(): MeldCheck
+  }
+}
+
+' ============================================================================
+package "rules.modes · res://rules/modes/<id>/ (plug-ins, sin class_name)" as PkgModes #EEF8F0 {
+
+  class "ClassicRule\n<size:10>classic_rule.gd</size>" as ClassicRule <<plug-in>> {
+    + {static} CARDS_PER_PLAYER: int = 10
+    --
+    + cards_to_deal(_ctx: RoundContext): int
+    + is_eliminated(_total_score: int): bool
+    + is_match_over(ctx: MatchContext): bool
+    + select_winner(ctx: MatchContext): StringName
+    # _closing_pattern(_ctx: RoundContext): Array[MeldSpec]
+    # _accepts_leftover(leftover: Array[Card], _points: int): bool
+  }
+
+  class "ApuntadoRule\n<size:10>apuntado_rule.gd</size>" as ApuntadoRule <<plug-in>> {
+    + {static} CARDS_PER_PLAYER: int = 10
+    + {static} WIN_TARGET: int = 51
+    + {static} PINTAS_SCORE: int = 25
+    --
+    + cards_to_deal(_ctx: RoundContext): int
+    + is_eliminated(total_score: int): bool
+    + is_match_over(ctx: MatchContext): bool
+    + select_winner(ctx: MatchContext): StringName
+    + special_closing_score(cards: Array[Card]): int
+    # _closing_patterns(ctx: RoundContext): Array
+    # _closing_pattern(_ctx: RoundContext): Array[MeldSpec]
+    - _complete_pattern(): Array[MeldSpec]
+    # _accepts_leftover(_leftover: Array[Card], points: int): bool
+  }
+
+  note bottom of ClassicRule
+    <b>Cierre</b>: [ANY 4, ANY 3, ANY 3]
+    sobrante vacío (1 cuarta + 2 ternas
+    + 1 descarte). Termina con el primer
+    cierre: rounds_played >= 1.
+    plugin.cfg: closer_score_delta=10
+  end note
+
+  note bottom of ApuntadoRule
+    <b>Tocar</b>: [3,3,3] + 1 carta, sobrante <= 4 (< 5)
+    <b>Ganar completo</b>: [4,3,3] sin sobrante
+    <b>Pintas</b>: 10 cartas de una pinta → +25
+    Eliminado si total <= −101 · gana con +51
+    o como último activo.
+    plugin.cfg: elimination_threshold=101,
+    max_leftover_points=4, closer_score_delta=10
+  end note
+}
+
+' ============================================================================
+package "rules.evaluation · res://rules/evaluation/" as PkgEval #FFF8E1 {
+
+  class HandEvaluator {
+    + {static} MIN_MELD: int = 3
+    + {static} MAX_SET: int = 5
+    + {static} ACE_HIGH: int = 14
+    --
+    + points_of(cards: Array[Card], values: CardValueTable): int
+    + is_valid_meld(cards: Array[Card]): bool
+    + meld_type(cards: Array[Card]): int
+    + best_melds(cards: Array[Card], pattern: Array[MeldSpec], values: CardValueTable): Array[Meld]
+    + min_leftover_points(cards: Array[Card], values: CardValueTable): int
+    .. búsqueda combinatoria con patrón (backtracking + poda) ..
+    - _search_pattern(remaining: Array[Card], pattern: Array[MeldSpec], idx: int, chosen: Array, values: CardValueTable, state: Dictionary): void
+    - _offer(leftover: Array[Card], chosen: Array, values: CardValueTable, state: Dictionary): void
+    - _candidates(cards: Array[Card], spec: MeldSpec): Array
+    - _sets_of_size(cards: Array[Card], n: int): Array
+    - _runs_of_size(cards: Array[Card], n: int): Array
+    - _combinations(pool: Array[Card], k: int): Array
+    .. búsqueda libre (penalización del perdedor) ..
+    - _min_leftover(remaining: Array[Card], values: CardValueTable): int
+    - _melds_containing(card: Card, cards: Array[Card]): Array
+    - _runs_containing(card: Card, others: Array[Card]): Array
+    - _collect_runs_from(start: int, must_include: int, by_rank: Dictionary, out: Array): void
+    .. reconocimiento ..
+    - _is_set(cards: Array[Card]): bool
+    - _is_run(cards: Array[Card]): bool
+    - _consecutive(sorted_ranks: Array[int]): bool
+    - _type_of(cards: Array[Card]): int
+  }
+
+  class MeldSpec <<value object>> {
+    + type: int {readOnly}
+    + size: int {readOnly}
+    --
+    + allows_sets(): bool
+    + allows_runs(): bool
+  }
+
+  enum "MeldSpec.Type" as MeldType {
+    SET
+    RUN
+    ANY
+  }
+
+  class Meld <<value object>> {
+    + type: int {readOnly}
+    + cards: Array[Card] {readOnly}
+    --
+    + size(): int
+  }
+
+  class CardValueTable {
+    - _values: Dictionary
+    - _joker_value: int
+    --
+    + {static} standard(): CardValueTable
+    + value_of(card: Card): int
+  }
+
+  note bottom of HandEvaluator
+    <b>Servicio sin estado</b>: no conoce la modalidad; recibe el
+    patrón y la tabla de valores. CC máx. 6 (FF-05, sección 4.2).
+    Grupo: 3–5 cartas del mismo rango · Escalera: misma pinta,
+    consecutivas, As bajo o alto sin dar la vuelta.
+  end note
+}
+
+package "deck · res://deck/" as PkgDeck #F5F5F5 {
+  class Card <<value object>> {
+    + instance_id: int {readOnly}
+    + rank: int {readOnly}
+    + suit: int {readOnly}
+    --
+    + is_joker(): bool
+    + same_rank_as(other: Card): bool
+    + same_suit_as(other: Card): bool
+    + follows(other: Card): bool
+  }
+}
+
+' ============================================================================
+'  Relaciones
+' ============================================================================
+GameRule <|-- ClassicRule
+GameRule <|-- ApuntadoRule
+
+RuleRegistry o--> "1" HandEvaluator : _evaluator
+RuleRegistry ..> GameRule : <<instantiate>>\nresolve() → configure()
+RuleRegistry ..> PkgModes : <<load>> load_plugins(): lee cada plugin.cfg\ny carga su script (sin referencia estática)
+RuleRegistry ..> RuleSettings : <<create>> [defaults]
+
+GameRule o--> "1" RuleSettings : #_settings
+GameRule o--> "1" HandEvaluator : #_evaluator
+GameRule ..> RoundContext : <<use>>
+GameRule ..> MatchContext : <<use>>
+GameRule ..> ValidationResult : <<create>>
+GameRule ..> MeldCheck : <<create>>
+GameRule ..> MeldSpec : <<use>>
+ValidationResult -- Reason
+ValidationResult o--> "*" Meld
+
+RuleSettings *--> "1" CardValueTable
+HandEvaluator ..> MeldSpec : <<use>>
+HandEvaluator ..> Meld : <<create>>
+HandEvaluator ..> CardValueTable : <<use>>
+MeldSpec -- MeldType
+Meld o--> "3..5" Card
+HandEvaluator ..> Card : <<use>>
+
+note top of GameRule
+  <b>Microkernel</b> (ADR-03): el núcleo solo conoce esta clase.
+  Ningún archivo fuera de rules/modes/ referencia un plug-in
+  (FF-06, Ca = 0). Cambiar este contrato exige subir
+  CONTRACT_VERSION y un ADR.
+end note
+
+@enduml
