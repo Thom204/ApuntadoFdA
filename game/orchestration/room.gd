@@ -7,6 +7,9 @@ extends RefCounted
 var id: StringName:
 	get:
 		return _id
+var code: String:
+	get:
+		return _code
 var host_id: StringName:
 	get:
 		return _players[0]["id"] if not _players.is_empty() else &""
@@ -18,6 +21,7 @@ var orchestrator: MatchOrchestrator:
 		return _orchestrator
 
 var _id: StringName
+var _code: String
 var _mode: StringName
 var _mode_name: String
 var _orchestrator: MatchOrchestrator
@@ -27,8 +31,9 @@ var _started := false
 var _offline: Dictionary = {}  # player_id -> true mientras está desconectado (D-11)
 
 
-func _init(p_id: StringName, p_mode: StringName, p_mode_name: String, p_orchestrator: MatchOrchestrator) -> void:
+func _init(p_id: StringName, p_code: String, p_mode: StringName, p_mode_name: String, p_orchestrator: MatchOrchestrator) -> void:
 	_id = p_id
+	_code = p_code
 	_mode = p_mode
 	_mode_name = p_mode_name
 	_orchestrator = p_orchestrator
@@ -102,6 +107,7 @@ func start() -> CommandResult:
 func view() -> Dictionary:
 	return {
 		"room_id": String(_id),
+		"room_code": _code,
 		"host_id": String(host_id),
 		"mode": String(_mode),
 		"mode_name": _mode_name,

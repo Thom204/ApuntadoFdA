@@ -140,7 +140,7 @@ func _render() -> void:
 
 func _render_waiting() -> void:
 	var room := _session.room
-	_title.text = "Sin sala" if room.is_empty() else "Sala %s · %s" % [room.get("room_id", ""), room.get("mode_name", "")]
+	_title.text = "Sin sala" if room.is_empty() else "Sala %s · %s" % [room.get("room_code", room.get("room_id", "")), room.get("mode_name", "")]
 	_banner.visible = true
 	_banner_text.text = "Esperando jugadores (%d/%d)" % [room.get("players", []).size(), int(room.get("max_players", 0))]
 	for button: Button in [_discard_button, _close_button, _check_button]:

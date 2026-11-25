@@ -74,9 +74,9 @@ func _new_game() -> void:
 		_add_player(i + 1)
 	var host := _sessions[0]
 	host.create_room("Jugador 1", _mode.get_item_metadata(_mode.selected))
-	var room_id := str(host.room.get("room_id", ""))
+	var room_code := str(host.room.get("room_code", ""))
 	for i in range(1, _sessions.size()):
-		_sessions[i].join_room(room_id, "Jugador %d" % (i + 1))
+		_sessions[i].join_room(room_code, "Jugador %d" % (i + 1))
 	host.start_match()
 
 

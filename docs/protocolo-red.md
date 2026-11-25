@@ -53,6 +53,12 @@ servidor, y `welcome`, `response` y `event` son llamadas de autoridad del servid
 cliente. `ClientNetworkTransport` adapta esas señales al puerto `IClientTransport` que
 consume `ClientSession`.
 
+El cliente de demo está en `res://app/online_client.tscn` y es la escena principal. La
+pantalla permite configurar la URL WebSocket, conectarse, crear una sala y unirse con el
+código compartido. En Web, el token se guarda en el sistema `user://` de Godot, respaldado
+por IndexedDB; el navegador debe permitir almacenamiento del sitio. En navegación privada
+o con ese almacenamiento bloqueado, se puede perder al cerrar o recargar la página.
+
 ```gdscript
 # infrastructure/network/network_session.gd (lo implementa la red; aquí sí se permite @rpc)
 var _registry := RuleRegistry.new(HandEvaluator.new())
@@ -119,7 +125,7 @@ class NetworkChannel extends IPlayerChannel:
 | `type` | Campos | Cambia estado | `data` si sale bien | Errores propios |
 |---|---|---|---|---|
 | `create_room` | `nickname`, `mode` | sí | `room` | `INVALID_REQUEST`, `ALREADY_IN_ROOM`, `UNKNOWN_MODE` |
-| `join_room` | `room_id`, `nickname` | sí | `room` | `NO_ROOM`, `ALREADY_IN_ROOM`, `ROOM_ALREADY_STARTED`, `ROOM_FULL` |
+| `join_room` | `room_code`, `nickname` | sí | `room` | `NO_ROOM`, `ALREADY_IN_ROOM`, `ROOM_ALREADY_STARTED`, `ROOM_FULL` |
 | `leave_room` | — | sí | — | `NOT_IN_ROOM`, `ROOM_ALREADY_STARTED` |
 | `start_match` | — | sí | `view` | `NOT_HOST`, `NOT_ENOUGH_PLAYERS`, `ROOM_ALREADY_STARTED` |
 | `draw_from_deck` | `expected_version` | sí | `view`, `card` (la robada, solo para quien roba) | de juego |
@@ -132,8 +138,9 @@ class NetworkChannel extends IPlayerChannel:
 
 - **Errores de juego:** `NOT_IN_ROOM`, `NO_MATCH` (la sala aún no empieza), `STALE_STATE`, `MATCH_FINISHED`, `NOT_PLAYER_TURN`, `ACTION_NOT_ALLOWED`, `CARD_NOT_IN_HAND`, `DISCARD_EMPTY`, `DECK_EMPTY`, `PERSISTENCE_FAILED`.
 - **Errores de cualquier solicitud:** `INVALID_REQUEST` (sin `type`, sin `action_id`, campos faltantes) y `UNKNOWN_REQUEST`.
-- **Salas:** quien crea la sala es el anfitrión. Un jugador está en una sola sala a la vez, por eso los comandos no llevan `room_id`. La sala admite de 2 a 5 jugadores y empieza cuando el anfitrión envía `start_match`. Si el anfitrión sale antes de empezar, lo reemplaza el siguiente en llegar. Una sala vacía desaparece.
-- **Reconexión:** el cliente envía `get_view` y recibe su mesa completa.
+- **Salas:** quien crea la sala es el anfitrión. La respuesta de `create_room` incluye `room.room_code`, un código de invitación de seis caracteres para compartir en la LAN. `join_room` busca por ese código; mantiene compatibilidad con clientes antiguos que envían `room_id`. Un jugador está en una sola sala a la vez, por eso los comandos de juego no llevan identificador de sala. La sala admite de 2 a 5 jugadores y empieza cuando el anfitrión envía `start_match`. Si el anfitrión sale antes de empezar, lo reemplaza el siguiente en llegar. Una sala vacía desaparece.
+- **Partida iniciada:** el código no permite añadir jugadores una vez iniciada; devuelve `ROOM_ALREADY_STARTED`. Un miembro vuelve presentando el token de sesión existente: el servidor asocia ese token al mismo `player_id` y el cliente solicita `get_view`. Una sesión nueva no puede reclamar un asiento con el código.
+- **Reconexión e inactividad:** el miembro reconectado recibe su mesa con `get_view`. Mientras permanece desconectado, la política vigente ejecuta turnos automáticos según los plazos configurados.
 - **Turnos automáticos (D-12):** si un turno no avanza en 45 s (10 s si el jugador está desconectado), el servidor juega por él: roba del mazo y descarta lo que robó. Llega como un `move_performed` normal con `"automatic": true`. Con 3 turnos automáticos seguidos, el jugador queda eliminado al liquidarse la ronda (`player_eliminated`). Si nadie de la sala está conectado, la partida espera.
 
 ## 3. Notificaciones (núcleo → cada jugador)
@@ -177,7 +184,7 @@ Cada mensaje trae la vista de quien lo recibe: el cliente puede redibujar con `v
 - **Liquidación:** `{ "round_number", "closer_id", "deltas": { "a": 10, "b": -65 } }`.
 - **Validación de cierre:** `{ "valid", "reason", "message", "leftover_points", "leftover": [cartas], "melds": [[cartas]] }`.
 - **Organizar la mano (`check`):** `{ "result": "SET" | "RUN" | "INVALID" | "CARD_NOT_IN_HAND", "valid", "points", "message" }`.
-- **Sala (`room`):** `{ "room_id", "host_id", "mode", "mode_name", "status": "WAITING" | "IN_PROGRESS" | "FINISHED", "max_players": 5, "players": [ { "id", "nickname", "connected" } ] }`. `connected` es `false` mientras la red tenga al jugador como desconectado.
+- **Sala (`room`):** `{ "room_id", "room_code", "host_id", "mode", "mode_name", "status": "WAITING" | "IN_PROGRESS" | "FINISHED", "max_players": 5, "players": [ { "id", "nickname", "connected" } ] }`. `room_code` es el código para encontrar una sala en espera; `connected` es `false` mientras la red tenga al jugador como desconectado.
 
 ## 6. Códigos de error
 

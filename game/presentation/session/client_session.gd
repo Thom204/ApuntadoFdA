@@ -41,8 +41,8 @@ func create_room(nickname: String, mode: StringName) -> void:
 	_send("create_room", {"nickname": nickname, "mode": String(mode)})
 
 
-func join_room(room_id: String, nickname: String) -> void:
-	_send("join_room", {"room_id": room_id, "nickname": nickname})
+func join_room(room_code: String, nickname: String) -> void:
+	_send("join_room", {"room_code": room_code, "nickname": nickname})
 
 
 func leave_room() -> void:

@@ -49,6 +49,7 @@ var _handlers: Dictionary = {}
 var _remembered: Dictionary = {}  # "player_id|action_id" -> respuesta
 var _remembered_order: Array[String] = []
 var _clock := TurnClock.new()
+var _crypto := Crypto.new()
 
 
 func _init(registry: RuleRegistry, repository: IMatchRepository, deck_factory: Callable = Callable()) -> void:
@@ -143,7 +144,7 @@ func _create_room(player_id: StringName, request: Dictionary) -> Dictionary:
 	if not mode in _registry.available_modes():
 		return _fail(ErrorCatalog.UNKNOWN_MODE)
 	_room_count += 1
-	var room := Room.new(StringName("r-%d" % _room_count), mode, _registry.display_name(mode),
+	var room := Room.new(StringName("r-%d" % _room_count), _new_room_code(), mode, _registry.display_name(mode),
 		MatchOrchestrator.new(_registry, _repository, _deck_factory))
 	_rooms[room.id] = room
 	_seat(room, player_id, nickname)
@@ -152,21 +153,54 @@ func _create_room(player_id: StringName, request: Dictionary) -> Dictionary:
 
 
 func _join_room(player_id: StringName, request: Dictionary) -> Dictionary:
+	var room_code := str(request.get("room_code", "")).strip_edges().to_upper()
 	var room_id := StringName(str(request.get("room_id", "")))
 	var nickname := str(request.get("nickname", "")).strip_edges()
-	if room_id == &"" or nickname == "":
+	if _invalid_join_request(room_code, room_id, nickname):
 		return _fail(ErrorCatalog.INVALID_REQUEST)
 	if _room_of.has(player_id):
 		return _fail(ErrorCatalog.ALREADY_IN_ROOM)
-	if not _rooms.has(room_id):
+	var room := _find_room(room_code, room_id)
+	if room == null:
 		return _fail(ErrorCatalog.NO_ROOM)
-	var room: Room = _rooms[room_id]
-	if not room.is_waiting():
-		return _fail(ErrorCatalog.ROOM_ALREADY_STARTED)
-	if room.is_full():
-		return _fail(ErrorCatalog.ROOM_FULL)
+	var rejection := _join_rejection(room)
+	if rejection != &"":
+		return _fail(rejection)
 	_seat(room, player_id, nickname)
 	return _ok({"room": room.view()})
+
+
+func _invalid_join_request(room_code: String, room_id: StringName, nickname: String) -> bool:
+	return (room_code == "" and room_id == &"") or nickname == ""
+
+
+func _find_room(room_code: String, room_id: StringName) -> Room:
+	for candidate: Room in _rooms.values():
+		if (room_code != "" and candidate.code == room_code) or (room_code == "" and candidate.id == room_id):
+			return candidate
+	return null
+
+
+func _join_rejection(room: Room) -> StringName:
+	if not room.is_waiting():
+		return ErrorCatalog.ROOM_ALREADY_STARTED
+	if room.is_full():
+		return ErrorCatalog.ROOM_FULL
+	return &""
+
+
+func _new_room_code() -> String:
+	var code := _crypto.generate_random_bytes(3).hex_encode().to_upper()
+	while _room_code_exists(code):
+		code = _crypto.generate_random_bytes(3).hex_encode().to_upper()
+	return code
+
+
+func _room_code_exists(code: String) -> bool:
+	for room: Room in _rooms.values():
+		if room.code == code:
+			return true
+	return false
 
 
 ## MVP: no se sale de una partida en curso (falta la política de desconexión).

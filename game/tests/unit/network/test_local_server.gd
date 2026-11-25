@@ -19,14 +19,14 @@ func before_each() -> void:
 
 func _start() -> void:
 	_ana.create_room("Ana", &"apuntado")
-	_beto.join_room(str(_ana.room["room_id"]), "Beto")
+	_beto.join_room(str(_ana.room["room_code"]), "Beto")
 	_ana.start_match()
 	await wait_process_frames(1)
 
 
 func test_crear_y_unirse_deja_a_los_dos_en_la_misma_sala() -> void:
 	_ana.create_room("Ana", &"apuntado")
-	_beto.join_room(str(_ana.room["room_id"]), "Beto")
+	_beto.join_room(str(_ana.room["room_code"]), "Beto")
 	await wait_process_frames(1)
 	assert_eq(_ana.room["players"].size(), 2, "Ana se entera por room_updated")
 	assert_eq(_beto.room["room_id"], _ana.room["room_id"])
