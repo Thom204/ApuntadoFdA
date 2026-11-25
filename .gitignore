@@ -3,6 +3,7 @@
 *.import.tmp
 /android/
 export/
+/exports/
 *.translation
 
 # OS / editors

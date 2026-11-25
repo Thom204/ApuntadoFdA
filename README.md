@@ -34,6 +34,33 @@ Opcional: `APUNTADO_PORT`, `APUNTADO_DB` y `APUNTADO_AUDIT_LOG` (ver `docs/proto
 **3. Sala:** un jugador elige la modalidad y pulsa **Crear sala**; los demás escriben el
 código de 6 caracteres y pulsan **Buscar / unirse**. El creador pulsa **Iniciar partida**.
 
-> Cada cliente guarda su sesión en `user://`. Dos ventanas en el mismo equipo comparten
-> esa carpeta y entran como el mismo jugador; para probar con varias, usa equipos
-> distintos o el modo local (`res://app/local_playground.tscn`, un equipo con pestañas).
+**Varios jugadores en el mismo equipo:** cada cliente guarda un token de sesión, y dos
+clientes con el mismo token son el mismo jugador.
+
+- Navegador: cada pestaña es un jugador distinto; recargar la pestaña conserva al jugador.
+- Escritorio: abre cada ventana con su perfil, `-- --perfil=2`, `-- --perfil=3`… (el
+  mismo perfil vuelve a ser el mismo jugador). Desde el editor:
+  `godot --path game res://app/online_client.tscn -- --perfil=2`.
+- Sin servidor: el modo local (`res://app/local_playground.tscn`) pone a todos en un
+  equipo, una pestaña por jugador.
+
+## Exportar
+
+Presets en `game/export_presets.cfg` (Proyecto → Exportar, o
+`godot --headless --path game --export-release "<preset>" <salida>`). Hacen falta las
+plantillas de exportación de Godot 4.5.1 (Editor → Administrar plantillas de exportación).
+Todo sale a `exports/`, que no se versiona.
+
+| Preset | Salida | Uso |
+|---|---|---|
+| `Windows` | `exports/windows/ApuntadoFdA.exe` | Cliente, servidor y modo local. Copia al lado los `.bat` de `tools/windows/`: `servidor.bat`, `jugador-extra.bat` (pide un número y abre otro jugador), `modo-local.bat` |
+| `Linux` | `exports/_server/server.x86_64` | Servidor dedicado: `./server.sh` (no necesita `--headless`) |
+| `Web` | `exports/_client/index.html` | Cliente para navegador. Sin SQLite ni servidor: se conecta a un servidor aparte |
+
+El build Web se sirve por HTTP, por ejemplo `python -m http.server 8060` dentro de
+`exports/_client`, y se abre en `http://<IP>:8060`. Si la página se sirve por HTTPS, el
+navegador exige `wss://` para el servidor.
+
+Los filtros `*.sql, *.cfg` de los presets no se pueden quitar: las migraciones y el
+`plugin.cfg` de cada modalidad no son recursos de Godot, y sin ellos el servidor no
+encuentra los modos de juego.

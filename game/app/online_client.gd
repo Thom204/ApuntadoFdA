@@ -34,8 +34,6 @@ func _ready() -> void:
 	_transport.connection_closed.connect(_on_connection_closed)
 	_table.bind(_session)
 	_refresh_actions()
-	if OS.has_feature("web") and not OS.is_userfs_persistent():
-		_status.text = "Conexión pendiente · habilita cookies/IndexedDB para conservar tu token"
 
 
 func _build() -> void:

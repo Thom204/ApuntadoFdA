@@ -47,7 +47,7 @@ func _start_services() -> bool:
 	_registry = RuleRegistry.new(HandEvaluator.new())
 	_registry.load_plugins(RuleRegistry.DEFAULT_PLUGIN_DIR)
 	if not _registry.has_required_modes():
-		push_error("No se encontraron los modos requeridos: %s" % _registry.rejections())
+		push_error("No se encontraron los modos requeridos: %s" % [_registry.rejections()])
 		return false
 
 	var db_path := _environment_or("APUNTADO_DB", DEFAULT_DB_PATH)

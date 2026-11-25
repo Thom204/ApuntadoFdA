@@ -5,6 +5,9 @@ extends Node
 
 const SERVER_PEER_ID := 1
 const SESSION_CONFIG_PATH := "user://apuntado_session.cfg"
+## Clave del token en sessionStorage (solo navegador): cada pestaña es un jugador distinto
+## y recargar la pestaña conserva al mismo jugador.
+const WEB_SESSION_KEY := "apuntado_resume_token"
 const MAX_QUEUED_REQUESTS := 128
 
 signal connection_established(session: Dictionary)
@@ -193,18 +196,43 @@ func _disconnect_peer() -> void:
 		_peer = null
 
 
+## Archivo de sesión en escritorio. Con `-- --perfil=<nombre>` cada ventana guarda su
+## propio token, así varias ventanas del mismo equipo son jugadores distintos.
+static func session_path_for(user_args: PackedStringArray) -> String:
+	for arg in user_args:
+		if arg.begins_with("--perfil="):
+			var profile := _safe_profile(arg.trim_prefix("--perfil="))
+			if profile != "":
+				return "user://apuntado_session_%s.cfg" % profile
+	return SESSION_CONFIG_PATH
+
+
+static func _safe_profile(raw: String) -> String:
+	var out := ""
+	for c in raw.strip_edges():
+		if (c >= "a" and c <= "z") or (c >= "A" and c <= "Z") or (c >= "0" and c <= "9") or c == "-" or c == "_":
+			out += c
+	return out
+
+
 func _load_resume_token() -> String:
+	if OS.has_feature("web"):
+		var stored: Variant = JavaScriptBridge.eval("window.sessionStorage.getItem('%s') || ''" % WEB_SESSION_KEY, true)
+		return str(stored) if stored != null else ""
 	var config := ConfigFile.new()
-	if config.load(SESSION_CONFIG_PATH) != OK:
+	if config.load(session_path_for(OS.get_cmdline_user_args())) != OK:
 		return ""
 	return str(config.get_value("session", "resume_token", ""))
 
 
 func _save_resume_token(token: String) -> void:
+	if OS.has_feature("web"):
+		# El servidor genera tokens hexadecimales; cualquier otra cosa no se mete en el JS.
+		if token.is_valid_hex_number():
+			JavaScriptBridge.eval("window.sessionStorage.setItem('%s', '%s')" % [WEB_SESSION_KEY, token], true)
+		return
 	var config := ConfigFile.new()
 	config.set_value("session", "resume_token", token)
-	var error := config.save(SESSION_CONFIG_PATH)
+	var error := config.save(session_path_for(OS.get_cmdline_user_args()))
 	if error != OK:
 		push_warning("No se pudo persistir el token de reanudación (error %d)" % error)
-	elif OS.has_feature("web") and not OS.is_userfs_persistent():
-		push_warning("El navegador no garantiza persistencia de user://; la sesión podría no reanudarse al recargar")
