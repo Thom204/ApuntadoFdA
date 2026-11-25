@@ -89,6 +89,7 @@ var _overlay: Control
 var _overlay_title: Label
 var _overlay_body: Label
 var _next_round_button: Button
+var _leave_button: Button
 
 
 func _init() -> void:
@@ -145,6 +146,18 @@ func _render_waiting() -> void:
 	_banner_text.text = "Esperando jugadores (%d/%d)" % [room.get("players", []).size(), int(room.get("max_players", 0))]
 	for button: Button in [_discard_button, _close_button, _check_button]:
 		button.disabled = true
+	# Sin partida (al salir de una terminada): la mesa queda vacía.
+	_overlay.visible = false
+	_prev_view = {}
+	_last_settlement = {}
+	for seat in _seats:
+		seat.visible = false
+	for child in _hand.get_children():
+		_hand.remove_child(child)
+		child.queue_free()
+	_deck_card.show_empty()
+	_discard_card.show_empty()
+	_me_text.text = ""
 	_layout()
 
 
@@ -284,6 +297,7 @@ func _render_overlay(view: Dictionary) -> void:
 		_overlay_title.text = "Ronda %d cerrada" % int(view["round_number"])
 	_overlay_body.text = "\n".join(lines)
 	_next_round_button.visible = not finished
+	_leave_button.visible = finished
 
 
 func _can_act(view: Dictionary, phase: String) -> bool:
@@ -780,6 +794,11 @@ func _build_overlay() -> void:
 	TableTheme.style_button(_next_round_button, true)
 	_next_round_button.pressed.connect(func() -> void: _session.start_next_round())
 	column.add_child(_next_round_button)
+	_leave_button = Button.new()
+	_leave_button.text = "Volver al inicio"
+	TableTheme.style_button(_leave_button, true)
+	_leave_button.pressed.connect(func() -> void: _session.leave_room())
+	column.add_child(_leave_button)
 
 
 func _pile_card() -> CardView:

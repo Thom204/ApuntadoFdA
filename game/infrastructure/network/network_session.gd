@@ -51,13 +51,13 @@ func _start_services() -> bool:
 		return false
 
 	var db_path := _environment_or("APUNTADO_DB", DEFAULT_DB_PATH)
-	_repository = SqlMatchRepository.open(db_path)
+	_repository = SqlMatchRepository.open(ProjectSettings.globalize_path(db_path))
 	if _repository == null:
 		push_error("No se pudo abrir SQLite: %s" % SqlMatchRepository.open_error)
 		return false
 
 	var audit_path := _environment_or("APUNTADO_AUDIT_LOG", DEFAULT_AUDIT_PATH)
-	_audit_sink = JsonlAuditSink.open(audit_path)
+	_audit_sink = JsonlAuditSink.open(ProjectSettings.globalize_path(audit_path))
 	if _audit_sink == null:
 		push_error("No se pudo abrir el log de auditoría: %s" % JsonlAuditSink.open_error)
 		_repository.close()
