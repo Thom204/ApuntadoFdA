@@ -12,7 +12,7 @@ El servidor y el cliente Web están desplegados en un VPS de Linode, con HTTPS y
 
 **<https://apuntadito.thom2msdev.click/>**
 
-1. Abre el enlace. El campo de servidor ya trae `wss://apuntadito.thom2msdev.click/ws/`;
+1. Abre el enlace. En el campo de servidor escribe `wss://apuntadito.thom2msdev.click/ws/`;
    pulsa **Conectar** y espera a que diga "Conectado".
 2. Un jugador escribe su nombre, elige la modalidad y pulsa **Crear sala**. Aparece un
    código de 6 caracteres.
