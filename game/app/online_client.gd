@@ -2,7 +2,7 @@ extends Control
 ## Punto de entrada mínimo para jugar en red. El endpoint es hijo directo de la raíz
 ## para conservar la ruta RPC /root/NetworkSession que espera el servidor.
 
-const SERVER_URL_DEFAULT := "ws://127.0.0.1:7777"
+const SERVER_URL_DEFAULT := "wss://apuntadito.thom2msdev.click/ws/"
 
 var _endpoint: ClientNetworkEndpoint
 var _transport: ClientNetworkTransport
