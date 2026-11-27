@@ -11,6 +11,7 @@ var _url: LineEdit
 var _nickname: LineEdit
 var _room_code: LineEdit
 var _mode: OptionButton
+var _max_leftover: SpinBox
 var _status: Label
 var _room_status: Label
 var _table: TableView
@@ -23,6 +24,7 @@ var _room_lookup_pending := false
 
 func _ready() -> void:
 	_build()
+	_on_mode_selected(_mode.selected)
 	_endpoint = get_parent() as ClientNetworkEndpoint
 	_transport = ClientNetworkTransport.new(_endpoint)
 	_session = ClientSession.new(_transport)
@@ -74,7 +76,20 @@ func _build() -> void:
 	_mode.set_item_metadata(0, "apuntado")
 	_mode.add_item("Clásica 4-3-3")
 	_mode.set_item_metadata(1, "classic")
+	_mode.item_selected.connect(_on_mode_selected)
 	player_row.add_child(_mode)
+	var leftover_label := Label.new()
+	leftover_label.text = "Sobrante máx. (Apuntado):"
+	player_row.add_child(leftover_label)
+	_max_leftover = SpinBox.new()
+	_max_leftover.min_value = 0
+	_max_leftover.max_value = 100
+	_max_leftover.step = 1
+	_max_leftover.value = 4
+	_max_leftover.tooltip_text = "Puntos máximos de la carta sobrante para poder cerrar por apuntado."
+	player_row.add_child(_max_leftover)
+	leftover_label.set_meta("setting_control", true)
+	_max_leftover.set_meta("setting_control", true)
 	_create_button = Button.new()
 	_create_button.text = "Crear sala"
 	_create_button.pressed.connect(_create_room)
@@ -116,7 +131,17 @@ func _connect_to_server() -> void:
 func _create_room() -> void:
 	if _session == null or not _transport.is_connected_and_ready():
 		return
-	_session.create_room(_nickname.text.strip_edges(), StringName(str(_mode.get_item_metadata(_mode.selected))))
+	var settings := {"max_leftover_points": int(_max_leftover.value)}
+	_session.create_room(_nickname.text.strip_edges(), StringName(str(_mode.get_item_metadata(_mode.selected))), settings)
+
+
+func _on_mode_selected(index: int) -> void:
+	if _max_leftover == null:
+		return
+	var show_setting := str(_mode.get_item_metadata(index)) == "apuntado"
+	for child in _mode.get_parent().get_children():
+		if child.has_meta("setting_control"):
+			child.visible = show_setting
 
 
 func _join_room() -> void:
@@ -156,9 +181,10 @@ func _on_room_changed(room: Dictionary) -> void:
 	if room.is_empty():
 		_room_status.text = "Sin sala"
 	else:
-		_room_status.text = "Código %s · %d/%d jugadores · %s" % [
+		var settings_label := " · Sobrante máx. %d pts" % int(room.get("max_leftover_points", 4)) if str(room.get("mode", "")) == "apuntado" else ""
+		_room_status.text = "Código %s · %d/%d jugadores · %s%s" % [
 			str(room.get("room_code", "")), room.get("players", []).size(),
-			int(room.get("max_players", 0)), str(room.get("status", "")),
+			int(room.get("max_players", 0)), str(room.get("status", "")), settings_label,
 		]
 		_room_code.text = str(room.get("room_code", _room_code.text))
 	_refresh_actions()
@@ -173,3 +199,5 @@ func _refresh_actions() -> void:
 	_create_button.disabled = not connected or in_room or _room_lookup_pending
 	_join_button.disabled = not connected or in_room or _room_lookup_pending
 	_start_button.disabled = not connected or not in_room or str(_session.room.get("status", "")) != "WAITING"
+	_mode.disabled = in_room
+	_max_leftover.editable = not in_room

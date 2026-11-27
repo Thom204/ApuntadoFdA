@@ -37,8 +37,11 @@ func _init(transport: IClientTransport, action_prefix: String = "") -> void:
 
 
 # ======================================================================= salas
-func create_room(nickname: String, mode: StringName) -> void:
-	_send("create_room", {"nickname": nickname, "mode": String(mode)})
+func create_room(nickname: String, mode: StringName, settings: Dictionary = {}) -> void:
+	var payload := {"nickname": nickname, "mode": String(mode)}
+	if not settings.is_empty():
+		payload["settings"] = settings.duplicate(true)
+	_send("create_room", payload)
 
 
 func join_room(room_code: String, nickname: String) -> void:

@@ -547,9 +547,8 @@ func _layout() -> void:
 # ======================================================================= acciones
 func _toggle_selected(card_id: int) -> void:
 	if card_id in _selected:
-		return
+		_selected.erase(card_id)
 	else:
-		_selected.clear()
 		_selected.append(card_id)
 
 	_render()
@@ -562,7 +561,7 @@ func _discard_selected() -> void:
 
 
 func _close_with_selected() -> void:
-	if not _close_button.disabled:
+	if not _close_button.disabled and len(_selected) > 0:
 		_session.declare_closing(_selected[0])
 		_selected.clear()
 

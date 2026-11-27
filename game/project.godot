@@ -13,6 +13,7 @@ config_version=5
 config/name="ApuntadoFdA"
 run/main_scene="res://app/online_client.tscn"
 config/features=PackedStringArray("4.5", "GL Compatibility")
+boot_splash/image="uid://de8ne5x3x5aoq"
 config/icon="res://icon.svg"
 run/main_scene.linux="res://app/server.tscn"
 

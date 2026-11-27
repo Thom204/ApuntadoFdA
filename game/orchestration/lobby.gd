@@ -143,9 +143,21 @@ func _create_room(player_id: StringName, request: Dictionary) -> Dictionary:
 		return _fail(ErrorCatalog.ALREADY_IN_ROOM)
 	if not mode in _registry.available_modes():
 		return _fail(ErrorCatalog.UNKNOWN_MODE)
+	var settings := _registry.default_settings(mode)
+	if settings == null:
+		return _fail(ErrorCatalog.UNKNOWN_MODE)
+	if mode == &"apuntado":
+		var raw_settings: Variant = request.get("settings", {})
+		if not raw_settings is Dictionary:
+			return _fail(ErrorCatalog.INVALID_REQUEST)
+		var requested_settings: Dictionary = raw_settings
+		var max_leftover := int(requested_settings.get("max_leftover_points", settings.max_leftover_points))
+		if max_leftover < 0 or max_leftover > 100:
+			return _fail(ErrorCatalog.INVALID_REQUEST)
+		settings.max_leftover_points = max_leftover
 	_room_count += 1
 	var room := Room.new(StringName("r-%d" % _room_count), _new_room_code(), mode, _registry.display_name(mode),
-		MatchOrchestrator.new(_registry, _repository, _deck_factory))
+		MatchOrchestrator.new(_registry, _repository, _deck_factory), settings)
 	_rooms[room.id] = room
 	_seat(room, player_id, nickname)
 	room_created.emit(room.id, room.orchestrator)

@@ -25,6 +25,7 @@ var _sessions: Array[ClientSession] = []
 var _switch_request := 0  # solo el último cambio de turno pendiente salta de pestaña
 
 var _mode: OptionButton
+var _max_leftover: SpinBox
 var _players: SpinBox
 var _tabs: TabContainer
 var _message: Label
@@ -37,6 +38,7 @@ func _ready() -> void:
 	for mode in _registry.available_modes():
 		_mode.add_item(_registry.display_name(mode))
 		_mode.set_item_metadata(_mode.item_count - 1, mode)
+	_on_mode_selected(_mode.selected)
 	_repository = SqlMatchRepository.open(ProjectSettings.globalize_path(DB_PATH))
 	if _repository == null:
 		_message.text = "No se pudo abrir la base de datos: %s" % SqlMatchRepository.open_error
@@ -73,7 +75,7 @@ func _new_game() -> void:
 	for i in int(_players.value):
 		_add_player(i + 1)
 	var host := _sessions[0]
-	host.create_room("Jugador 1", _mode.get_item_metadata(_mode.selected))
+	host.create_room("Jugador 1", _mode.get_item_metadata(_mode.selected), {"max_leftover_points": int(_max_leftover.value)})
 	var room_code := str(host.room.get("room_code", ""))
 	for i in range(1, _sessions.size()):
 		_sessions[i].join_room(room_code, "Jugador %d" % (i + 1))
@@ -122,7 +124,20 @@ func _build() -> void:
 	mode_label.text = "Modalidad:"
 	bar.add_child(mode_label)
 	_mode = OptionButton.new()
+	_mode.item_selected.connect(_on_mode_selected)
 	bar.add_child(_mode)
+	var leftover_label := Label.new()
+	leftover_label.text = "Sobrante máx. (Apuntado):"
+	bar.add_child(leftover_label)
+	_max_leftover = SpinBox.new()
+	_max_leftover.min_value = 0
+	_max_leftover.max_value = 100
+	_max_leftover.step = 1
+	_max_leftover.value = 4
+	_max_leftover.tooltip_text = "Puntos máximos de la carta sobrante para poder cerrar por apuntado."
+	bar.add_child(_max_leftover)
+	leftover_label.set_meta("setting_control", true)
+	_max_leftover.set_meta("setting_control", true)
 	var players_label := Label.new()
 	players_label.text = "Jugadores:"
 	bar.add_child(players_label)
@@ -141,3 +156,12 @@ func _build() -> void:
 	_tabs = TabContainer.new()
 	_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	column.add_child(_tabs)
+
+
+func _on_mode_selected(index: int) -> void:
+	if _max_leftover == null or index < 0:
+		return
+	var show_setting := str(_mode.get_item_metadata(index)) == "apuntado"
+	for child in _mode.get_parent().get_children():
+		if child.has_meta("setting_control"):
+			child.visible = show_setting

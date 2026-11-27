@@ -25,18 +25,20 @@ var _code: String
 var _mode: StringName
 var _mode_name: String
 var _orchestrator: MatchOrchestrator
+var _settings: RuleSettings
 ## [{ "id": StringName, "nickname": String }] en orden de llegada (= asiento).
 var _players: Array[Dictionary] = []
 var _started := false
 var _offline: Dictionary = {}  # player_id -> true mientras está desconectado (D-11)
 
 
-func _init(p_id: StringName, p_code: String, p_mode: StringName, p_mode_name: String, p_orchestrator: MatchOrchestrator) -> void:
+func _init(p_id: StringName, p_code: String, p_mode: StringName, p_mode_name: String, p_orchestrator: MatchOrchestrator, p_settings: RuleSettings = null) -> void:
 	_id = p_id
 	_code = p_code
 	_mode = p_mode
 	_mode_name = p_mode_name
 	_orchestrator = p_orchestrator
+	_settings = p_settings if p_settings != null else RuleSettings.new()
 
 
 func add(player_id: StringName, nickname: String) -> void:
@@ -98,7 +100,7 @@ func status() -> String:
 
 ## Crea la partida con los jugadores de la sala, en orden de asiento.
 func start() -> CommandResult:
-	var result := _orchestrator.create_match(MatchConfig.new(_mode, _players))
+	var result := _orchestrator.create_match(MatchConfig.new(_mode, _players, _settings))
 	_started = result.ok
 	return result
 
@@ -111,6 +113,7 @@ func view() -> Dictionary:
 		"host_id": String(host_id),
 		"mode": String(_mode),
 		"mode_name": _mode_name,
+		"max_leftover_points": _settings.max_leftover_points,
 		"status": status(),
 		"max_players": MatchConfig.MAX_PLAYERS,
 		"players": _players.map(func(p: Dictionary) -> Dictionary:
